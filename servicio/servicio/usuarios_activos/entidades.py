@@ -9,23 +9,17 @@ class Usuario:
     def get_cedula(self):
         return self.__cedula
 
+    def get_nombre(self):
+        return self.__nombre
+
+    def get_apellido(self):
+        return self.__apellido
+
+    def get_activos(self):
+        return self.__activos
+
     def get_cantidad_activos(self):
         return len(self.__activos)
-
-    def get_usuario(self):
-        return {
-            "cedula_usuario": self.__cedula,
-            "nombre_usuario": self.__nombre,
-            "apellido_usuario": self.__apellido,
-        }
-
-    def get_usuario_activos(self):
-        return {
-            "cedula_usuario": self.__cedula,
-            "nombre_usuario": self.__nombre,
-            "apellido_usuario": self.__apellido,
-            "activos_usuario": [activo.get_activo() for activo in self.__activos]
-        }
 
     def set_activos(self, activos):
         self.__activos = activos
@@ -38,9 +32,11 @@ class Activo:
         self.__nombre = kwargs.get("nombre_activo")
         self.__descripcion = kwargs.get("descripcion_activo")
 
-    def get_activo(self):
-        return {
-            "id_activo" : self.__id,
-            "nombre_activo": self.__nombre,
-            "descripcion_activo": self.__descripcion
-        }
+    def get_id(self):
+        return self.__id
+
+    def get_nombre(self):
+        return self.__nombre
+
+    def get_descripcion(self):
+        return self.__descripcion
