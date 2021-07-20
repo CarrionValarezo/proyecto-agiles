@@ -10,5 +10,5 @@ package clases;
  * @author carri
  */
 public class Usuario {
-	
+
 }
