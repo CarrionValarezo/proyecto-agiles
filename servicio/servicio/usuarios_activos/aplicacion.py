@@ -1,11 +1,13 @@
-from .data import DataUsuario, DataActivo
-from .entidades import Usuario, Activo
+from .data import DataUsuarioActivo, DataUsuario
+from .entidades import Usuario
 
-
-def get_usuarios_activos():
-    repositorio_usuarios = DataUsuario()
-    repositorio_activos = DataActivo()
-    lista_usuarios = [Usuario(**usuario) for usuario in repositorio_usuarios.get_usuarios()]
-    for usuario in lista_usuarios:
-        usuario.set_activos([Activo(**activo) for activo in repositorio_activos.get_activos_by_usuario(usuario)])
-    return lista_usuarios
+# Devuelve una lista de tuplas con el usuario y su cantidad de activos
+# [(usuario: Usuario, cantidad_de_activos: int),]
+def get_usuarios_cant_activos():
+    repo_usuario_activo = DataUsuarioActivo()
+    repo_usuario = DataUsuario()
+    usuarios_activos = []
+    for data_usuario in repo_usuario.get_usuarios():
+        usuario = Usuario(**data_usuario)
+        usuarios_activos.append((usuario, repo_usuario_activo.get_cant_activos_por_usuario(usuario)))
+    return usuarios_activos

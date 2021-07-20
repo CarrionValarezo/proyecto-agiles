@@ -20,7 +20,7 @@ public class Conexion {
 
 	public static String[][] getUsuarios() throws Exception {
 		//Especificar la url a la cual voy a realizar la peticion
-		String url = "http://localhost:5000/usuario-activo";
+		String url = "http://localhost:5000/usuario-cant-activos";
 		//Declaracion de la matriz usuarios a devolver
 		String[][] usuarios = null;
 		//Instanciar cliente Http
@@ -42,7 +42,7 @@ public class Conexion {
 			usuarios[i][0] = jArray.getJSONObject(i).getString("cedula_usuario");
 			usuarios[i][1] = jArray.getJSONObject(i).getString("nombre_usuario");
 			usuarios[i][2] = jArray.getJSONObject(i).getString("apellido_usuario");
-			usuarios[i][3] = String.valueOf(jArray.getJSONObject(i).getJSONArray("activos_usuario").length());
+			usuarios[i][3] = String.valueOf(jArray.getJSONObject(i).getInt("cantidad_activos_usuario"));
 		}
 		return usuarios;
 	}

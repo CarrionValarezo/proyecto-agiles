@@ -24,19 +24,3 @@ class Usuario:
     def set_activos(self, activos):
         self.__activos = activos
 
-
-class Activo:
-
-    def __init__(self, **kwargs):
-        self.__id = kwargs.get("id_activo")
-        self.__nombre = kwargs.get("nombre_activo")
-        self.__descripcion = kwargs.get("descripcion_activo")
-
-    def get_id(self):
-        return self.__id
-
-    def get_nombre(self):
-        return self.__nombre
-
-    def get_descripcion(self):
-        return self.__descripcion
