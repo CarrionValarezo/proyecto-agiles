@@ -8,6 +8,7 @@ package interfaces;
 import gestor.Conexion;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -21,7 +22,9 @@ public class IntUsuariosActivos extends javax.swing.JFrame {
 		 */
 		public IntUsuariosActivos() {
 				initComponents();
-				llenarTabla(); 
+				llenarTabla();
+                                this.setTitle("Activos Empresa");
+                                this.setLocationRelativeTo(null);
 		}
 
 		public void llenarTabla(){ 
@@ -32,7 +35,8 @@ public class IntUsuariosActivos extends javax.swing.JFrame {
 								modeloTabla.addRow(usuarios[i]); 
 						}
 				} catch (Exception ex) {
-						Logger.getLogger(IntUsuariosActivos.class.getName()).log(Level.SEVERE, null, ex);
+                                                JOptionPane.showMessageDialog(null, "Error: No se puede conectar al servidor.");
+						//Logger.getLogger(IntUsuariosActivos.class.getName()).log(Level.SEVERE, null, ex);
 				}
 		}
 
@@ -83,6 +87,11 @@ public class IntUsuariosActivos extends javax.swing.JFrame {
         jLabel1.setText("ACTIVOS DE LA EMPRESA");
 
         jButton2.setText("Validar");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -116,6 +125,11 @@ public class IntUsuariosActivos extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        Validacion validacion = new Validacion();
+        validacion.setVisible(true);
+    }//GEN-LAST:event_jButton2ActionPerformed
 
 		/**
 		 * @param args the command line arguments
