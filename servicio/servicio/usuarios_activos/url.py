@@ -4,20 +4,16 @@ from . import aplicacion
 usac = Blueprint("usac", __name__)
 
 
-@usac.route('/usuario-activo')
-def get_usuarios_activos():
+@usac.route('/usuario-cant-activos')
+def get_usuarios_cant_activos():
     respuesta = []
-    lista_usuarios = aplicacion.get_usuarios_activos()
-    for usuario in lista_usuarios:
+    usuarios_cant_activos = aplicacion.get_usuarios_cant_activos()
+    for usuario, cant_activos in usuarios_cant_activos:
         respuesta.append({
             "cedula_usuario": usuario.get_cedula(),
             "nombre_usuario": usuario.get_nombre(),
             "apellido_usuario": usuario.get_apellido(),
-            "activos_usuario": [{
-                "id_activo": activo.get_id(),
-                "nombre_activo": activo.get_nombre(),
-                "descripcion_activo": activo.get_descripcion()
-            } for activo in usuario.get_activos()]
+            "cantidad_activos_usuario": cant_activos
         })
     return jsonify(respuesta)
 

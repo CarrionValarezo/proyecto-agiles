@@ -6,8 +6,6 @@
 package interfaces;
 
 import gestor.Conexion;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
@@ -27,16 +25,15 @@ public class IntUsuariosActivos extends javax.swing.JFrame {
 		this.setLocationRelativeTo(null);
 	}
 
-	public void llenarTabla() {
+	private void llenarTabla() {
 		DefaultTableModel modeloTabla = (DefaultTableModel) jTblUsuarios.getModel();
 		try {
 			String[][] usuarios = Conexion.getUsuarios();
-			for (int i = 0; i < usuarios.length; i++) {
-				modeloTabla.addRow(usuarios[i]);
+			for (String[] usuario : usuarios) {
+				modeloTabla.addRow(usuario);
 			}
 		} catch (Exception ex) {
 			JOptionPane.showMessageDialog(null, "Error: No se puede conectar al servidor.");
-			//Logger.getLogger(IntUsuariosActivos.class.getName()).log(Level.SEVERE, null, ex);
 		}
 	}
 
