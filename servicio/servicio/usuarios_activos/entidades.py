@@ -73,3 +73,6 @@ class Proceso:
 
     def get_fecha(self):
         return self.__fecha
+
+    def set_id(self, id):
+        self.__id = id

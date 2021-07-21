@@ -1,4 +1,4 @@
-from .data import DataUsuarioActivo, DataUsuario
+from .data import DataUsuarioActivo, DataUsuario, DataProceso
 from .entidades import Usuario, Activo, UsuarioActivo, Proceso
 
 
@@ -28,4 +28,12 @@ def get_activos_por_usuario(usuario):
 
 
 def crear_proceso(proceso, usuarios):
-    proceso = Proceso(**proceso)
+    repo_procesos = DataProceso()
+    nuevo_proceso = Proceso(**proceso)
+    activos = []
+    for usuario in usuarios:
+        activos = activos + get_activos_por_usuario(usuario)
+    nuevo_proceso.set_id(repo_procesos.crear_proceso(nuevo_proceso))
+    for activo in activos:
+        repo_procesos.agregar_activo(nuevo_proceso, activo)
+

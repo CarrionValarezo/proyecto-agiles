@@ -36,9 +36,10 @@ def get_activos_por_usuario(cedula):
 def crear_proceso():
     data = request.get_json()
     proceso = data.get("proceso")
-    usuarios = data.get("usuarios")
+    cedulas_usuarios = data.get("usuarios_proceso")
+    usuarios = [aplicacion.get_usuario_por_cedula(usuario.get("cedula_usuario")) for usuario in cedulas_usuarios]
     aplicacion.crear_proceso(proceso, usuarios)
-    return "Proceso Creado"
+    return jsonify({"message":"Proceso Creado"})
 
 @usac.route('/')
 def test():

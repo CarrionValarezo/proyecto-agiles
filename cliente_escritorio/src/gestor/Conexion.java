@@ -5,12 +5,15 @@
  */
 package gestor;
 
+import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.net.http.HttpResponse.BodyHandler;
+import java.net.http.HttpRequest.BodyPublishers;
 import org.json.JSONArray;
+import org.json.JSONObject;
 
 /**
  *
@@ -46,9 +49,10 @@ public class Conexion {
 		}
 		return usuarios;
 	}
+
 	public static String[][] getActivosUsuarios(String cedula) throws Exception {
 		//Especificar la url a la cual voy a realizar la peticion
-		String url = "http://localhost:5000/activos-usuario/"+cedula;
+		String url = "http://localhost:5000/activos-usuario/" + cedula;
 		//Declaracion de la matriz usuarios a devolver
 		String[][] activos = null;
 		//Instanciar cliente Http
@@ -74,6 +78,34 @@ public class Conexion {
 		}
 		return activos;
 	}
-			
-	
+
+	public void crearProceso(String nombre, String fecha, String[] cedulas) throws Exception {
+		JSONObject jEnviar = new JSONObject();
+		JSONObject jProceso = new JSONObject();
+		jProceso.put("nombre_proceso", nombre);
+		jProceso.put("fecha_proceso", fecha);
+		jEnviar.put("proceso", jProceso);
+		JSONArray jArray = new JSONArray();
+		for (String cedula : cedulas) {
+			System.out.println(cedula);
+			JSONObject jCedula = new JSONObject();
+			jCedula.put("cedula_usuario", cedula);
+			jArray.put(jCedula);
+		}
+		jEnviar.put("usuarios_proceso", jArray);
+		String url = "http://localhost:5000/proceso";
+		HttpClient client = HttpClient.newHttpClient();
+		HttpRequest request = HttpRequest.newBuilder()
+				.uri(new URI(url))
+				.header("Content-Type", "application/json")
+				.POST(BodyPublishers.ofString(jEnviar.toString()))
+				.build();
+
+		System.out.println(jEnviar.toString());
+		HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+		JSONObject jsonResponse = new JSONObject(response.body());
+		System.out.println(response.body());
+
+	}
+
 }

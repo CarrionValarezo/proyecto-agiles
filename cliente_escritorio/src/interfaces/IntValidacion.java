@@ -6,9 +6,15 @@
 package interfaces;
 
 import entidades.Usuario;
+import gestor.Conexion;
 import java.awt.Point;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
@@ -19,12 +25,14 @@ import javax.swing.table.DefaultTableModel;
 public class IntValidacion extends javax.swing.JFrame {
 
 	DefaultTableModel modeloTablaRegistrados;
+	Conexion conexion; 
 
 	/**
 	 * Creates new form Validacion
 	 */
 	public IntValidacion(DefaultTableModel modeloTabla) {
 		initComponents();
+		this.conexion = new Conexion(); 
 		this.modeloTablaRegistrados = modeloTabla;
 		this.setTitle("Proceso de Validación");
 		this.setLocationRelativeTo(null);
@@ -35,7 +43,7 @@ public class IntValidacion extends javax.swing.JFrame {
 				JTable table = (JTable) mouseEvent.getSource();
 				Point point = mouseEvent.getPoint();
 				int row = table.rowAtPoint(point);
-				if (mouseEvent.getClickCount() == 2 && table.getSelectedRow() != -1) {
+				if (mouseEvent.getClickCount() == 1 && table.getSelectedRow() != -1) {
 					cambiarUsuario(jTblUsuariosRegistrados, jTblUsuariosProcesar);
 				}
 			}
@@ -45,7 +53,7 @@ public class IntValidacion extends javax.swing.JFrame {
 				JTable table = (JTable) mouseEvent.getSource();
 				Point point = mouseEvent.getPoint();
 				int row = table.rowAtPoint(point);
-				if (mouseEvent.getClickCount() == 2 && table.getSelectedRow() != -1) {
+				if (mouseEvent.getClickCount() == 1 && table.getSelectedRow() != -1) {
 					cambiarUsuario(jTblUsuariosProcesar, jTblUsuariosRegistrados);
 				}
 			}
@@ -81,6 +89,25 @@ public class IntValidacion extends javax.swing.JFrame {
 		this.jTblUsuariosRegistrados.setModel(this.modeloTablaRegistrados);
 	}
 
+	private String [] getCedulasTabla(){
+		DefaultTableModel modeloTablaProceso = (DefaultTableModel) jTblUsuariosProcesar.getModel(); 
+		String [] cedulas = new String[modeloTablaProceso.getRowCount()];
+		for (int i = 0; i < cedulas.length; i++){ 
+			cedulas[i] = modeloTablaProceso.getValueAt(i,0).toString(); 
+		}
+		return cedulas;	
+	}
+	private void crearProceso(){
+		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+		LocalDateTime ahora = LocalDateTime.now(); 
+		String fecha = dtf.format(ahora); 
+		String [] cedulas = getCedulasTabla(); 
+		try {
+			this.conexion.crearProceso(jTxtNombreProceso.getText(), fecha, cedulas);
+		} catch (Exception ex) {
+			JOptionPane.showMessageDialog(null, ex);
+		}
+	}
 
 	/**
 	 * This method is called from within the constructor to initialize the form.
@@ -194,10 +221,10 @@ public class IntValidacion extends javax.swing.JFrame {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(jLabel5)
                             .addComponent(jLabel4))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jTxtCantidadUsuarios, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jTxtCantidadActivos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jTxtCantidadUsuarios, javax.swing.GroupLayout.DEFAULT_SIZE, 70, Short.MAX_VALUE)
+                            .addComponent(jTxtCantidadActivos))
                         .addGap(10, 10, 10))))
         );
         layout.setVerticalGroup(
@@ -237,6 +264,7 @@ public class IntValidacion extends javax.swing.JFrame {
 
     private void jBtnCrearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBtnCrearActionPerformed
 		// TODO add your handling code here:
+		crearProceso(); 
     }//GEN-LAST:event_jBtnCrearActionPerformed
 
 	/**

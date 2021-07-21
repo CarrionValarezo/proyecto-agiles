@@ -47,5 +47,13 @@ class DataProceso:
     def crear_proceso(self, proceso):
         cur = db.get_cursor()
         cur.execute(f'''insert into proceso
-                        values(null,'{proceso.get_nombre()}', '{proceso.get_fecha()}');''')
+                        values(null,'{proceso.get_nombre()}','{proceso.get_fecha()}');''')
+        cur.connection.commit()
+        cur.execute(f"select last_insert_id();")
+        return cur.fetchone()['last_insert_id()']
+
+    def agregar_activo(self, proceso, activo):
+        cur = db.get_cursor()
+        cur.execute(f'''insert into detalle_proceso
+                        values({proceso.get_id()},'{activo.get_id_pertenencia()}',0,null);''')
         cur.connection.commit()
