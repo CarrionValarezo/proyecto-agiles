@@ -1,5 +1,5 @@
 from .data import DataUsuarioActivo, DataUsuario
-from .entidades import Usuario, Activo, UsuarioActivo
+from .entidades import Usuario, Activo, UsuarioActivo, Proceso
 
 
 # Devuelve una lista de tuplas con el usuario y su cantidad de activos
@@ -25,3 +25,7 @@ def get_activos_por_usuario(usuario):
     for data_activo in repo_usuario_activo.get_activos_por_usuario(usuario):
         activos_usuario.append(UsuarioActivo(**data_activo, activo=Activo(**data_activo)))
     return activos_usuario
+
+
+def crear_proceso(proceso, usuarios):
+    proceso = Proceso(**proceso)

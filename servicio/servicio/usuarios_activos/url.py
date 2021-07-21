@@ -1,4 +1,4 @@
-from flask import Blueprint, jsonify
+from flask import Blueprint, jsonify, request
 from . import aplicacion
 
 usac = Blueprint("usac", __name__)
@@ -31,6 +31,14 @@ def get_activos_por_usuario(cedula):
             "descripcion_activo": detalle_activo.get_descripcion()
         })
     return jsonify(respuesta)
+
+@usac.route('/proceso', methods=['POST'])
+def crear_proceso():
+    data = request.get_json()
+    proceso = data.get("proceso")
+    usuarios = data.get("usuarios")
+    aplicacion.crear_proceso(proceso, usuarios)
+    return "Proceso Creado"
 
 @usac.route('/')
 def test():

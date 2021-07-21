@@ -57,3 +57,19 @@ class UsuarioActivo:
 
     def get_activo(self):
         return self.__activo
+
+class Proceso:
+
+    def __init__(self, **kwargs):
+        self.__id = kwargs.get("id_proceso")
+        self.__nombre = kwargs.get("nombre_proceso")
+        self.__fecha = kwargs.get("fecha_proceso")
+
+    def get_id(self):
+        return self.__id
+
+    def get_nombre(self):
+        return self.__nombre
+
+    def get_fecha(self):
+        return self.__fecha

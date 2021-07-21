@@ -40,3 +40,12 @@ class DataUsuarioActivo:
                         WHERE A.ID_ACT = UA.ACT_USAC
                         AND USU_USAC = {usuario.get_cedula()}; ''')
         return cur.fetchall()
+
+
+class DataProceso:
+
+    def crear_proceso(self, proceso):
+        cur = db.get_cursor()
+        cur.execute(f'''insert into proceso
+                        values(null,'{proceso.get_nombre()}', '{proceso.get_fecha()}');''')
+        cur.connection.commit()
