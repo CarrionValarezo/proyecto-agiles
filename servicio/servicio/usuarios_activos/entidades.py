@@ -24,3 +24,36 @@ class Usuario:
     def set_activos(self, activos):
         self.__activos = activos
 
+
+class Activo:
+
+    def __init__(self, **kwargs):
+        self.__id = kwargs.get("id_activo")
+        self.__nombre = kwargs.get("nombre_activo")
+        self.__descripcion = kwargs.get("descripcion_activo")
+
+    def get_id(self):
+        return self.__id
+
+    def get_nombre(self):
+        return self.__nombre
+
+    def get_descripcion(self):
+        return self.__descripcion
+
+
+class UsuarioActivo:
+
+    def __init__(self, **kwargs):
+        self.__id_pertenencia = kwargs.get("id_pertenencia")
+        self.__usuario = kwargs.get("usuario")
+        self.__activo = kwargs.get("activo")
+
+    def get_id_pertenencia(self):
+        return self.__id_pertenencia
+
+    def get_usuario(self):
+        return self.__usuario
+
+    def get_activo(self):
+        return self.__activo
