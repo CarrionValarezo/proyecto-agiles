@@ -46,4 +46,34 @@ public class Conexion {
 		}
 		return usuarios;
 	}
+	public static String[][] getActivosUsuarios(String cedula) throws Exception {
+		//Especificar la url a la cual voy a realizar la peticion
+		String url = "http://localhost:5000/activos-usuario/"+cedula;
+		//Declaracion de la matriz usuarios a devolver
+		String[][] activos = null;
+		//Instanciar cliente Http
+		HttpClient client = HttpClient.newHttpClient();
+		//Construccion de la request(peticion) que realizara el cliente
+		HttpRequest request = HttpRequest.newBuilder()
+				.uri(new URI(url))
+				.GET()
+				.build();
+		//Respuesta que obtiene el cliente al realizar la peticion especificada
+		//anteriormente
+		HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+		//Cuerpo de la peticion a un array de tipo JSON.
+		JSONArray jArray = new JSONArray(response.body());
+		//Declaracion de la matriz usuarios
+		activos = new String[jArray.length()][4];
+		//Llenar la matriz segun los datos del JSON obtenido
+		for (int i = 0; i < jArray.length(); i++) {
+			activos[i][0] = String.valueOf(jArray.getJSONObject(i).getInt("id_pertenencia"));
+			activos[i][1] = jArray.getJSONObject(i).getString("id_activo");
+			activos[i][2] = jArray.getJSONObject(i).getString("nombre_activo");
+			activos[i][3] = jArray.getJSONObject(i).getString("descripcion_activo");
+		}
+		return activos;
+	}
+			
+	
 }

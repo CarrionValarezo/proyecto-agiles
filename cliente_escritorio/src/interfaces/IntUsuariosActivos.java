@@ -6,8 +6,13 @@
 package interfaces;
 
 import gestor.Conexion;
+import java.awt.Point;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import javax.swing.JOptionPane;
+import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
+import entidades.Usuario; 
 
 /**
  *
@@ -15,6 +20,7 @@ import javax.swing.table.DefaultTableModel;
  */
 public class IntUsuariosActivos extends javax.swing.JFrame {
 
+	DefaultTableModel modeloTabla; 
 	/**
 	 * Creates new form IntUsuariosActivos
 	 */
@@ -23,15 +29,37 @@ public class IntUsuariosActivos extends javax.swing.JFrame {
 		llenarTabla();
 		this.setTitle("Activos Empresa");
 		this.setLocationRelativeTo(null);
+		this.jTblUsuarios.addMouseListener(new MouseAdapter() {
+			public void mousePressed(MouseEvent mouseEvent) {
+				JTable table = (JTable) mouseEvent.getSource();
+				Point point = mouseEvent.getPoint();
+				int row = table.rowAtPoint(point);
+				if (mouseEvent.getClickCount() == 2 && table.getSelectedRow() != -1) {
+					String cedula = jTblUsuarios.getValueAt(jTblUsuarios.getSelectedRow(), 0).toString(); 
+					String nombre = jTblUsuarios.getValueAt(jTblUsuarios.getSelectedRow(), 1).toString(); 
+					String apellido = jTblUsuarios.getValueAt(jTblUsuarios.getSelectedRow(), 2).toString(); 
+					Usuario usuarioSeleccionado = new Usuario(cedula, nombre, apellido); 
+					IntActivosUsuario intActivosUsuario = new IntActivosUsuario(usuarioSeleccionado);
+					intActivosUsuario.setVisible(true);
+				}
+			}
+		});
 	}
 
 	private void llenarTabla() {
-		DefaultTableModel modeloTabla = (DefaultTableModel) jTblUsuarios.getModel();
+		String [] titulos = {"CEDULA", "NOMBRE", "APELLIDO", "CANTIDAD DE ACTIVOS"}; 
+		this.modeloTabla = new DefaultTableModel(null, titulos){
+			@Override
+			public boolean isCellEditable(int row, int column){
+				return false; 
+			}
+		};
 		try {
 			String[][] usuarios = Conexion.getUsuarios();
 			for (String[] usuario : usuarios) {
-				modeloTabla.addRow(usuario);
+				this.modeloTabla.addRow(usuario);
 			}
+			this.jTblUsuarios.setModel(this.modeloTabla);
 		} catch (Exception ex) {
 			JOptionPane.showMessageDialog(null, "Error: No se puede conectar al servidor.");
 		}
@@ -51,6 +79,7 @@ public class IntUsuariosActivos extends javax.swing.JFrame {
         jTblUsuarios = new javax.swing.JTable();
         jLabel1 = new javax.swing.JLabel();
         jButton2 = new javax.swing.JButton();
+        jBtnVerProcesos = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -83,39 +112,45 @@ public class IntUsuariosActivos extends javax.swing.JFrame {
 
         jLabel1.setText("ACTIVOS DE LA EMPRESA");
 
-        jButton2.setText("Validar");
+        jButton2.setText("Crear Proceso");
         jButton2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton2ActionPerformed(evt);
             }
         });
 
+        jBtnVerProcesos.setText("Ver Procesos");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jLabel1)
+                .addGap(308, 308, 308))
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addContainerGap()
                         .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(359, 359, 359)
-                        .addComponent(jButton2)))
+                        .addGap(275, 275, 275)
+                        .addComponent(jButton2)
+                        .addGap(45, 45, 45)
+                        .addComponent(jBtnVerProcesos)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
-                .addComponent(jLabel1)
-                .addGap(318, 318, 318))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(34, 34, 34)
+                .addGap(32, 32, 32)
                 .addComponent(jLabel1)
-                .addGap(38, 38, 38)
-                .addComponent(jButton2)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 28, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButton2)
+                    .addComponent(jBtnVerProcesos))
+                .addGap(18, 18, 18)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
@@ -124,7 +159,7 @@ public class IntUsuariosActivos extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-		Validacion validacion = new Validacion();
+		IntValidacion validacion = new IntValidacion((DefaultTableModel) jTblUsuarios.getModel());
 		validacion.setVisible(true);
     }//GEN-LAST:event_jButton2ActionPerformed
 
@@ -164,6 +199,7 @@ public class IntUsuariosActivos extends javax.swing.JFrame {
 	}
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton jBtnVerProcesos;
     private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
