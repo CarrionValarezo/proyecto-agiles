@@ -14,14 +14,14 @@ import javax.swing.table.DefaultTableModel;
  *
  * @author carri
  */
-public class IntActivosUsuario extends javax.swing.JFrame {
+public class IntDetalleUsuario extends javax.swing.JFrame {
 	DefaultTableModel modeloTabla; 	
 	Conexion conexion; 
 	Usuario usuario; 
 	/**
 	 * Creates new form IntActivosUsuario
 	 */
-	public IntActivosUsuario(Usuario usuario) {
+	public IntDetalleUsuario(Usuario usuario) {
 		initComponents();
 		this.usuario = usuario; 
 		conexion = new Conexion(); 
@@ -29,7 +29,7 @@ public class IntActivosUsuario extends javax.swing.JFrame {
 		cargarDatosUsuario();
 	}
 
-	private IntActivosUsuario() {
+	private IntDetalleUsuario() {
 		initComponents();
 	}
 
@@ -41,7 +41,12 @@ public class IntActivosUsuario extends javax.swing.JFrame {
 
 	private void cargarTabla(){
 		String [] titulos = {"ID", "ID ACTIVO", "NOMBRE", "DESCRIPCION"}; 
-		this.modeloTabla = new DefaultTableModel(null, titulos); 
+		this.modeloTabla = new DefaultTableModel(null, titulos){
+			@Override
+			public boolean isCellEditable(int row, int column){
+				return false; 
+			}
+		}; 
 		try { 
 			String [][] activos = conexion.getActivosUsuarios(usuario.getCedula());
 			for(String [] activo : activos){ 
@@ -62,13 +67,24 @@ public class IntActivosUsuario extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jScrollPane1 = new javax.swing.JScrollPane();
-        jTblActivos = new javax.swing.JTable();
         jLblCedula = new javax.swing.JLabel();
         jLblNombre = new javax.swing.JLabel();
         jLblApellido = new javax.swing.JLabel();
+        jTabbedPane1 = new javax.swing.JTabbedPane();
+        jPanel1 = new javax.swing.JPanel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jTblActivos = new javax.swing.JTable();
+        jPanel2 = new javax.swing.JPanel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        jTblProcesos = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+
+        jLblCedula.setText("jLabel1");
+
+        jLblNombre.setText("jLabel2");
+
+        jLblApellido.setText("jLabel3");
 
         jTblActivos.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -83,11 +99,60 @@ public class IntActivosUsuario extends javax.swing.JFrame {
         ));
         jScrollPane1.setViewportView(jTblActivos);
 
-        jLblCedula.setText("jLabel1");
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 686, Short.MAX_VALUE)
+            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                    .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 674, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addContainerGap()))
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 134, Short.MAX_VALUE)
+            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel1Layout.createSequentialGroup()
+                    .addContainerGap()
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 122, Short.MAX_VALUE)
+                    .addContainerGap()))
+        );
 
-        jLblNombre.setText("jLabel2");
+        jTabbedPane1.addTab("Activos", jPanel1);
 
-        jLblApellido.setText("jLabel3");
+        jTblProcesos.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        jScrollPane2.setViewportView(jTblProcesos);
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 674, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 122, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+
+        jTabbedPane1.addTab("Procesos", jPanel2);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -96,14 +161,14 @@ public class IntActivosUsuario extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLblCedula)
                         .addGap(69, 69, 69)
                         .addComponent(jLblNombre, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(87, 87, 87)
-                        .addComponent(jLblApellido))
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 674, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(25, Short.MAX_VALUE))
+                        .addComponent(jLblApellido)))
+                .addContainerGap(37, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -113,9 +178,9 @@ public class IntActivosUsuario extends javax.swing.JFrame {
                     .addComponent(jLblCedula)
                     .addComponent(jLblNombre)
                     .addComponent(jLblApellido))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 32, Short.MAX_VALUE)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(20, 20, 20))
+                .addGap(18, 18, 18)
+                .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 167, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(27, Short.MAX_VALUE))
         );
 
         pack();
@@ -138,21 +203,22 @@ public class IntActivosUsuario extends javax.swing.JFrame {
 				}
 			}
 		} catch (ClassNotFoundException ex) {
-			java.util.logging.Logger.getLogger(IntActivosUsuario.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+			java.util.logging.Logger.getLogger(IntDetalleUsuario.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
 		} catch (InstantiationException ex) {
-			java.util.logging.Logger.getLogger(IntActivosUsuario.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+			java.util.logging.Logger.getLogger(IntDetalleUsuario.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
 		} catch (IllegalAccessException ex) {
-			java.util.logging.Logger.getLogger(IntActivosUsuario.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+			java.util.logging.Logger.getLogger(IntDetalleUsuario.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
 		} catch (javax.swing.UnsupportedLookAndFeelException ex) {
-			java.util.logging.Logger.getLogger(IntActivosUsuario.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+			java.util.logging.Logger.getLogger(IntDetalleUsuario.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
 		}
+		//</editor-fold>
 		//</editor-fold>
 
 		/* Create and display the form */
 		java.awt.EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				Usuario usuario = new Usuario("123","Richard","Carrion");
-				new IntActivosUsuario(usuario).setVisible(true);
+				new IntDetalleUsuario(usuario).setVisible(true);
 			}
 		});
 	}
@@ -161,7 +227,12 @@ public class IntActivosUsuario extends javax.swing.JFrame {
     private javax.swing.JLabel jLblApellido;
     private javax.swing.JLabel jLblCedula;
     private javax.swing.JLabel jLblNombre;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JTable jTblActivos;
+    private javax.swing.JTable jTblProcesos;
     // End of variables declaration//GEN-END:variables
 }

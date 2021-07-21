@@ -44,6 +44,15 @@ class DataUsuarioActivo:
 
 class DataProceso:
 
+    def get_proceso_por_id(self, id_proceso):
+        cur = db.get_cursor()
+        cur.execute(f'''select id_pro as id_proceso, 
+                        nom_pro as nombre_proceso, 
+                        fec_cre_pro as fecha_proceso
+                        from proceso 
+                        where id_pro = {id_proceso}''')
+        return cur.fetchone()
+
     def crear_proceso(self, proceso):
         cur = db.get_cursor()
         cur.execute(f'''insert into proceso
@@ -57,3 +66,26 @@ class DataProceso:
         cur.execute(f'''insert into detalle_proceso
                         values({proceso.get_id()},'{activo.get_id_pertenencia()}',0,null);''')
         cur.connection.commit()
+
+    def get_activos_por_proceso(self, proceso):
+        cur = db.get_cursor()
+        cur.execute(f'''SELECT UA.ID_USAC AS id_pertenencia,
+                        A.ID_ACT AS id_activo, 
+                        A.NOM_ACT AS nombre_activo, 
+                        A.DES_ACT AS descripcion_activo
+                        FROM USUARIO_ACTIVO UA, ACTIVO A, PROCESO P
+                        WHERE UA.ACT_USAC = A.ID_ACT
+                        AND P.ID_PRO = {proceso.get_id()};''')
+        return cur.fetchall()
+
+    def get_usuarios_por_proceso(self, proceso):
+        cur = db.get_cursor()
+        cur.execute(f'''select u.ced_usu as cedula_usuario, 
+                        u.nom_usu as nombre_usuario, 
+                        u.ape_usu as apellido_usuario
+                        from usuario u, usuario_activo ua, proceso p, detalle_proceso dp
+                        where u.ced_usu = ua.usu_usac
+                        and ua.id_usac = dp.id_per_det
+                        and p.id_pro = dp.id_pro_det
+                        and p.id_pro = {proceso.get_id()};''')
+        return cur.fetchall()

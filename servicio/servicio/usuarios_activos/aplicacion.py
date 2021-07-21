@@ -19,6 +19,7 @@ def get_usuario_por_cedula(cedula):
     usuario = Usuario(**repos_usuario.get_usuario_por_cedula(cedula))
     return usuario
 
+
 def get_activos_por_usuario(usuario):
     repo_usuario_activo = DataUsuarioActivo()
     activos_usuario = []
@@ -36,4 +37,32 @@ def crear_proceso(proceso, usuarios):
     nuevo_proceso.set_id(repo_procesos.crear_proceso(nuevo_proceso))
     for activo in activos:
         repo_procesos.agregar_activo(nuevo_proceso, activo)
+    return nuevo_proceso
 
+
+def get_proceso_por_id(id_proceso):
+    repo_procesos = DataProceso()
+    proceso = Proceso(**repo_procesos.get_proceso_por_id(id_proceso))
+    return proceso
+
+
+def get_activos_por_proceso(proceso):
+    repo_procesos = DataProceso()
+    activos = [UsuarioActivo(**data_activo, activo=Activo(**data_activo)) for data_activo in
+               repo_procesos.get_activos_por_proceso(proceso)]
+    return activos
+
+
+def get_usuarios_por_proceso(proceso):
+    repo_proceso = DataProceso()
+    usuarios = {}
+    for usuario in repo_proceso.get_usuarios_por_proceso(proceso):
+        if usuario["cedula_usuario"] not in usuarios:
+            usuarios[usuario["cedula_usuario"]] = {
+                "cedula_usuario": usuario["cedula_usuario"],
+                "nombre_usuario": usuario["nombre_usuario"],
+                "apellido_usuario": usuario["apellido_usuario"]
+            }
+
+    lista_usuarios = [Usuario(**data_usuario) for data_usuario in usuarios.values()]
+    return lista_usuarios

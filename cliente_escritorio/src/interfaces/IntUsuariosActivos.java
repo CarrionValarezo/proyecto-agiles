@@ -39,7 +39,7 @@ public class IntUsuariosActivos extends javax.swing.JFrame {
 					String nombre = jTblUsuarios.getValueAt(jTblUsuarios.getSelectedRow(), 1).toString(); 
 					String apellido = jTblUsuarios.getValueAt(jTblUsuarios.getSelectedRow(), 2).toString(); 
 					Usuario usuarioSeleccionado = new Usuario(cedula, nombre, apellido); 
-					IntActivosUsuario intActivosUsuario = new IntActivosUsuario(usuarioSeleccionado);
+					IntDetalleUsuario intActivosUsuario = new IntDetalleUsuario(usuarioSeleccionado);
 					intActivosUsuario.setVisible(true);
 				}
 			}
@@ -74,12 +74,15 @@ public class IntUsuariosActivos extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jPopMenu = new javax.swing.JPopupMenu();
         jPanel1 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTblUsuarios = new javax.swing.JTable();
         jLabel1 = new javax.swing.JLabel();
         jButton2 = new javax.swing.JButton();
         jBtnVerProcesos = new javax.swing.JButton();
+
+        jPopMenu.setToolTipText("Ver Procesos\nVer Activos\n");
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -203,6 +206,7 @@ public class IntUsuariosActivos extends javax.swing.JFrame {
     private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JPopupMenu jPopMenu;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTblUsuarios;
     // End of variables declaration//GEN-END:variables
