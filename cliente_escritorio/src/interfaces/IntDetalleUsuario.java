@@ -24,7 +24,7 @@ public class IntDetalleUsuario extends javax.swing.JFrame {
 	public IntDetalleUsuario(Usuario usuario) {
 		initComponents();
 		this.usuario = usuario; 
-		conexion = new Conexion(); 
+		this.conexion = new Conexion(); 
 		this.cargarTabla();
 		cargarDatosUsuario();
 	}

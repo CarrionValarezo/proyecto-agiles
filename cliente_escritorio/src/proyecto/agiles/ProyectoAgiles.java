@@ -21,7 +21,7 @@ public class ProyectoAgiles {
 	public static void main(String[] args) {
 		try {
 			// TODO code application logic here
-			String[][] usuarios = Conexion.getUsuarios();
+			String[][] usuarios = new Conexion().getUsuarios();
 		} catch (Exception ex) {
 			Logger.getLogger(ProyectoAgiles.class.getName()).log(Level.SEVERE, null, ex);
 		}

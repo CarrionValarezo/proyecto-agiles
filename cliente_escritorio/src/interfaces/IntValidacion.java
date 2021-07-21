@@ -104,6 +104,7 @@ public class IntValidacion extends javax.swing.JFrame {
 		String [] cedulas = getCedulasTabla(); 
 		try {
 			this.conexion.crearProceso(jTxtNombreProceso.getText(), fecha, cedulas);
+			JOptionPane.showConfirmDialog(null, "El proceso ha sido creado exitosamente \n ¿Desea ver el detalle del proceso creado?");
 		} catch (Exception ex) {
 			JOptionPane.showMessageDialog(null, ex);
 		}

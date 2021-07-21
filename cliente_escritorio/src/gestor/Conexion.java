@@ -5,8 +5,12 @@
  */
 package gestor;
 
+import entidades.Activo;
+import entidades.Proceso;
+import entidades.Usuario;
 import java.io.IOException;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
@@ -21,13 +25,18 @@ import org.json.JSONObject;
  */
 public class Conexion {
 
-	public static String[][] getUsuarios() throws Exception {
+	private HttpClient cliente;
+
+	public Conexion() {
+		this.cliente = HttpClient.newHttpClient();
+	}
+
+	public String[][] getUsuarios() throws Exception {
 		//Especificar la url a la cual voy a realizar la peticion
-		String url = "http://localhost:5000/usuario-cant-activos";
+		String url = "http://localhost:5000/usuarios/cantidad_activos";
 		//Declaracion de la matriz usuarios a devolver
 		String[][] usuarios = null;
 		//Instanciar cliente Http
-		HttpClient client = HttpClient.newHttpClient();
 		//Construccion de la request(peticion) que realizara el cliente
 		HttpRequest request = HttpRequest.newBuilder()
 				.uri(new URI(url))
@@ -35,7 +44,7 @@ public class Conexion {
 				.build();
 		//Respuesta que obtiene el cliente al realizar la peticion especificada
 		//anteriormente
-		HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+		HttpResponse<String> response = this.cliente.send(request, HttpResponse.BodyHandlers.ofString());
 		//Cuerpo de la peticion a un array de tipo JSON.
 		JSONArray jArray = new JSONArray(response.body());
 		//Declaracion de la matriz usuarios
@@ -50,13 +59,12 @@ public class Conexion {
 		return usuarios;
 	}
 
-	public static String[][] getActivosUsuarios(String cedula) throws Exception {
+	public String[][] getActivosUsuarios(String cedula) throws Exception {
 		//Especificar la url a la cual voy a realizar la peticion
-		String url = "http://localhost:5000/activos-usuario/" + cedula;
+		String url = "http://localhost:5000/usuarios/" + cedula + "/activos";
 		//Declaracion de la matriz usuarios a devolver
 		String[][] activos = null;
 		//Instanciar cliente Http
-		HttpClient client = HttpClient.newHttpClient();
 		//Construccion de la request(peticion) que realizara el cliente
 		HttpRequest request = HttpRequest.newBuilder()
 				.uri(new URI(url))
@@ -64,7 +72,8 @@ public class Conexion {
 				.build();
 		//Respuesta que obtiene el cliente al realizar la peticion especificada
 		//anteriormente
-		HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+		HttpResponse<String> response = this.cliente.send(request, HttpResponse.BodyHandlers.ofString());
+		System.out.println(response.body());
 		//Cuerpo de la peticion a un array de tipo JSON.
 		JSONArray jArray = new JSONArray(response.body());
 		//Declaracion de la matriz usuarios
@@ -93,8 +102,7 @@ public class Conexion {
 			jArray.put(jCedula);
 		}
 		jEnviar.put("usuarios_proceso", jArray);
-		String url = "http://localhost:5000/proceso";
-		HttpClient client = HttpClient.newHttpClient();
+		String url = "http://localhost:5000/procesos";
 		HttpRequest request = HttpRequest.newBuilder()
 				.uri(new URI(url))
 				.header("Content-Type", "application/json")
@@ -102,10 +110,67 @@ public class Conexion {
 				.build();
 
 		System.out.println(jEnviar.toString());
-		HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+		HttpResponse<String> response = this.cliente.send(request, HttpResponse.BodyHandlers.ofString());
 		JSONObject jsonResponse = new JSONObject(response.body());
 		System.out.println(response.body());
-
 	}
 
+	/*
+		public Proceso getProceso(String idProceso){ 
+		e
+	} 
+	 */
+	public Proceso getProceso(String idProceso) throws Exception {
+		Usuario [] usuarios = null; 
+		Activo [] activos = null; 
+		Proceso p = null; 
+		String url = "http://localhost:5000/procesos/"+idProceso;
+
+		HttpClient clienteProceso = HttpClient.newHttpClient(); 
+		HttpRequest request = HttpRequest.newBuilder()
+				.uri(new URI(url))
+				.GET()
+				.build();
+		
+		HttpResponse<String> response = clienteProceso.send(request, HttpResponse.BodyHandlers.ofString());
+		System.out.println(response.body());
+		//Cuerpo de la peticion a un array de tipo JSON.
+		//JSONArray jArray = new JSONArray(response.body());
+
+		JSONObject respuesta = new JSONObject(response.body());
+
+		JSONObject jsonProceso = respuesta.getJSONObject("proceso");
+		JSONArray jsonUsuarios = respuesta.getJSONArray("usuarios");
+		JSONArray jsonActivos = respuesta.getJSONArray("activos");
+		
+		usuarios = new Usuario[jsonProceso.getInt("cantidad_usuarios_proceso")];
+		activos = new Activo[jsonProceso.getInt("cantidad_activos_proceso")];
+		
+		for (int i = 0; i < usuarios.length; i++){
+			String cedula = jsonUsuarios.getJSONObject(i).getString("cedula_usuario"); 
+			String nombre = jsonUsuarios.getJSONObject(i).getString("nombre_usuario"); 
+			String apellido = jsonUsuarios.getJSONObject(i).getString("apellido_usuario"); 
+			usuarios[i] = new Usuario(cedula, nombre, apellido);
+		}
+
+		for (int i = 0; i < activos.length; i++){
+			String idPertenencia = String.valueOf(jsonActivos.getJSONObject(i).getInt("id_pertenencia"));
+			String idActivo = jsonActivos.getJSONObject(i).getString("id_activo");
+			String nombreActivo = jsonActivos.getJSONObject(i).getString("nombre_activo");
+			String descripcionActivo = jsonActivos.getJSONObject(i).getString("descripcion_activo");
+
+			String cedula = jsonActivos.getJSONObject(i).getString("cedula_usuario"); 
+			String nombre = jsonActivos.getJSONObject(i).getString("nombre_usuario"); 
+			String apellido = jsonActivos.getJSONObject(i).getString("apellido_usuario"); 
+
+			activos[i] = new Activo(idPertenencia, idActivo, nombreActivo, descripcionActivo); 
+			activos[i].setUsuario(new Usuario(cedula,nombre,apellido));
+		}
+
+		String nombreProceso = jsonProceso.getString("nombre_proceso");
+		String fechaProceso = jsonProceso.getString("fecha_creacion_proceso");
+		
+		p = new Proceso(idProceso,nombreProceso, fechaProceso, usuarios, activos); 
+		return p; 
+	}
 }

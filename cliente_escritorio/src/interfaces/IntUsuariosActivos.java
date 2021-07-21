@@ -5,6 +5,7 @@
  */
 package interfaces;
 
+import entidades.Proceso;
 import gestor.Conexion;
 import java.awt.Point;
 import java.awt.event.MouseAdapter;
@@ -13,6 +14,8 @@ import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import entidades.Usuario; 
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -21,12 +24,20 @@ import entidades.Usuario;
 public class IntUsuariosActivos extends javax.swing.JFrame {
 
 	DefaultTableModel modeloTabla; 
+	Conexion conexion; 
 	/**
 	 * Creates new form IntUsuariosActivos
 	 */
 	public IntUsuariosActivos() {
 		initComponents();
+		this.conexion = new Conexion(); 
 		llenarTabla();
+		try { 
+			String id = "1"; 
+			Proceso p = conexion.getProceso(id);
+		} catch (Exception ex) {
+			JOptionPane.showMessageDialog(null, "Erro:");
+		}
 		this.setTitle("Activos Empresa");
 		this.setLocationRelativeTo(null);
 		this.jTblUsuarios.addMouseListener(new MouseAdapter() {
@@ -55,7 +66,7 @@ public class IntUsuariosActivos extends javax.swing.JFrame {
 			}
 		};
 		try {
-			String[][] usuarios = Conexion.getUsuarios();
+			String[][] usuarios = this.conexion.getUsuarios();
 			for (String[] usuario : usuarios) {
 				this.modeloTabla.addRow(usuario);
 			}

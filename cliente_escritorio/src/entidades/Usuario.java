@@ -12,11 +12,18 @@ package entidades;
 public class Usuario {
 	
 	String cedula, nombre, apellido; 
+	Activo [] activos; 
 
 	public Usuario(String cedula, String nombre, String apellido) {
 		this.cedula = cedula;
 		this.nombre = nombre;
 		this.apellido = apellido;
+	}
+	public Usuario(String cedula, String nombre, String apellido,Activo [] activos) {
+		this.cedula = cedula;
+		this.nombre = nombre;
+		this.apellido = apellido;
+		this.activos = activos; 
 	}
 
 	public String getCedula() {

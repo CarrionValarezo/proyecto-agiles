@@ -19,6 +19,17 @@ class DataUsuario:
                        WHERE ced_usu = {cedula}''')
         return cur.fetchone()
 
+    def get_usuario_por_activo(self, activo):
+        cur = db.get_cursor()
+        cur.execute(f'''select u.ced_usu as cedula_usuario, 
+                        u.nom_usu as nombre_usuario, 
+                        u.ape_usu as apellido_usuario
+                        from usuario_activo ua, usuario u
+                        where u.ced_usu = ua.usu_usac
+                        and ua.id_usac = {activo.get_id_pertenencia()};
+                        ''')
+        return cur.fetchone()
+
 
 class DataUsuarioActivo:
 
@@ -73,8 +84,10 @@ class DataProceso:
                         A.ID_ACT AS id_activo, 
                         A.NOM_ACT AS nombre_activo, 
                         A.DES_ACT AS descripcion_activo
-                        FROM USUARIO_ACTIVO UA, ACTIVO A, PROCESO P
+                        FROM USUARIO_ACTIVO UA, ACTIVO A, PROCESO P, DETALLE_PROCESO DP
                         WHERE UA.ACT_USAC = A.ID_ACT
+                        and ua.id_usac = dp.id_per_det
+                        and p.id_pro = dp.id_pro_det
                         AND P.ID_PRO = {proceso.get_id()};''')
         return cur.fetchall()
 
@@ -89,3 +102,10 @@ class DataProceso:
                         and p.id_pro = dp.id_pro_det
                         and p.id_pro = {proceso.get_id()};''')
         return cur.fetchall()
+
+    def get_cantidad_activos_por_proceso(self, proceso):
+        cur = db.get_cursor()
+        cur.execute(f'''select count(id_pro_det) as cantidad_activos
+                        from detalle_proceso 
+                        where id_pro_det = {proceso.get_id()}; ''')
+        return cur.fetchone()["cantidad_activos"]

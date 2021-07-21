@@ -14,12 +14,14 @@ def get_usuarios_cant_activos():
     return usuarios_activos
 
 
+# Devulve un usuario en base a la cedula
 def get_usuario_por_cedula(cedula):
     repos_usuario = DataUsuario()
     usuario = Usuario(**repos_usuario.get_usuario_por_cedula(cedula))
     return usuario
 
 
+# Devuelve una lista con los activos que le pertenecen al usuario
 def get_activos_por_usuario(usuario):
     repo_usuario_activo = DataUsuarioActivo()
     activos_usuario = []
@@ -28,6 +30,7 @@ def get_activos_por_usuario(usuario):
     return activos_usuario
 
 
+# Crea un proceso, lo inicializa en base a los activos que poseen cada usuario enviado y retorno los datos del proceso
 def crear_proceso(proceso, usuarios):
     repo_procesos = DataProceso()
     nuevo_proceso = Proceso(**proceso)
@@ -40,19 +43,26 @@ def crear_proceso(proceso, usuarios):
     return nuevo_proceso
 
 
+# Devuelve un proceso en base a su id
 def get_proceso_por_id(id_proceso):
     repo_procesos = DataProceso()
     proceso = Proceso(**repo_procesos.get_proceso_por_id(id_proceso))
     return proceso
 
 
+# Devuelve una lista de activos en base a un proceso
 def get_activos_por_proceso(proceso):
     repo_procesos = DataProceso()
     activos = [UsuarioActivo(**data_activo, activo=Activo(**data_activo)) for data_activo in
                repo_procesos.get_activos_por_proceso(proceso)]
     return activos
 
+def get_usuario_por_activo(activo):
+    repo_usuarios = DataUsuario()
+    usuario = Usuario(**repo_usuarios.get_usuario_por_activo(activo))
+    return usuario
 
+# Devulve los usuarios que estan registrados en un proceso
 def get_usuarios_por_proceso(proceso):
     repo_proceso = DataProceso()
     usuarios = {}
@@ -66,3 +76,7 @@ def get_usuarios_por_proceso(proceso):
 
     lista_usuarios = [Usuario(**data_usuario) for data_usuario in usuarios.values()]
     return lista_usuarios
+
+
+def get_cantidad_activos_proceso(proceso):
+    return DataProceso().get_cantidad_activos_por_proceso(proceso)

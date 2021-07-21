@@ -5,17 +5,82 @@
  */
 package interfaces;
 
+import entidades.Activo;
+import entidades.Proceso;
+import entidades.Usuario;
+import gestor.Conexion;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+
 /**
  *
  * @author carri
  */
 public class IntDetalleProceso extends javax.swing.JFrame {
-
+	Conexion conexion; 
+	DefaultTableModel modeloTablaActivos, modeloTablaUsuarios; 
+	Proceso proceso;
 	/**
 	 * Creates new form IntDetalleProceso
 	 */
 	public IntDetalleProceso() {
 		initComponents();
+		this.conexion = new Conexion();
+		String idProceso = "1"; 
+		try {
+			this.proceso = conexion.getProceso(idProceso);
+		} catch (Exception ex) {
+			JOptionPane.showMessageDialog(null, "Eror");
+		}
+		cargarTablaActivos();
+		cargarTablaUsuario();
+	}
+
+	private void cargarTablaUsuario(){
+		String [] titulos = {"CEDULA USUARIO","NOMBRE USUARIO","APELLIDO USUARIO"}; 
+		this.modeloTablaUsuarios = new DefaultTableModel(null, titulos){
+			@Override
+			public boolean isCellEditable(int row, int column){
+				return false; 
+			}
+		}; 
+		try { 
+			for(Usuario usuario : proceso.getUsuarios()){ 
+				String [] datos = {usuario.getCedula(), usuario.getNombre(), usuario.getApellido()};
+				modeloTablaUsuarios.addRow(datos);
+			}
+			jTblUsuarios.setModel(modeloTablaUsuarios);
+		} catch (Exception ex) {
+			JOptionPane.showMessageDialog(null, "Error: No se ha podido comunicar con el servidor");
+		}
+
+	}
+
+	private void cargarTablaActivos(){
+		String [] titulos = {"ID ACTIVO","ID OBJETO", "NOMBRE", "DESCRIPCION","CEDULA USUARIO","NOMBRE USUARIO","APELLIDO USUARIO"}; 
+		this.modeloTablaActivos = new DefaultTableModel(null, titulos){
+			@Override
+			public boolean isCellEditable(int row, int column){
+				return false; 
+			}
+		}; 
+		try { 
+			for(Activo activo : this.proceso.getActivos()){ 
+				System.out.println(activo.toString());
+				String [] datos = {activo.getIdPertinencia(),
+					activo.getIdActivo(),activo.getNombreActivo(),
+					activo.getDescripcionActivo(), 
+					activo.getUsuario().getCedula(),
+					activo.getUsuario().getNombre(),
+					activo.getUsuario().getApellido()};
+				modeloTablaActivos.addRow(datos);
+			}
+			jTblActivosProceso.setModel(modeloTablaActivos);
+		} catch (Exception ex) {
+			JOptionPane.showMessageDialog(null, "Error: No se ha podido comunicar con el servidor");
+		}
 	}
 
 	/**
@@ -28,13 +93,13 @@ public class IntDetalleProceso extends javax.swing.JFrame {
     private void initComponents() {
 
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTblUsuariosProceso = new javax.swing.JTable();
+        jTblUsuarios = new javax.swing.JTable();
         jScrollPane2 = new javax.swing.JScrollPane();
         jTblActivosProceso = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jTblUsuariosProceso.setModel(new javax.swing.table.DefaultTableModel(
+        jTblUsuarios.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -45,7 +110,7 @@ public class IntDetalleProceso extends javax.swing.JFrame {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
-        jScrollPane1.setViewportView(jTblUsuariosProceso);
+        jScrollPane1.setViewportView(jTblUsuarios);
 
         jTblActivosProceso.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -66,19 +131,21 @@ public class IntDetalleProceso extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 380, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 427, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 843, Short.MAX_VALUE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 519, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(131, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(17, 17, 17))
+                .addContainerGap(72, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(11, 11, 11))
         );
 
         pack();
@@ -123,6 +190,6 @@ public class IntDetalleProceso extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTable jTblActivosProceso;
-    private javax.swing.JTable jTblUsuariosProceso;
+    private javax.swing.JTable jTblUsuarios;
     // End of variables declaration//GEN-END:variables
 }
