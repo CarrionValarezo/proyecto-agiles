@@ -22,7 +22,7 @@ import javax.swing.table.DefaultTableModel;
  *
  * @author Alejandro
  */
-public class IntValidacion extends javax.swing.JFrame {
+public class IntCrearProceso extends javax.swing.JFrame {
 
 	DefaultTableModel modeloTablaRegistrados;
 	Conexion conexion; 
@@ -30,15 +30,14 @@ public class IntValidacion extends javax.swing.JFrame {
 	/**
 	 * Creates new form Validacion
 	 */
-	public IntValidacion(DefaultTableModel modeloTabla) {
+	public IntCrearProceso() {
 		initComponents();
 		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		this.conexion = new Conexion(); 
-		this.modeloTablaRegistrados = modeloTabla;
 		this.setTitle("Proceso de Validación");
 		this.setLocationRelativeTo(null);
-		this.cargarTablaUsuariosRegistrados();
 		this.cargarTablaUsuariosProcesar();
+		this.cargarTablaUsuariosRegistrados();
 		this.jTblUsuariosRegistrados.addMouseListener(new MouseAdapter() {
 			public void mousePressed(MouseEvent mouseEvent) {
 				JTable table = (JTable) mouseEvent.getSource();
@@ -46,6 +45,8 @@ public class IntValidacion extends javax.swing.JFrame {
 				int row = table.rowAtPoint(point);
 				if (mouseEvent.getClickCount() == 1 && table.getSelectedRow() != -1) {
 					cambiarUsuario(jTblUsuariosRegistrados, jTblUsuariosProcesar);
+					jTxtCantidadUsuarios.setText(String.valueOf(jTblUsuariosProcesar.getRowCount()));
+					jTxtCantidadActivos.setText(String.valueOf(getSumaActivos()));
 				}
 			}
 		});
@@ -56,13 +57,19 @@ public class IntValidacion extends javax.swing.JFrame {
 				int row = table.rowAtPoint(point);
 				if (mouseEvent.getClickCount() == 1 && table.getSelectedRow() != -1) {
 					cambiarUsuario(jTblUsuariosProcesar, jTblUsuariosRegistrados);
+					jTxtCantidadUsuarios.setText(String.valueOf(jTblUsuariosProcesar.getRowCount()));
+					jTxtCantidadActivos.setText(String.valueOf(getSumaActivos()));
 				}
 			}
 		});
 	}
 
-	private IntValidacion() {
-		initComponents();
+	private int getSumaActivos(){
+		int suma = 0; 
+		for (int i = 0; i < jTblUsuariosProcesar.getRowCount(); i++){
+			suma += Integer.parseInt((String) jTblUsuariosProcesar.getValueAt(i, 3));
+		}
+		return suma; 
 	}
 
 	private void cargarTablaUsuariosProcesar() {
@@ -87,7 +94,22 @@ public class IntValidacion extends javax.swing.JFrame {
 	}
 
 	private void cargarTablaUsuariosRegistrados() {
-		this.jTblUsuariosRegistrados.setModel(this.modeloTablaRegistrados);
+		String [] titulos = {"CEDULA", "NOMBRE", "APELLIDO", "CANTIDAD DE ACTIVOS"}; 
+		this.modeloTablaRegistrados = new DefaultTableModel(null, titulos){
+			@Override
+			public boolean isCellEditable(int row, int column){
+				return false; 
+			}
+		};
+		try {
+			String[][] usuarios = this.conexion.getUsuarios();
+			for (String[] usuario : usuarios) {
+				this.modeloTablaRegistrados.addRow(usuario);
+			}
+			this.jTblUsuariosRegistrados.setModel(this.modeloTablaRegistrados);
+		} catch (Exception ex) {
+			JOptionPane.showMessageDialog(null, "Error: No se puede conectar al servidor.");
+		}
 	}
 
 	private String [] getCedulasTabla(){
@@ -104,8 +126,14 @@ public class IntValidacion extends javax.swing.JFrame {
 		String fecha = dtf.format(ahora); 
 		String [] cedulas = getCedulasTabla(); 
 		try {
-			this.conexion.crearProceso(jTxtNombreProceso.getText(), fecha, cedulas);
-			JOptionPane.showConfirmDialog(null, "El proceso ha sido creado exitosamente \n ¿Desea ver el detalle del proceso creado?");
+			if(!jTxtNombreProceso.getText().isEmpty()){
+				this.conexion.crearProceso(jTxtNombreProceso.getText(), fecha, cedulas);
+				JOptionPane.showConfirmDialog(null, "El proceso ha sido creado exitosamente \n ¿Desea ver el detalle del proceso creado?");
+			}
+			else{
+				JOptionPane.showMessageDialog(null, "Debe ingresar un nombre al proceso!");
+				jTxtNombreProceso.requestFocus();
+			}
 		} catch (Exception ex) {
 			JOptionPane.showMessageDialog(null, ex);
 		}
@@ -286,21 +314,23 @@ public class IntValidacion extends javax.swing.JFrame {
 				}
 			}
 		} catch (ClassNotFoundException ex) {
-			java.util.logging.Logger.getLogger(IntValidacion.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+			java.util.logging.Logger.getLogger(IntCrearProceso.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
 		} catch (InstantiationException ex) {
-			java.util.logging.Logger.getLogger(IntValidacion.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+			java.util.logging.Logger.getLogger(IntCrearProceso.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
 		} catch (IllegalAccessException ex) {
-			java.util.logging.Logger.getLogger(IntValidacion.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+			java.util.logging.Logger.getLogger(IntCrearProceso.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
 		} catch (javax.swing.UnsupportedLookAndFeelException ex) {
-			java.util.logging.Logger.getLogger(IntValidacion.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+			java.util.logging.Logger.getLogger(IntCrearProceso.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
 		}
+		//</editor-fold>
+		//</editor-fold>
 		//</editor-fold>
 		//</editor-fold>
 
 		/* Create and display the form */
 		java.awt.EventQueue.invokeLater(new Runnable() {
 			public void run() {
-				new IntValidacion().setVisible(true);
+				new IntCrearProceso().setVisible(true);
 			}
 		});
 	}

@@ -129,6 +129,11 @@ public class IntMain extends javax.swing.JFrame {
         });
 
         jBtnVerProcesos.setText("Ver Procesos");
+        jBtnVerProcesos.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jBtnVerProcesosActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -168,9 +173,15 @@ public class IntMain extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-		IntValidacion validacion = new IntValidacion((DefaultTableModel) jTblUsuarios.getModel());
+		IntCrearProceso validacion = new IntCrearProceso();
 		validacion.setVisible(true);
     }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jBtnVerProcesosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBtnVerProcesosActionPerformed
+        // TODO add your handling code here:
+		IntVerProcesos intVerProcesos = new IntVerProcesos(); 
+		intVerProcesos.setVisible(true);
+    }//GEN-LAST:event_jBtnVerProcesosActionPerformed
 
 	/**
 	 * @param args the command line arguments

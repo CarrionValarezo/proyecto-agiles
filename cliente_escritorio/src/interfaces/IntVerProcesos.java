@@ -27,6 +27,7 @@ public class IntVerProcesos extends javax.swing.JFrame {
 	 */
 	public IntVerProcesos() {
 		initComponents();
+		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		this.conexion = new Conexion();
 		cargarTablaProcesos();
 		this.jTblProcesos.addMouseListener(new MouseAdapter() {
