@@ -115,11 +115,7 @@ public class Conexion {
 		JSONObject jsonResponse = new JSONObject(response.body());
 	}
 
-	/*
-		public Proceso getProceso(String idProceso){ 
-		e
-	} 
-	 */
+	
 	public Proceso getProceso(String idProceso) throws Exception {
 		Usuario[] usuarios = null;
 		Activo[] activos = null;
@@ -234,6 +230,22 @@ public class Conexion {
 			procesos[i][3] = jArray.getJSONObject(i).getString("estado_proceso");
 		}
 		return procesos;
+	}
+
+	public void eliminarUsuarioDeProceso(String id_proceso, String cedula) throws Exception{
+		//Especificar la url a la cual voy a realizar la peticion
+		String url = "http://localhost:5000/procesos/"+id_proceso+"/usuarios/"+cedula;
+		//Declaracion de la matriz usuarios a devolver
+		//Instanciar cliente Http
+		//Construccion de la request(peticion) que realizara el cliente
+		HttpRequest request = HttpRequest.newBuilder()
+				.uri(new URI(url))
+				.DELETE()
+				.build();
+		//Respuesta que obtiene el cliente al realizar la peticion especificada
+		//anteriormente
+		HttpResponse<String> response = this.cliente.send(request, HttpResponse.BodyHandlers.ofString());
+		System.out.println(response.body());
 	}
 
 }

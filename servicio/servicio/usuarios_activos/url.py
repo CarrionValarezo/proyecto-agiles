@@ -48,6 +48,7 @@ def get_procesos_por_usuario(cedula):
         })
     return jsonify(respuesta)
 
+
 @usac.route('/procesos')
 def get_procesos():
     procesos = aplicacion.get_procesos()
@@ -60,6 +61,7 @@ def get_procesos():
             "estado_proceso": proceso.get_estado()
         })
     return jsonify(respuesta)
+
 
 @usac.route('/procesos', methods=['POST'])
 def crear_proceso():
@@ -140,6 +142,22 @@ def get_detalle_proceso(id_proceso):
             "observacion_revision": activo.get_observacion()
         })
     return jsonify(respuesta)
+
+
+@usac.route('/procesos/<id_proceso>/usuarios/<cedula>', methods=['DELETE'])
+def eliminar_usuario_de_proceso(id_proceso, cedula):
+    usuario = aplicacion.get_usuario_por_cedula(cedula)
+    proceso = aplicacion.get_proceso_por_id(id_proceso)
+    aplicacion.eliminar_usuario_de_proceso(usuario, proceso)
+    return jsonify({"mensaje": "Usuario eliminado correctamente"})
+
+
+@usac.route('/procesos/<id_proceso>/usuarios/<cedula>', methods=['POST'])
+def agregar_usuario_a_proceso(id_proceso, cedula):
+    usuario = aplicacion.get_usuario_por_cedula(cedula)
+    proceso = aplicacion.get_proceso_por_id(id_proceso)
+    aplicacion.agregar_usuario_proceso(usuario, proceso)
+    return jsonify({"mensaje": "No implementado"})
 
 
 @usac.route('/')

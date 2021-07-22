@@ -94,3 +94,13 @@ def get_procesos():
     repo_procesos = DataProceso()
     procesos = [Proceso(**data_procesos) for data_procesos in repo_procesos.get_procesos()]
     return procesos
+
+
+def eliminar_usuario_de_proceso(usuario, proceso):
+    repo_procesos = DataProceso()
+    repo_procesos.eliminar_usuario_de_proceso(usuario, proceso)
+    return None
+
+
+def agregar_usuario_proceso(usuario, proceso):
+    return None

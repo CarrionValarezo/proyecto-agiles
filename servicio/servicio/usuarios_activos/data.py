@@ -137,3 +137,12 @@ class DataProceso:
                         from proceso; 
                     ''')
         return cur.fetchall()
+
+    def eliminar_usuario_de_proceso(self, usuario, proceso):
+        cur = db.get_cursor()
+        cur.execute(f''' delete from detalle_proceso
+                        where id_pro_det = {proceso.get_id()} 
+                        and id_act_det in ( select id_act 
+                            from activo
+                            where ced_usu_act = '{usuario.get_cedula()}');''')
+        cur.connection.commit()

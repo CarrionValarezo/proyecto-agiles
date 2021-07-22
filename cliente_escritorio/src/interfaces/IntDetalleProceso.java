@@ -323,7 +323,15 @@ public class IntDetalleProceso extends javax.swing.JFrame {
 			if (value instanceof JButton) {
 				((JButton) value).doClick();
 				JButton btn = (JButton) value;
-				System.out.println("Elimando usuario " + cedula);
+				try {
+					this.conexion.eliminarUsuarioDeProceso(this.proceso.getIdProceso(), cedula);
+					JOptionPane.showConfirmDialog(null, "Se elimino el usuario correctamente");
+					IntDetalleProceso intDetalleRecarga = new IntDetalleProceso(this.proceso.getIdProceso()); 
+					this.dispose();
+					intDetalleRecarga.setVisible(true);
+				} catch (Exception ex) {
+					JOptionPane.showConfirmDialog(null, "Ocurrio un error");
+				}
 			}
 		}
 	}
