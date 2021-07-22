@@ -32,6 +32,7 @@ public class IntValidacion extends javax.swing.JFrame {
 	 */
 	public IntValidacion(DefaultTableModel modeloTabla) {
 		initComponents();
+		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		this.conexion = new Conexion(); 
 		this.modeloTablaRegistrados = modeloTabla;
 		this.setTitle("Proceso de Validación");

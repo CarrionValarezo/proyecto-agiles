@@ -21,23 +21,18 @@ import java.util.logging.Logger;
  *
  * @author carri
  */
-public class IntUsuariosActivos extends javax.swing.JFrame {
+public class IntMain extends javax.swing.JFrame {
 
 	DefaultTableModel modeloTabla; 
 	Conexion conexion; 
 	/**
 	 * Creates new form IntUsuariosActivos
 	 */
-	public IntUsuariosActivos() {
+	public IntMain() {
 		initComponents();
+		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		this.conexion = new Conexion(); 
 		llenarTabla();
-		try { 
-			String id = "1"; 
-			Proceso p = conexion.getProceso(id);
-		} catch (Exception ex) {
-			JOptionPane.showMessageDialog(null, "Erro:");
-		}
 		this.setTitle("Activos Empresa");
 		this.setLocationRelativeTo(null);
 		this.jTblUsuarios.addMouseListener(new MouseAdapter() {
@@ -194,20 +189,21 @@ public class IntUsuariosActivos extends javax.swing.JFrame {
 				}
 			}
 		} catch (ClassNotFoundException ex) {
-			java.util.logging.Logger.getLogger(IntUsuariosActivos.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+			java.util.logging.Logger.getLogger(IntMain.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
 		} catch (InstantiationException ex) {
-			java.util.logging.Logger.getLogger(IntUsuariosActivos.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+			java.util.logging.Logger.getLogger(IntMain.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
 		} catch (IllegalAccessException ex) {
-			java.util.logging.Logger.getLogger(IntUsuariosActivos.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+			java.util.logging.Logger.getLogger(IntMain.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
 		} catch (javax.swing.UnsupportedLookAndFeelException ex) {
-			java.util.logging.Logger.getLogger(IntUsuariosActivos.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+			java.util.logging.Logger.getLogger(IntMain.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
 		}
+		//</editor-fold>
 		//</editor-fold>
 
 		/* Create and display the form */
 		java.awt.EventQueue.invokeLater(new Runnable() {
 			public void run() {
-				new IntUsuariosActivos().setVisible(true);
+				new IntMain().setVisible(true);
 			}
 		});
 	}

@@ -57,10 +57,12 @@ def get_activos_por_proceso(proceso):
                repo_procesos.get_activos_por_proceso(proceso)]
     return activos
 
+
 def get_usuario_por_activo(activo):
     repo_usuarios = DataUsuario()
     usuario = Usuario(**repo_usuarios.get_usuario_por_activo(activo))
     return usuario
+
 
 # Devulve los usuarios que estan registrados en un proceso
 def get_usuarios_por_proceso(proceso):
@@ -80,3 +82,9 @@ def get_usuarios_por_proceso(proceso):
 
 def get_cantidad_activos_proceso(proceso):
     return DataProceso().get_cantidad_activos_por_proceso(proceso)
+
+
+def get_procesos_por_usuario(usuario):
+    repo_procesos = DataProceso()
+    procesos = [Proceso(**data_procesos) for data_procesos in repo_procesos.get_procesos_por_usuario(usuario)]
+    return procesos

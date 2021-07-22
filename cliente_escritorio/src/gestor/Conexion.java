@@ -121,17 +121,17 @@ public class Conexion {
 	} 
 	 */
 	public Proceso getProceso(String idProceso) throws Exception {
-		Usuario [] usuarios = null; 
-		Activo [] activos = null; 
-		Proceso p = null; 
-		String url = "http://localhost:5000/procesos/"+idProceso;
+		Usuario[] usuarios = null;
+		Activo[] activos = null;
+		Proceso p = null;
+		String url = "http://localhost:5000/procesos/" + idProceso;
 
-		HttpClient clienteProceso = HttpClient.newHttpClient(); 
+		HttpClient clienteProceso = HttpClient.newHttpClient();
 		HttpRequest request = HttpRequest.newBuilder()
 				.uri(new URI(url))
 				.GET()
 				.build();
-		
+
 		HttpResponse<String> response = clienteProceso.send(request, HttpResponse.BodyHandlers.ofString());
 		System.out.println(response.body());
 		//Cuerpo de la peticion a un array de tipo JSON.
@@ -142,35 +142,63 @@ public class Conexion {
 		JSONObject jsonProceso = respuesta.getJSONObject("proceso");
 		JSONArray jsonUsuarios = respuesta.getJSONArray("usuarios");
 		JSONArray jsonActivos = respuesta.getJSONArray("activos");
-		
+
 		usuarios = new Usuario[jsonProceso.getInt("cantidad_usuarios_proceso")];
 		activos = new Activo[jsonProceso.getInt("cantidad_activos_proceso")];
-		
-		for (int i = 0; i < usuarios.length; i++){
-			String cedula = jsonUsuarios.getJSONObject(i).getString("cedula_usuario"); 
-			String nombre = jsonUsuarios.getJSONObject(i).getString("nombre_usuario"); 
-			String apellido = jsonUsuarios.getJSONObject(i).getString("apellido_usuario"); 
+
+		for (int i = 0; i < usuarios.length; i++) {
+			String cedula = jsonUsuarios.getJSONObject(i).getString("cedula_usuario");
+			String nombre = jsonUsuarios.getJSONObject(i).getString("nombre_usuario");
+			String apellido = jsonUsuarios.getJSONObject(i).getString("apellido_usuario");
 			usuarios[i] = new Usuario(cedula, nombre, apellido);
 		}
 
-		for (int i = 0; i < activos.length; i++){
+		for (int i = 0; i < activos.length; i++) {
 			String idPertenencia = String.valueOf(jsonActivos.getJSONObject(i).getInt("id_pertenencia"));
 			String idActivo = jsonActivos.getJSONObject(i).getString("id_activo");
 			String nombreActivo = jsonActivos.getJSONObject(i).getString("nombre_activo");
 			String descripcionActivo = jsonActivos.getJSONObject(i).getString("descripcion_activo");
 
-			String cedula = jsonActivos.getJSONObject(i).getString("cedula_usuario"); 
-			String nombre = jsonActivos.getJSONObject(i).getString("nombre_usuario"); 
-			String apellido = jsonActivos.getJSONObject(i).getString("apellido_usuario"); 
+			String cedula = jsonActivos.getJSONObject(i).getString("cedula_usuario");
+			String nombre = jsonActivos.getJSONObject(i).getString("nombre_usuario");
+			String apellido = jsonActivos.getJSONObject(i).getString("apellido_usuario");
 
-			activos[i] = new Activo(idPertenencia, idActivo, nombreActivo, descripcionActivo); 
-			activos[i].setUsuario(new Usuario(cedula,nombre,apellido));
+			activos[i] = new Activo(idPertenencia, idActivo, nombreActivo, descripcionActivo);
+			activos[i].setUsuario(new Usuario(cedula, nombre, apellido));
 		}
 
 		String nombreProceso = jsonProceso.getString("nombre_proceso");
 		String fechaProceso = jsonProceso.getString("fecha_creacion_proceso");
-		
-		p = new Proceso(idProceso,nombreProceso, fechaProceso, usuarios, activos); 
-		return p; 
+
+		p = new Proceso(idProceso, nombreProceso, fechaProceso, usuarios, activos);
+		return p;
+	}
+
+	public String[][] getProcesosUsuarios(String cedula) throws Exception{
+		//Especificar la url a la cual voy a realizar la peticion
+		String url = "http://localhost:5000/usuarios/" + cedula + "/procesos";
+		//Declaracion de la matriz usuarios a devolver
+		String[][] procesos = null;
+		//Instanciar cliente Http
+		//Construccion de la request(peticion) que realizara el cliente
+		HttpRequest request = HttpRequest.newBuilder()
+				.uri(new URI(url))
+				.GET()
+				.build();
+		//Respuesta que obtiene el cliente al realizar la peticion especificada
+		//anteriormente
+		HttpResponse<String> response = this.cliente.send(request, HttpResponse.BodyHandlers.ofString());
+		System.out.println(response.body());
+		//Cuerpo de la peticion a un array de tipo JSON.
+		JSONArray jArray = new JSONArray(response.body());
+		//Declaracion de la matriz usuarios
+		procesos = new String[jArray.length()][3];
+		//Llenar la matriz segun los datos del JSON obtenido
+		for (int i = 0; i < jArray.length(); i++) {
+			procesos[i][0] = String.valueOf(jArray.getJSONObject(i).getInt("id_proceso"));
+			procesos[i][1] = jArray.getJSONObject(i).getString("nombre_proceso");
+			procesos[i][2] = jArray.getJSONObject(i).getString("fecha_creacion_proceso");
+		}
+		return procesos;
 	}
 }

@@ -109,3 +109,17 @@ class DataProceso:
                         from detalle_proceso 
                         where id_pro_det = {proceso.get_id()}; ''')
         return cur.fetchone()["cantidad_activos"]
+
+    def get_procesos_por_usuario(self, usuario):
+        cur = db.get_cursor()
+        cur.execute(f'''select id_pro as id_proceso, 
+                        nom_pro as nombre_proceso, 
+                        fec_cre_pro as fecha_proceso 
+                        from proceso 
+                        where id_pro in (
+                            select id_pro_det 
+                            from detalle_proceso 
+                            where id_per_det in ( select id_usac
+                                from usuario_activo 
+                                where usu_usac = "{usuario.get_cedula()}")); ''')
+        return cur.fetchall()
