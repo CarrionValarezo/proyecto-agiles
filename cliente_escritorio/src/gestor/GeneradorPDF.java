@@ -36,6 +36,7 @@ public class GeneradorPDF {
 		Font font = new Font(Font.FontFamily.HELVETICA, 10, Font.NORMAL);
 		PdfPTable pdfTable = new PdfPTable(table.getColumnCount());
 		float [] columnsWidth = new float[]{5f, 7f, 10f, 20f, 10f, 10f, 10f, 0f,5f,20f}; 
+		//float [] columnsWidth = new float[]{5f, 7f, 10f, 20f, 10f, 10f, 10f,5f,20f}; 
 		pdfTable.setWidths(columnsWidth);
 		pdfTable.setWidthPercentage(100);
 		//adding table headers
@@ -45,8 +46,9 @@ public class GeneradorPDF {
 	
 		//pdfTable.addCell(table.getColumnName(i));
 		//pdfTable.addCell(new PdfPCell(new Phrase(table.getColumnName(i),font)));
+
 		//extracting data from the JTable and inserting it to PdfPTable
-		for (int rows = 0; rows < table.getRowCount() - 1; rows++) {
+		for (int rows = 0; rows < table.getRowCount() ; rows++) {
 			for (int cols = 0; cols < table.getColumnCount(); cols++) {
 				String valor = table.getModel().getValueAt(rows, cols).toString();
 				pdfTable.addCell(new PdfPCell(new Phrase(valor,font)));
