@@ -123,3 +123,12 @@ class DataProceso:
                                 from usuario_activo 
                                 where usu_usac = "{usuario.get_cedula()}")); ''')
         return cur.fetchall()
+
+    def get_procesos(self):
+        cur = db.get_cursor()
+        cur.execute(f'''select id_pro as id_proceso, 
+                        nom_pro as nombre_proceso, 
+                        fec_cre_pro as fecha_proceso 
+                        from proceso; 
+                    ''')
+        return cur.fetchall()

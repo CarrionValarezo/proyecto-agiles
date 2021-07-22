@@ -201,4 +201,32 @@ public class Conexion {
 		}
 		return procesos;
 	}
+	public String[][] getProcesos() throws Exception{
+		//Especificar la url a la cual voy a realizar la peticion
+		String url = "http://localhost:5000/procesos";
+		//Declaracion de la matriz usuarios a devolver
+		String[][] procesos = null;
+		//Instanciar cliente Http
+		//Construccion de la request(peticion) que realizara el cliente
+		HttpRequest request = HttpRequest.newBuilder()
+				.uri(new URI(url))
+				.GET()
+				.build();
+		//Respuesta que obtiene el cliente al realizar la peticion especificada
+		//anteriormente
+		HttpResponse<String> response = this.cliente.send(request, HttpResponse.BodyHandlers.ofString());
+		System.out.println(response.body());
+		//Cuerpo de la peticion a un array de tipo JSON.
+		JSONArray jArray = new JSONArray(response.body());
+		//Declaracion de la matriz usuarios
+		procesos = new String[jArray.length()][3];
+		//Llenar la matriz segun los datos del JSON obtenido
+		for (int i = 0; i < jArray.length(); i++) {
+			procesos[i][0] = String.valueOf(jArray.getJSONObject(i).getInt("id_proceso"));
+			procesos[i][1] = jArray.getJSONObject(i).getString("nombre_proceso");
+			procesos[i][2] = jArray.getJSONObject(i).getString("fecha_creacion_proceso");
+		}
+		return procesos;
+	}
+
 }

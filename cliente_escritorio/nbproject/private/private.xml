@@ -3,9 +3,10 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/carri/Desktop/proyecto-agiles/cliente_escritorio/src/entidades/Proceso.java</file>
-            <file>file:/C:/Users/carri/Desktop/proyecto-agiles/cliente_escritorio/src/interfaces/IntUsuariosActivos.java</file>
-            <file>file:/C:/Users/carri/Desktop/proyecto-agiles/cliente_escritorio/src/interfaces/IntDetalleProceso.java</file>
+            <file>file:/C:/Users/carri/Desktop/proyecto-agiles/cliente_escritorio/src/interfaces/IntVerProcesos.java</file>
+            <file>file:/C:/Users/carri/Desktop/proyecto-agiles/cliente_escritorio/src/interfaces/IntMain.java</file>
+            <file>file:/C:/Users/carri/Desktop/proyecto-agiles/cliente_escritorio/src/gestor/Conexion.java</file>
+            <file>file:/C:/Users/carri/Desktop/proyecto-agiles/cliente_escritorio/src/interfaces/IntDetalleUsuario.java</file>
         </group>
     </open-files>
 </project-private>

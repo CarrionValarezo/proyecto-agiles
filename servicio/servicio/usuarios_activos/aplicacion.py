@@ -88,3 +88,9 @@ def get_procesos_por_usuario(usuario):
     repo_procesos = DataProceso()
     procesos = [Proceso(**data_procesos) for data_procesos in repo_procesos.get_procesos_por_usuario(usuario)]
     return procesos
+
+
+def get_procesos():
+    repo_procesos = DataProceso()
+    procesos = [Proceso(**data_procesos) for data_procesos in repo_procesos.get_procesos()]
+    return procesos

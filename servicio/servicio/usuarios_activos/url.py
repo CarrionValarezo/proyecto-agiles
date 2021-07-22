@@ -47,6 +47,17 @@ def get_procesos_por_usuario(cedula):
         })
     return jsonify(respuesta)
 
+@usac.route('/procesos')
+def get_procesos():
+    procesos = aplicacion.get_procesos()
+    respuesta = []
+    for proceso in procesos:
+        respuesta.append({
+            "id_proceso": proceso.get_id(),
+            "nombre_proceso": proceso.get_nombre(),
+            "fecha_creacion_proceso": proceso.get_fecha()
+        })
+    return jsonify(respuesta)
 
 @usac.route('/procesos', methods=['POST'])
 def crear_proceso():
