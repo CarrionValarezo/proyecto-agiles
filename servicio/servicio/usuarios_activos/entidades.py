@@ -48,6 +48,9 @@ class UsuarioActivo:
         self.__id_pertenencia = kwargs.get("id_pertenencia")
         self.__usuario = kwargs.get("usuario")
         self.__activo = kwargs.get("activo")
+        self.__revision = kwargs.get("revision_activo")
+        self.__estado = kwargs.get("estado_revision_activo")
+        self.__observacion = kwargs.get("observacion_revision")
 
     def get_id_pertenencia(self):
         return self.__id_pertenencia
@@ -58,12 +61,22 @@ class UsuarioActivo:
     def get_activo(self):
         return self.__activo
 
+    def get_revision(self):
+        return self.__revision
+
+    def get_estado(self):
+        return self.__estado
+
+    def get_observacion(self):
+        return self.__observacion
+
 class Proceso:
 
     def __init__(self, **kwargs):
         self.__id = kwargs.get("id_proceso")
         self.__nombre = kwargs.get("nombre_proceso")
         self.__fecha = kwargs.get("fecha_proceso")
+        self.__estado = kwargs.get("estado_proceso")
 
     def get_id(self):
         return self.__id
@@ -73,6 +86,9 @@ class Proceso:
 
     def get_fecha(self):
         return self.__fecha
+
+    def get_estado(self):
+        return self.__estado
 
     def set_id(self, id):
         self.__id = id

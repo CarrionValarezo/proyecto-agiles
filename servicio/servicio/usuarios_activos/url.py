@@ -4,7 +4,7 @@ from . import aplicacion
 usac = Blueprint("usac", __name__)
 
 
-@usac.route('/usuarios/cantidad_activos')
+@usac.route('/usuarios/cantidad-activos')
 def get_usuarios_cant_activos():
     respuesta = []
     usuarios_cant_activos = aplicacion.get_usuarios_cant_activos()
@@ -43,7 +43,8 @@ def get_procesos_por_usuario(cedula):
         respuesta.append({
             "id_proceso": proceso.get_id(),
             "nombre_proceso": proceso.get_nombre(),
-            "fecha_creacion_proceso": proceso.get_fecha()
+            "fecha_creacion_proceso": proceso.get_fecha(),
+            "estado_proceso": proceso.get_estado()
         })
     return jsonify(respuesta)
 
@@ -55,7 +56,8 @@ def get_procesos():
         respuesta.append({
             "id_proceso": proceso.get_id(),
             "nombre_proceso": proceso.get_nombre(),
-            "fecha_creacion_proceso": proceso.get_fecha()
+            "fecha_creacion_proceso": proceso.get_fecha(),
+            "estado_proceso": proceso.get_estado()
         })
     return jsonify(respuesta)
 
@@ -110,6 +112,7 @@ def get_detalle_proceso(id_proceso):
         "id_proceso": proceso.get_id(),
         "nombre_proceso": proceso.get_nombre(),
         "fecha_creacion_proceso": proceso.get_fecha(),
+        "estado_proceso": proceso.get_estado(),
         "cantidad_usuarios_proceso": len(usuarios),
         "cantidad_activos_proceso": aplicacion.get_cantidad_activos_proceso(proceso),
     },
@@ -131,7 +134,10 @@ def get_detalle_proceso(id_proceso):
             "apellido_usuario": usuario.get_apellido(),
             "id_activo": activo.get_activo().get_id(),
             "nombre_activo": activo.get_activo().get_nombre(),
-            "descripcion_activo": activo.get_activo().get_descripcion()
+            "descripcion_activo": activo.get_activo().get_descripcion(),
+            "revision_activo": activo.get_revision(),
+            "estado_revision_activo": activo.get_estado(),
+            "observacion_revision": activo.get_observacion()
         })
     return jsonify(respuesta)
 

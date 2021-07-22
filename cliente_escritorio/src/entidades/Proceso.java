@@ -10,16 +10,21 @@ package entidades;
  * @author carri
  */
 public class Proceso {
-	String idProceso, nombre, fecha; 	
+	String idProceso, nombre, fecha, estado; 	
 	Usuario [] usuarios; 
 	Activo [] activos; 
 
-	public Proceso(String idProceso, String nombre, String fecha, Usuario[] usuarios, Activo[] activos) {
+	public Proceso(String idProceso, String nombre, String fecha, String estado, Usuario[] usuarios, Activo[] activos) {
 		this.idProceso = idProceso;
 		this.nombre = nombre;
 		this.fecha = fecha;
+		this.estado = estado; 
 		this.usuarios = usuarios;
 		this.activos = activos;
+	}
+
+	public String getEstado() {
+		return estado;
 	}
 
 

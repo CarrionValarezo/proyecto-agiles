@@ -24,32 +24,32 @@ class DataUsuario:
         cur.execute(f'''select u.ced_usu as cedula_usuario, 
                         u.nom_usu as nombre_usuario, 
                         u.ape_usu as apellido_usuario
-                        from usuario_activo ua, usuario u
-                        where u.ced_usu = ua.usu_usac
-                        and ua.id_usac = {activo.get_id_pertenencia()};
+                        from activo a, usuario u
+                        where u.ced_usu = a.ced_usu_act
+                        and a.id_act = {activo.get_id_pertenencia()};
                         ''')
         return cur.fetchone()
 
 
-class DataUsuarioActivo:
+class DataActivo:
 
     # Devuelve la cantidad de activos por usuario
     def get_cant_activos_por_usuario(self, usuario):
         cur = db.get_cursor()
-        cur.execute(f'''SELECT COUNT(ID_USAC) AS cantidad_activos
-                        FROM USUARIO_ACTIVO 
-                        WHERE USU_USAC = {usuario.get_cedula()} ''')
+        cur.execute(f'''SELECT COUNT(id_act) AS cantidad_activos
+                        FROM activo 
+                        WHERE ced_USU_act = {usuario.get_cedula()} ''')
         return cur.fetchone()["cantidad_activos"]
 
     def get_activos_por_usuario(self, usuario):
         cur = db.get_cursor()
-        cur.execute(f'''SELECT UA.ID_USAC AS id_pertenencia, 
-                        A.ID_ACT AS id_activo,
-                        A.NOM_ACT AS nombre_activo, 
-                        A.DES_ACT AS descripcion_activo
-                        FROM USUARIO_ACTIVO UA, ACTIVO A
-                        WHERE A.ID_ACT = UA.ACT_USAC
-                        AND USU_USAC = {usuario.get_cedula()}; ''')
+        cur.execute(f'''SELECT a.id_act AS id_pertenencia, 
+                        i.ID_ite AS id_activo,
+                        i.NOM_ite AS nombre_activo, 
+                        i.DES_ite AS descripcion_activo
+                        FROM activo A, item i
+                        WHERE i.ID_ite = A.id_ite_act
+                        AND ced_USU_act = {usuario.get_cedula()}; ''')
         return cur.fetchall()
 
 
@@ -59,7 +59,8 @@ class DataProceso:
         cur = db.get_cursor()
         cur.execute(f'''select id_pro as id_proceso, 
                         nom_pro as nombre_proceso, 
-                        fec_cre_pro as fecha_proceso
+                        fec_cre_pro as fecha_proceso, 
+                        est_pro as estado_proceso
                         from proceso 
                         where id_pro = {id_proceso}''')
         return cur.fetchone()
@@ -67,7 +68,7 @@ class DataProceso:
     def crear_proceso(self, proceso):
         cur = db.get_cursor()
         cur.execute(f'''insert into proceso
-                        values(null,'{proceso.get_nombre()}','{proceso.get_fecha()}');''')
+                        values(null,'{proceso.get_nombre()}','{proceso.get_fecha()}','CREADO');''')
         cur.connection.commit()
         cur.execute(f"select last_insert_id();")
         return cur.fetchone()['last_insert_id()']
@@ -75,18 +76,21 @@ class DataProceso:
     def agregar_activo(self, proceso, activo):
         cur = db.get_cursor()
         cur.execute(f'''insert into detalle_proceso
-                        values({proceso.get_id()},'{activo.get_id_pertenencia()}',0,null);''')
+                        values({proceso.get_id()},'{activo.get_id_pertenencia()}',0,'','');''')
         cur.connection.commit()
 
     def get_activos_por_proceso(self, proceso):
         cur = db.get_cursor()
-        cur.execute(f'''SELECT UA.ID_USAC AS id_pertenencia,
-                        A.ID_ACT AS id_activo, 
-                        A.NOM_ACT AS nombre_activo, 
-                        A.DES_ACT AS descripcion_activo
-                        FROM USUARIO_ACTIVO UA, ACTIVO A, PROCESO P, DETALLE_PROCESO DP
-                        WHERE UA.ACT_USAC = A.ID_ACT
-                        and ua.id_usac = dp.id_per_det
+        cur.execute(f'''SELECT a.ID_act AS id_pertenencia,
+                        dp.rev_act_det as revision_activo,                    
+                        dp.est_act_det as estado_revision_activo, 
+                        dp.obs_act_det as observacion_revision,
+                        i.ID_ite AS id_activo, 
+                        i.NOM_ite AS nombre_activo, 
+                        i.DES_ite AS descripcion_activo
+                        FROM activo A, item i, PROCESO P, DETALLE_PROCESO DP
+                        WHERE A.id_ite_act = i.ID_ite
+                        and a.id_act = dp.id_act_det
                         and p.id_pro = dp.id_pro_det
                         AND P.ID_PRO = {proceso.get_id()};''')
         return cur.fetchall()
@@ -96,9 +100,9 @@ class DataProceso:
         cur.execute(f'''select u.ced_usu as cedula_usuario, 
                         u.nom_usu as nombre_usuario, 
                         u.ape_usu as apellido_usuario
-                        from usuario u, usuario_activo ua, proceso p, detalle_proceso dp
-                        where u.ced_usu = ua.usu_usac
-                        and ua.id_usac = dp.id_per_det
+                        from usuario u, activo a, proceso p, detalle_proceso dp
+                        where u.ced_usu = a.ced_usu_act
+                        and a.id_act = dp.id_act_det
                         and p.id_pro = dp.id_pro_det
                         and p.id_pro = {proceso.get_id()};''')
         return cur.fetchall()
@@ -119,16 +123,17 @@ class DataProceso:
                         where id_pro in (
                             select id_pro_det 
                             from detalle_proceso 
-                            where id_per_det in ( select id_usac
-                                from usuario_activo 
-                                where usu_usac = "{usuario.get_cedula()}")); ''')
+                            where id_act_det in ( select id_act
+                                from activo 
+                                where ced_usu_act = "{usuario.get_cedula()}")); ''')
         return cur.fetchall()
 
     def get_procesos(self):
         cur = db.get_cursor()
         cur.execute(f'''select id_pro as id_proceso, 
                         nom_pro as nombre_proceso, 
-                        fec_cre_pro as fecha_proceso 
+                        fec_cre_pro as fecha_proceso, 
+                        est_pro as estado_proceso
                         from proceso; 
                     ''')
         return cur.fetchall()

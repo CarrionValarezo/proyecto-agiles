@@ -33,7 +33,7 @@ public class Conexion {
 
 	public String[][] getUsuarios() throws Exception {
 		//Especificar la url a la cual voy a realizar la peticion
-		String url = "http://localhost:5000/usuarios/cantidad_activos";
+		String url = "http://localhost:5000/usuarios/cantidad-activos";
 		//Declaracion de la matriz usuarios a devolver
 		String[][] usuarios = null;
 		//Instanciar cliente Http
@@ -102,6 +102,7 @@ public class Conexion {
 			jArray.put(jCedula);
 		}
 		jEnviar.put("usuarios_proceso", jArray);
+
 		String url = "http://localhost:5000/procesos";
 		HttpRequest request = HttpRequest.newBuilder()
 				.uri(new URI(url))
@@ -109,10 +110,9 @@ public class Conexion {
 				.POST(BodyPublishers.ofString(jEnviar.toString()))
 				.build();
 
-		System.out.println(jEnviar.toString());
 		HttpResponse<String> response = this.cliente.send(request, HttpResponse.BodyHandlers.ofString());
-		JSONObject jsonResponse = new JSONObject(response.body());
 		System.out.println(response.body());
+		JSONObject jsonResponse = new JSONObject(response.body());
 	}
 
 	/*
@@ -159,18 +159,24 @@ public class Conexion {
 			String nombreActivo = jsonActivos.getJSONObject(i).getString("nombre_activo");
 			String descripcionActivo = jsonActivos.getJSONObject(i).getString("descripcion_activo");
 
+			int revisionActivo = jsonActivos.getJSONObject(i).getInt("revision_activo");
+			String estadoRevisionActivo = jsonActivos.getJSONObject(i).getString("estado_revision_activo");
+			String observacionRevision = jsonActivos.getJSONObject(i).getString("observacion_revision");
+
 			String cedula = jsonActivos.getJSONObject(i).getString("cedula_usuario");
 			String nombre = jsonActivos.getJSONObject(i).getString("nombre_usuario");
 			String apellido = jsonActivos.getJSONObject(i).getString("apellido_usuario");
 
-			activos[i] = new Activo(idPertenencia, idActivo, nombreActivo, descripcionActivo);
+			activos[i] = new Activo(idPertenencia, idActivo, nombreActivo, descripcionActivo, revisionActivo,
+					estadoRevisionActivo, observacionRevision);
 			activos[i].setUsuario(new Usuario(cedula, nombre, apellido));
 		}
 
 		String nombreProceso = jsonProceso.getString("nombre_proceso");
 		String fechaProceso = jsonProceso.getString("fecha_creacion_proceso");
+		String estadoProceso = jsonProceso.getString("estado_proceso"); 
 
-		p = new Proceso(idProceso, nombreProceso, fechaProceso, usuarios, activos);
+		p = new Proceso(idProceso, nombreProceso, fechaProceso, estadoProceso, usuarios, activos);
 		return p;
 	}
 
@@ -219,12 +225,13 @@ public class Conexion {
 		//Cuerpo de la peticion a un array de tipo JSON.
 		JSONArray jArray = new JSONArray(response.body());
 		//Declaracion de la matriz usuarios
-		procesos = new String[jArray.length()][3];
+		procesos = new String[jArray.length()][4];
 		//Llenar la matriz segun los datos del JSON obtenido
 		for (int i = 0; i < jArray.length(); i++) {
 			procesos[i][0] = String.valueOf(jArray.getJSONObject(i).getInt("id_proceso"));
 			procesos[i][1] = jArray.getJSONObject(i).getString("nombre_proceso");
 			procesos[i][2] = jArray.getJSONObject(i).getString("fecha_creacion_proceso");
+			procesos[i][3] = jArray.getJSONObject(i).getString("estado_proceso");
 		}
 		return procesos;
 	}

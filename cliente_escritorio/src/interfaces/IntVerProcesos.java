@@ -46,7 +46,7 @@ public class IntVerProcesos extends javax.swing.JFrame {
 	}
 
 	private void cargarTablaProcesos() {
-		String[] titulos = {"ID PROCESO", "NOMBRE PROCESO", "FECHA CREACION PROCESO"};
+		String[] titulos = {"ID PROCESO", "NOMBRE PROCESO", "FECHA CREACION PROCESO", "ESTADO PROCESO"};
 		this.modeloTablaProcesos = new DefaultTableModel(null, titulos) {
 			@Override
 			public boolean isCellEditable(int row, int column) {

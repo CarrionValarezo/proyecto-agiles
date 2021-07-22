@@ -36,11 +36,12 @@ public class IntDetalleProceso extends javax.swing.JFrame {
 		try {
 			this.proceso = conexion.getProceso(idProceso);
 		} catch (Exception ex) {
-			JOptionPane.showMessageDialog(null, "Eror");
+			JOptionPane.showMessageDialog(null, ex);
 		}
 		jLblIdProceso.setText(idProceso);
 		jLblNombreProceso.setText(proceso.getNombre());
 		jLblFechaProceso.setText(proceso.getFecha());
+		jLblEstado.setText(proceso.getEstado()); 
 		cargarTablaActivos();
 		cargarTablaUsuario();
 	}
@@ -66,7 +67,8 @@ public class IntDetalleProceso extends javax.swing.JFrame {
 	}
 
 	private void cargarTablaActivos() {
-		String[] titulos = {"ID ACTIVO", "ID OBJETO", "NOMBRE", "DESCRIPCION", "CEDULA USUARIO", "NOMBRE USUARIO", "APELLIDO USUARIO"};
+		String[] titulos = {"ID ACTIVO", "ID OBJETO", "NOMBRE", "DESCRIPCION", "CEDULA USUARIO", 
+			"NOMBRE USUARIO", "APELLIDO USUARIO", "REVISADO", "ESTADO REVISION", "OBSERVACION REVISION" };
 		this.modeloTablaActivos = new DefaultTableModel(null, titulos) {
 			@Override
 			public boolean isCellEditable(int row, int column) {
@@ -75,13 +77,20 @@ public class IntDetalleProceso extends javax.swing.JFrame {
 		};
 		try {
 			for (Activo activo : this.proceso.getActivos()) {
+				String revision = "";
 				System.out.println(activo.toString());
+				if (activo.getRevisionActivo() == 1)
+					revision = "REVISADO"; 
 				String[] datos = {activo.getIdPertinencia(),
 					activo.getIdActivo(), activo.getNombreActivo(),
 					activo.getDescripcionActivo(),
 					activo.getUsuario().getCedula(),
 					activo.getUsuario().getNombre(),
-					activo.getUsuario().getApellido()};
+					activo.getUsuario().getApellido(),
+					revision,
+					activo.getEstadoRevisionActivo(), 
+					activo.getObservacionRevision()
+				};
 				modeloTablaActivos.addRow(datos);
 			}
 			jTblActivosProceso.setModel(modeloTablaActivos);
@@ -110,6 +119,8 @@ public class IntDetalleProceso extends javax.swing.JFrame {
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
+        jLabel6 = new javax.swing.JLabel();
+        jLblEstado = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -162,6 +173,10 @@ public class IntDetalleProceso extends javax.swing.JFrame {
             }
         });
 
+        jLabel6.setText("ESTADO:");
+
+        jLblEstado.setText("CREADO");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -182,36 +197,38 @@ public class IntDetalleProceso extends javax.swing.JFrame {
                                     .addComponent(jLblFechaProceso, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addGroup(layout.createSequentialGroup()
                                         .addComponent(jLblIdProceso)
+                                        .addGap(66, 66, 66)
+                                        .addComponent(jLabel6)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addComponent(jLblEstado)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                         .addComponent(jButton1))))
                             .addGroup(layout.createSequentialGroup()
                                 .addContainerGap()
                                 .addComponent(jLabel4)))
-                        .addGap(75, 75, 75))
+                        .addGap(15, 15, 15))
                     .addGroup(layout.createSequentialGroup()
                         .addContainerGap()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 878, Short.MAX_VALUE)
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 985, Short.MAX_VALUE)
                             .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 519, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel5))
+                                    .addComponent(jLabel5)
+                                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 578, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addGap(0, 0, Short.MAX_VALUE)))))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(17, 17, 17)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel1)
-                            .addComponent(jLblIdProceso)))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(23, 23, 23)
-                        .addComponent(jButton1)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(14, 14, 14)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel1)
+                    .addComponent(jLblIdProceso)
+                    .addComponent(jLabel6)
+                    .addComponent(jLblEstado)
+                    .addComponent(jButton1))
+                .addGap(15, 15, 15)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
                     .addComponent(jLblNombreProceso))
@@ -237,28 +254,34 @@ public class IntDetalleProceso extends javax.swing.JFrame {
 		// TODO add your handling code here:
 		GeneradorPDF gpdf = new GeneradorPDF();
 		try {
+			gpdf.generarPdf(jTblActivosProceso, proceso.getNombre());
+			/*
+			try {
 			JTable tablaPdf = new JTable();
-			String[] titulos = {"ID ACTIVO", "ID OBJETO", "NOMBRE", "DESCRIPCION", 
-				"CEDULA USUARIO", "NOMBRE USUARIO", "APELLIDO USUARIO","REVISADO","OBSERVACION"};
+			String[] titulos = {"ID ACTIVO", "ID OBJETO", "NOMBRE", "DESCRIPCION",
+			"CEDULA USUARIO", "NOMBRE USUARIO", "APELLIDO USUARIO","REVISADO","OBSERVACION"};
 			DefaultTableModel modeloPdf = new DefaultTableModel(null, titulos);
 			try {
-				for (Activo activo : this.proceso.getActivos()) {
-					String[] datos = {activo.getIdPertinencia(),
-						activo.getIdActivo(), activo.getNombreActivo(),
-						activo.getDescripcionActivo(),
-						activo.getUsuario().getCedula(),
-						activo.getUsuario().getNombre(),
-						activo.getUsuario().getApellido(),"",""};
-					modeloPdf.addRow(datos);
-				}
-				tablaPdf.setModel(modeloPdf);
+			for (Activo activo : this.proceso.getActivos()) {
+			String[] datos = {activo.getIdPertinencia(),
+			activo.getIdActivo(), activo.getNombreActivo(),
+			activo.getDescripcionActivo(),
+			activo.getUsuario().getCedula(),
+			activo.getUsuario().getNombre(),
+			activo.getUsuario().getApellido(),"",""};
+			modeloPdf.addRow(datos);
+			}
+			tablaPdf.setModel(modeloPdf);
 			} catch (Exception ex) {
-				JOptionPane.showMessageDialog(null, "Error: No se ha podido comunicar con el servidor");
+			JOptionPane.showMessageDialog(null, "Error: No se ha podido comunicar con el servidor");
 			}
 			gpdf.generarPdf(tablaPdf, proceso.getNombre());
 			JOptionPane.showMessageDialog(null, "Se ha generado su pdf");
-		} catch (Exception ex) {
+			} catch (Exception ex) {
 			JOptionPane.showMessageDialog(null, ex);
+			}*/
+		} catch (Exception ex) {
+			Logger.getLogger(IntDetalleProceso.class.getName()).log(Level.SEVERE, null, ex);
 		}
 
 	}
@@ -298,7 +321,7 @@ public class IntDetalleProceso extends javax.swing.JFrame {
 		/* Create and display the form */
 		java.awt.EventQueue.invokeLater(new Runnable() {
 			public void run() {
-				String id = "3";
+				String id = "5";
 				new IntDetalleProceso(id).setVisible(true);
 			}
 		});
@@ -311,6 +334,8 @@ public class IntDetalleProceso extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLblEstado;
     private javax.swing.JLabel jLblFechaProceso;
     private javax.swing.JLabel jLblIdProceso;
     private javax.swing.JLabel jLblNombreProceso;
