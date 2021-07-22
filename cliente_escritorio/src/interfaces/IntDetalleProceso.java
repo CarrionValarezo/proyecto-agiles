@@ -18,6 +18,7 @@ import java.awt.event.MouseMotionListener;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
@@ -192,7 +193,7 @@ public class IntDetalleProceso extends javax.swing.JFrame {
 
         jLabel5.setText("ACTIVOS DEL PROCESO");
 
-        jButton1.setText("PDF");
+        jButton1.setText("Generar PDF");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton1ActionPerformed(evt);
@@ -280,13 +281,19 @@ public class IntDetalleProceso extends javax.swing.JFrame {
 
 	private void generarPdf() {
 		// TODO add your handling code here:
-		GeneradorPDF gpdf = new GeneradorPDF();
-		try {
-			gpdf.generarPdf(jTblActivosProceso, proceso.getNombre());
-		} catch (Exception ex) {
-			Logger.getLogger(IntDetalleProceso.class.getName()).log(Level.SEVERE, null, ex);
+		JFileChooser jFlcDestinoPdf = new JFileChooser();
+		jFlcDestinoPdf.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+		int opcion = jFlcDestinoPdf.showSaveDialog(this);
+		if (opcion == JFileChooser.APPROVE_OPTION) {
+			try {
+				String path = jFlcDestinoPdf.getSelectedFile().getAbsolutePath() + "\\";
+				System.out.println(path);
+				GeneradorPDF gpdf = new GeneradorPDF();
+				gpdf.generarPdf(jTblActivosProceso, path, proceso.getNombre());
+			} catch (Exception ex) {
+				Logger.getLogger(IntDetalleProceso.class.getName()).log(Level.SEVERE, null, ex);
+			}
 		}
-
 	}
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
@@ -304,15 +311,14 @@ public class IntDetalleProceso extends javax.swing.JFrame {
     }//GEN-LAST:event_jTblUsuariosMouseEntered
 
     private void jTblUsuariosMouseMoved(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTblUsuariosMouseMoved
-        // TODO add your handling code here:
-		if (jTblUsuarios.columnAtPoint(evt.getPoint()) == 3){
+		// TODO add your handling code here:
+		if (jTblUsuarios.columnAtPoint(evt.getPoint()) == 3) {
 			jTblUsuarios.setCursor(new Cursor(Cursor.HAND_CURSOR));
-		}else{
+		} else {
 			jTblUsuarios.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 		}
 		//System.out.println(evt.getPoint().toString());
     }//GEN-LAST:event_jTblUsuariosMouseMoved
-
 
 	private void eliminarUsuario(java.awt.event.MouseEvent evt) {
 		int column = jTblUsuarios.getColumnModel().getColumnIndexAtX(evt.getX());
@@ -324,11 +330,14 @@ public class IntDetalleProceso extends javax.swing.JFrame {
 				((JButton) value).doClick();
 				JButton btn = (JButton) value;
 				try {
-					this.conexion.eliminarUsuarioDeProceso(this.proceso.getIdProceso(), cedula);
-					JOptionPane.showConfirmDialog(null, "Se elimino el usuario correctamente");
-					IntDetalleProceso intDetalleRecarga = new IntDetalleProceso(this.proceso.getIdProceso()); 
-					this.dispose();
-					intDetalleRecarga.setVisible(true);
+					int opcion = JOptionPane.showConfirmDialog(null, "Esta seguro de eliminar al usuario del proceso: " + this.proceso.getNombre());
+					if (opcion == 0) {
+						this.conexion.eliminarUsuarioDeProceso(this.proceso.getIdProceso(), cedula);
+						JOptionPane.showConfirmDialog(null, "Se elimino el usuario correctamente");
+						IntDetalleProceso intDetalleRecarga = new IntDetalleProceso(this.proceso.getIdProceso());
+						this.dispose();
+						intDetalleRecarga.setVisible(true);
+					}
 				} catch (Exception ex) {
 					JOptionPane.showConfirmDialog(null, "Ocurrio un error");
 				}

@@ -29,8 +29,8 @@ public class GeneradorPDF {
 		
 	}
 
-	public void generarPdf(JTable table, String nombre) throws Exception{
-		PdfWriter.getInstance(documento, new FileOutputStream(nombre+".pdf"));
+	public void generarPdf(JTable table, String path, String nombre) throws Exception{
+		PdfWriter.getInstance(documento, new FileOutputStream(path+nombre+".pdf"));
 		documento.open();
 
 		Font font = new Font(Font.FontFamily.HELVETICA, 10, Font.NORMAL);
