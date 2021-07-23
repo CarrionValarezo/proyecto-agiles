@@ -127,8 +127,13 @@ public class IntCrearProceso extends javax.swing.JFrame {
 		String [] cedulas = getCedulasTabla(); 
 		try {
 			if(!jTxtNombreProceso.getText().isEmpty()){
-				this.conexion.crearProceso(jTxtNombreProceso.getText(), fecha, cedulas);
-				JOptionPane.showConfirmDialog(null, "El proceso ha sido creado exitosamente \n ¿Desea ver el detalle del proceso creado?");
+				String idProceso = this.conexion.crearProceso(jTxtNombreProceso.getText(), fecha, cedulas);
+				int opcion = JOptionPane.showConfirmDialog(null, "El proceso ha sido creado exitosamente \n ¿Desea ver el detalle del proceso creado?");
+				if(opcion == 0){ 
+					IntDetalleProceso intDetalle = new IntDetalleProceso(idProceso); 
+					intDetalle.setVisible(true);
+					this.dispose(); 
+				}
 			}
 			else{
 				JOptionPane.showMessageDialog(null, "Debe ingresar un nombre al proceso!");

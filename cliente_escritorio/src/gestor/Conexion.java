@@ -88,7 +88,7 @@ public class Conexion {
 		return activos;
 	}
 
-	public void crearProceso(String nombre, String fecha, String[] cedulas) throws Exception {
+	public String crearProceso(String nombre, String fecha, String[] cedulas) throws Exception {
 		JSONObject jEnviar = new JSONObject();
 		JSONObject jProceso = new JSONObject();
 		jProceso.put("nombre_proceso", nombre);
@@ -113,6 +113,7 @@ public class Conexion {
 		HttpResponse<String> response = this.cliente.send(request, HttpResponse.BodyHandlers.ofString());
 		System.out.println(response.body());
 		JSONObject jsonResponse = new JSONObject(response.body());
+		return String.valueOf(jsonResponse.getInt("id_proceso")); 
 	}
 
 	

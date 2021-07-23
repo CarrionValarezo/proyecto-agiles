@@ -326,14 +326,14 @@ public class IntDetalleProceso extends javax.swing.JFrame {
 		if (row < jTblUsuarios.getRowCount() && row >= 0 && column < jTblUsuarios.getColumnCount() && column >= 0) {
 			Object value = jTblUsuarios.getValueAt(row, column);
 			String cedula = (String) jTblUsuarios.getValueAt(row, 0);
+			String nombre = (String) jTblUsuarios.getValueAt(row, 1); 
 			if (value instanceof JButton) {
 				((JButton) value).doClick();
 				JButton btn = (JButton) value;
 				try {
-					int opcion = JOptionPane.showConfirmDialog(null, "Esta seguro de eliminar al usuario del proceso: " + this.proceso.getNombre());
+					int opcion = JOptionPane.showConfirmDialog(null, "Esta seguro de eliminar al usuario: "+cedula+" "+nombre+"  del proceso: " + this.proceso.getNombre());
 					if (opcion == 0) {
 						this.conexion.eliminarUsuarioDeProceso(this.proceso.getIdProceso(), cedula);
-						JOptionPane.showConfirmDialog(null, "Se elimino el usuario correctamente");
 						IntDetalleProceso intDetalleRecarga = new IntDetalleProceso(this.proceso.getIdProceso());
 						this.dispose();
 						intDetalleRecarga.setVisible(true);

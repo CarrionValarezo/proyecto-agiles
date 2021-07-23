@@ -69,8 +69,8 @@ def crear_proceso():
     proceso = data.get("proceso")
     cedulas_usuarios = data.get("usuarios_proceso")
     usuarios = [aplicacion.get_usuario_por_cedula(usuario.get("cedula_usuario")) for usuario in cedulas_usuarios]
-    aplicacion.crear_proceso(proceso, usuarios)
-    return jsonify({"message": "Proceso Creado"})
+    nuevo_proceso = aplicacion.crear_proceso(proceso, usuarios)
+    return jsonify({"id_proceso": nuevo_proceso.get_id()})
 
 
 @usac.route('/procesos/<id_proceso>/usuarios')
