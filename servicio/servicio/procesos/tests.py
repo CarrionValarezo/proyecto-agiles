@@ -1,3 +1,5 @@
+import json
+
 from .aplicacion import get_usuarios_cant_activos, get_activos_por_usuario, get_usuario_por_cedula
 from .entidades import Usuario
 from servicio.app import create_app
@@ -9,6 +11,7 @@ class TestProcesos(unittest.TestCase):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.app = create_app()
+        self.app.config["MYSQL_DB"] = "agiles_pruebas"
         self.tester = self.app.test_client()
         self.usuario = "123"
         self.proceso = "1"
@@ -30,6 +33,20 @@ class TestProcesos(unittest.TestCase):
         for key in data:
             print(key)
             self.assertTrue(key in data_json)
+
+    def test_crear_proceso(self):
+        dic = {
+            "proceso": {"nombre_proceso": "Proceso prueba",
+                        "fecha_proceso": "2021-06-06"},
+            "usuarios_proceso": [{"cedula_usuario": "123"},
+                                 {"cedula_usuario": "456"},
+                                 {"cedula_usuario": "789"}]
+        }
+        respuesta = self.tester.post('/procesos',
+                                     data=json.dumps(dic),
+                                     content_type="application/json")
+        self.assertEqual(respuesta.status_code, 200)
+        self.assertTrue(b"id_proceso" in respuesta.data)
 
     def test_usuarios_cantidad_activos(self):
         ruta = "/usuarios/cantidad-activos"
