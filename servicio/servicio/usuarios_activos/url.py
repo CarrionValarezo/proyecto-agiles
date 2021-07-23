@@ -159,10 +159,19 @@ def agregar_usuario_a_proceso(id_proceso, cedula):
     aplicacion.agregar_usuario_proceso(usuario, proceso)
     return jsonify({"mensaje": "No implementado"})
 
-@usac.route('/procesos/<id_proceso>/activos/<id_activo>', methods=['POST'])
+
+@usac.route('/procesos/<id_proceso>/activos/<id_activo>', methods=['PUT'])
 def validar_activo(id_proceso, id_activo):
+    data = request.get_json()
     proceso = aplicacion.get_proceso_por_id(id_proceso)
+    print(id_proceso)
+    print(id_activo)
     activo = aplicacion.get_activo_por_id(id_activo)
+    print("En objeto")
+    print(proceso.get_id())
+    print(activo.get_id())
+    aplicacion.validar_activo(activo, proceso, data.get("estado_activo"), data.get("observacion_activo"))
+    return jsonify({"mensaje": "Activo validado"})
 
 
 @usac.route('/')

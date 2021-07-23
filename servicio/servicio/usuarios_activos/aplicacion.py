@@ -108,5 +108,10 @@ def agregar_usuario_proceso(usuario, proceso):
 
 def get_activo_por_id(id_activo):
     repo_activos = DataActivo()
-    activo = repo_activos.get_activo_por_id(id_activo)
+    activo = Activo(**repo_activos.get_activo_por_id(id_activo))
     return activo
+
+
+def validar_activo(activo, proceso, estado, observacion):
+    repo_procesos = DataProceso()
+    repo_procesos.validar_activo(activo, proceso, estado, observacion)

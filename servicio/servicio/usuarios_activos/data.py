@@ -59,7 +59,7 @@ class DataActivo:
                         i.NOM_ite AS nombre_item, 
                         i.DES_ite AS descripcion_item
                         FROM activo A, item i
-                        WHERE i.ID_ite = {id_activo}''')
+                        WHERE a.ID_act = {id_activo}''')
         return cur.fetchone()
 
 
@@ -155,4 +155,14 @@ class DataProceso:
                         and id_act_det in ( select id_act 
                             from activo
                             where ced_usu_act = '{usuario.get_cedula()}');''')
+        cur.connection.commit()
+
+    def validar_activo(self, activo, proceso, estado, observacion):
+        cur = db.get_cursor()
+        cur.execute(f'''update detalle_proceso 
+                        set rev_act_det = true, 
+                            est_act_det = '{estado}', 
+                            obs_act_det = '{observacion}'
+                        where id_pro_det = {proceso.get_id()}
+                        and id_act_det = '{activo.get_id()}';''')
         cur.connection.commit()

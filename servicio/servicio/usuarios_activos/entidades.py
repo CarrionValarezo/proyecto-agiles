@@ -45,7 +45,7 @@ class Item:
 class Activo:
 
     def __init__(self, **kwargs):
-        self.__id_pertenencia = kwargs.get("id_activo")
+        self.__id = kwargs.get("id_activo")
         self.__usuario = kwargs.get("usuario")
         self.__activo = kwargs.get("item")
         self.__revision = kwargs.get("revision_activo")
@@ -53,7 +53,7 @@ class Activo:
         self.__observacion = kwargs.get("observacion_revision")
 
     def get_id(self):
-        return self.__id_pertenencia
+        return self.__id
 
     def get_usuario(self):
         return self.__usuario
