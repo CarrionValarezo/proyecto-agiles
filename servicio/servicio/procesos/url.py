@@ -1,69 +1,53 @@
 from flask import Blueprint, jsonify, request
 from . import aplicacion
+from . import serializers
 
-usac = Blueprint("usac", __name__)
+procesos_blueprint = Blueprint("usac", __name__)
 
 
-@usac.route('/usuarios/cantidad-activos')
+@procesos_blueprint.route('/usuarios/cantidad-activos')
 def get_usuarios_cant_activos():
     respuesta = []
     usuarios_cant_activos = aplicacion.get_usuarios_cant_activos()
     for usuario, cant_activos in usuarios_cant_activos:
-        respuesta.append({
-            "cedula_usuario": usuario.get_cedula(),
-            "nombre_usuario": usuario.get_nombre(),
-            "apellido_usuario": usuario.get_apellido(),
-            "cantidad_activos_usuario": cant_activos
-        })
+        data_usuario = serializers.usuario_dict(usuario)
+        data_usuario["cantidad_activos_usuario"] = cant_activos
+        respuesta.append(data_usuario)
     return jsonify(respuesta)
 
 
-@usac.route('/usuarios/<cedula>/activos')
+@procesos_blueprint.route('/usuarios/<cedula>/activos')
 def get_activos_por_usuario(cedula):
     usuario = aplicacion.get_usuario_por_cedula(cedula)
     respuesta = []
     activos_usuario = aplicacion.get_activos_por_usuario(usuario)
     for activo in activos_usuario:
-        item = activo.get_item()
-        respuesta.append({
-            "id_activo": activo.get_id(),
-            "id_item": item.get_id(),
-            "nombre_item": item.get_nombre(),
-            "descripcion_item": item.get_descripcion()
-        })
+        data_activo = serializers.activo_dict(activo)
+        data_item = serializers.item_dic(activo.get_item())
+        respuesta.append({**data_activo, **data_item})
     return jsonify(respuesta)
 
 
-@usac.route('/usuarios/<cedula>/procesos')
+@procesos_blueprint.route('/usuarios/<cedula>/procesos')
 def get_procesos_por_usuario(cedula):
     usuario = aplicacion.get_usuario_por_cedula(cedula)
     procesos = aplicacion.get_procesos_por_usuario(usuario)
     respuesta = []
     for proceso in procesos:
-        respuesta.append({
-            "id_proceso": proceso.get_id(),
-            "nombre_proceso": proceso.get_nombre(),
-            "fecha_creacion_proceso": proceso.get_fecha(),
-            "estado_proceso": proceso.get_estado()
-        })
+        respuesta.append(serializers.proceso_dic(proceso))
     return jsonify(respuesta)
 
 
-@usac.route('/procesos')
+@procesos_blueprint.route('/procesos')
 def get_procesos():
     procesos = aplicacion.get_procesos()
     respuesta = []
     for proceso in procesos:
-        respuesta.append({
-            "id_proceso": proceso.get_id(),
-            "nombre_proceso": proceso.get_nombre(),
-            "fecha_creacion_proceso": proceso.get_fecha(),
-            "estado_proceso": proceso.get_estado()
-        })
+        respuesta.append(serializers.proceso_dic(proceso))
     return jsonify(respuesta)
 
 
-@usac.route('/procesos', methods=['POST'])
+@procesos_blueprint.route('/procesos', methods=['POST'])
 def crear_proceso():
     data = request.get_json()
     proceso = data.get("proceso")
@@ -73,21 +57,17 @@ def crear_proceso():
     return jsonify({"id_proceso": nuevo_proceso.get_id()})
 
 
-@usac.route('/procesos/<id_proceso>/usuarios')
+@procesos_blueprint.route('/procesos/<id_proceso>/usuarios')
 def get_usuarios_por_proceso(id_proceso):
     proceso = aplicacion.get_proceso_por_id(id_proceso)
     usuarios = aplicacion.get_usuarios_por_proceso(proceso)
     respuesta = []
     for usuario in usuarios:
-        respuesta.append({
-            "cedula_usuario": usuario.get_cedula(),
-            "nombre_usuario": usuario.get_nombre(),
-            "apellido_usuario": usuario.get_apellido()
-        })
+        respuesta.append(serializers.usuario_dict(usuario))
     return jsonify(respuesta)
 
 
-@usac.route('/procesos/<id_proceso>/activos')
+@procesos_blueprint.route('/procesos/<id_proceso>/activos')
 def get_activos_por_proceso(id_proceso):
     proceso = aplicacion.get_proceso_por_id(id_proceso)
     usuarios = aplicacion.get_usuarios_por_proceso(proceso)
@@ -97,24 +77,18 @@ def get_activos_por_proceso(id_proceso):
         activos = activos + aplicacion.get_activos_por_usuario(usuario)
     for activo in activos:
         item = activo.get_item()
-        respuesta.append({
-            "id_activo": activo.get_id(),
-            "id_item": item.get_id(),
-            "nombre_item": item.get_nombre(),
-            "descripcion_item": item.get_descripcion()
-        })
+        data_activo = serializers.activo_dict(activo)
+        data_item = serializers.item_dic(item)
+        respuesta.append({**data_activo, **data_item})
     return jsonify(respuesta)
 
 
-@usac.route('/procesos/<id_proceso>')
+@procesos_blueprint.route('/procesos/<id_proceso>')
 def get_detalle_proceso(id_proceso):
     proceso = aplicacion.get_proceso_por_id(id_proceso)
     usuarios = aplicacion.get_usuarios_por_proceso(proceso)
     respuesta = {"proceso": {
-        "id_proceso": proceso.get_id(),
-        "nombre_proceso": proceso.get_nombre(),
-        "fecha_creacion_proceso": proceso.get_fecha(),
-        "estado_proceso": proceso.get_estado(),
+        **serializers.proceso_dic(proceso),
         "cantidad_usuarios_proceso": len(usuarios),
         "cantidad_activos_proceso": aplicacion.get_cantidad_activos_proceso(proceso),
     },
@@ -122,29 +96,21 @@ def get_detalle_proceso(id_proceso):
         "activos": []
     }
     for usuario in usuarios:
-        respuesta["usuarios"].append({
-            "cedula_usuario": usuario.get_cedula(),
-            "nombre_usuario": usuario.get_nombre(),
-            "apellido_usuario": usuario.get_apellido()
-        })
+        respuesta["usuarios"].append(serializers.usuario_dict(usuario))
     for activo in aplicacion.get_activos_por_proceso(proceso):
         usuario = aplicacion.get_usuario_por_activo(activo)
-        respuesta["activos"].append({
-            "id_activo": activo.get_id(),
-            "cedula_usuario": usuario.get_cedula(),
-            "nombre_usuario": usuario.get_nombre(),
-            "apellido_usuario": usuario.get_apellido(),
-            "id_item": activo.get_item().get_id(),
-            "nombre_item": activo.get_item().get_nombre(),
-            "descripcion_item": activo.get_item().get_descripcion(),
-            "revision_activo": activo.get_revision(),
-            "estado_revision_activo": activo.get_estado(),
-            "observacion_revision": activo.get_observacion()
-        })
+        item = activo.get_item()
+        respuesta["activos"].append({**serializers.activo_dict(activo),
+                                     **serializers.item_dic(item),
+                                     **serializers.usuario_dict(usuario),
+                                     "revision_activo": activo.get_revision(),
+                                     "estado_revision_activo": activo.get_estado(),
+                                     "observacion_revision": activo.get_observacion()
+                                     })
     return jsonify(respuesta)
 
 
-@usac.route('/procesos/<id_proceso>/usuarios/<cedula>', methods=['DELETE'])
+@procesos_blueprint.route('/procesos/<id_proceso>/usuarios/<cedula>', methods=['DELETE'])
 def eliminar_usuario_de_proceso(id_proceso, cedula):
     usuario = aplicacion.get_usuario_por_cedula(cedula)
     proceso = aplicacion.get_proceso_por_id(id_proceso)
@@ -152,7 +118,7 @@ def eliminar_usuario_de_proceso(id_proceso, cedula):
     return jsonify({"mensaje": "Usuario eliminado correctamente"})
 
 
-@usac.route('/procesos/<id_proceso>/usuarios/<cedula>', methods=['POST'])
+@procesos_blueprint.route('/procesos/<id_proceso>/usuarios/<cedula>', methods=['POST'])
 def agregar_usuario_a_proceso(id_proceso, cedula):
     usuario = aplicacion.get_usuario_por_cedula(cedula)
     proceso = aplicacion.get_proceso_por_id(id_proceso)
@@ -160,20 +126,15 @@ def agregar_usuario_a_proceso(id_proceso, cedula):
     return jsonify({"mensaje": "No implementado"})
 
 
-@usac.route('/procesos/<id_proceso>/activos/<id_activo>', methods=['PUT'])
+@procesos_blueprint.route('/procesos/<id_proceso>/activos/<id_activo>', methods=['PUT'])
 def validar_activo(id_proceso, id_activo):
     data = request.get_json()
     proceso = aplicacion.get_proceso_por_id(id_proceso)
-    print(id_proceso)
-    print(id_activo)
     activo = aplicacion.get_activo_por_id(id_activo)
-    print("En objeto")
-    print(proceso.get_id())
-    print(activo.get_id())
     aplicacion.validar_activo(activo, proceso, data.get("estado_activo"), data.get("observacion_activo"))
     return jsonify({"mensaje": "Activo validado"})
 
 
-@usac.route('/')
+@procesos_blueprint.route('/')
 def test():
     return "Si funciona!"

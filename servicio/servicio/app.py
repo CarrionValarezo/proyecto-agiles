@@ -24,7 +24,7 @@ def create_app():
     app.config.from_object(LocalConfig)
 
     # Registra blueprint
-    from .usuarios_activos.url import usac
-    app.register_blueprint(usac)
+    from .procesos.url import procesos_blueprint
+    app.register_blueprint(procesos_blueprint)
 
     return app
