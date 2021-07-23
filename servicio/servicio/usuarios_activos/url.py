@@ -24,12 +24,12 @@ def get_activos_por_usuario(cedula):
     respuesta = []
     activos_usuario = aplicacion.get_activos_por_usuario(usuario)
     for activo in activos_usuario:
-        detalle_activo = activo.get_activo()
+        item = activo.get_item()
         respuesta.append({
-            "id_pertenencia": activo.get_id_pertenencia(),
-            "id_activo": detalle_activo.get_id(),
-            "nombre_activo": detalle_activo.get_nombre(),
-            "descripcion_activo": detalle_activo.get_descripcion()
+            "id_activo": activo.get_id(),
+            "id_item": item.get_id(),
+            "nombre_item": item.get_nombre(),
+            "descripcion_item": item.get_descripcion()
         })
     return jsonify(respuesta)
 
@@ -96,12 +96,12 @@ def get_activos_por_proceso(id_proceso):
     for usuario in usuarios:
         activos = activos + aplicacion.get_activos_por_usuario(usuario)
     for activo in activos:
-        detalle_activo = activo.get_activo()
+        item = activo.get_item()
         respuesta.append({
-            "id_pertenencia": activo.get_id_pertenencia(),
-            "id_activo": detalle_activo.get_id(),
-            "nombre_activo": detalle_activo.get_nombre(),
-            "descripcion_activo": detalle_activo.get_descripcion()
+            "id_activo": activo.get_id(),
+            "id_item": item.get_id(),
+            "nombre_item": item.get_nombre(),
+            "descripcion_item": item.get_descripcion()
         })
     return jsonify(respuesta)
 
@@ -130,13 +130,13 @@ def get_detalle_proceso(id_proceso):
     for activo in aplicacion.get_activos_por_proceso(proceso):
         usuario = aplicacion.get_usuario_por_activo(activo)
         respuesta["activos"].append({
-            "id_pertenencia": activo.get_id_pertenencia(),
+            "id_activo": activo.get_id(),
             "cedula_usuario": usuario.get_cedula(),
             "nombre_usuario": usuario.get_nombre(),
             "apellido_usuario": usuario.get_apellido(),
-            "id_activo": activo.get_activo().get_id(),
-            "nombre_activo": activo.get_activo().get_nombre(),
-            "descripcion_activo": activo.get_activo().get_descripcion(),
+            "id_item": activo.get_item().get_id(),
+            "nombre_item": activo.get_item().get_nombre(),
+            "descripcion_item": activo.get_item().get_descripcion(),
             "revision_activo": activo.get_revision(),
             "estado_revision_activo": activo.get_estado(),
             "observacion_revision": activo.get_observacion()
@@ -158,6 +158,11 @@ def agregar_usuario_a_proceso(id_proceso, cedula):
     proceso = aplicacion.get_proceso_por_id(id_proceso)
     aplicacion.agregar_usuario_proceso(usuario, proceso)
     return jsonify({"mensaje": "No implementado"})
+
+@usac.route('/procesos/<id_proceso>/activos/<id_activo>', methods=['POST'])
+def validar_activo(id_proceso, id_activo):
+    proceso = aplicacion.get_proceso_por_id(id_proceso)
+    activo = aplicacion.get_activo_por_id(id_activo)
 
 
 @usac.route('/')

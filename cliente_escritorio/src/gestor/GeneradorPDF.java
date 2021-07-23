@@ -35,7 +35,7 @@ public class GeneradorPDF {
 
 		Font font = new Font(Font.FontFamily.HELVETICA, 10, Font.NORMAL);
 		PdfPTable pdfTable = new PdfPTable(table.getColumnCount());
-		float [] columnsWidth = new float[]{5f, 7f, 10f, 20f, 10f, 10f, 10f, 0f,5f,20f}; 
+		float [] columnsWidth = new float[]{5f, 7f, 10f, 20f, 10f, 10f, 10f, 0f,5f,20f,0f}; 
 		//float [] columnsWidth = new float[]{5f, 7f, 10f, 20f, 10f, 10f, 10f,5f,20f}; 
 		pdfTable.setWidths(columnsWidth);
 		pdfTable.setWidthPercentage(100);
@@ -52,7 +52,6 @@ public class GeneradorPDF {
 			for (int cols = 0; cols < table.getColumnCount(); cols++) {
 				String valor = table.getModel().getValueAt(rows, cols).toString();
 				pdfTable.addCell(new PdfPCell(new Phrase(valor,font)));
-
 			}
 		}
 		documento.add(pdfTable);

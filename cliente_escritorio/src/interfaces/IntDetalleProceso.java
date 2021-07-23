@@ -64,7 +64,6 @@ public class IntDetalleProceso extends javax.swing.JFrame {
 		};
 		try {
 			JButton btnEliminar = new JButton("Eliminar");
-			btnEliminar.setCursor(new Cursor(Cursor.HAND_CURSOR));
 			btnEliminar.setBackground(Color.red);
 			btnEliminar.setForeground(Color.white);
 			for (Usuario usuario : proceso.getUsuarios()) {
@@ -80,8 +79,9 @@ public class IntDetalleProceso extends javax.swing.JFrame {
 	}
 
 	private void cargarTablaActivos() {
+		jTblActivosProceso.setDefaultRenderer(Object.class, new Render());
 		String[] titulos = {"ID ACTIVO", "ID OBJETO", "NOMBRE", "DESCRIPCION", "CEDULA USUARIO",
-			"NOMBRE USUARIO", "APELLIDO USUARIO", "REVISADO", "ESTADO REVISION", "OBSERVACION REVISION"};
+			"NOMBRE USUARIO", "APELLIDO USUARIO", "REVISADO", "ESTADO REVISION", "OBSERVACION REVISION", ""};
 		this.modeloTablaActivos = new DefaultTableModel(null, titulos) {
 			@Override
 			public boolean isCellEditable(int row, int column) {
@@ -90,12 +90,15 @@ public class IntDetalleProceso extends javax.swing.JFrame {
 		};
 		try {
 			for (Activo activo : this.proceso.getActivos()) {
+				JButton btnValidar = new JButton("Validar"); 
+				btnValidar.setBackground(Color.green);
+				btnValidar.setForeground(Color.white);
 				String revision = "";
 				System.out.println(activo.toString());
 				if (activo.getRevisionActivo() == 1) {
 					revision = "REVISADO";
 				}
-				String[] datos = {activo.getIdPertinencia(),
+				Object [] datos = {activo.getIdPertinencia(),
 					activo.getIdActivo(), activo.getNombreActivo(),
 					activo.getDescripcionActivo(),
 					activo.getUsuario().getCedula(),
@@ -103,11 +106,13 @@ public class IntDetalleProceso extends javax.swing.JFrame {
 					activo.getUsuario().getApellido(),
 					revision,
 					activo.getEstadoRevisionActivo(),
-					activo.getObservacionRevision()
+					activo.getObservacionRevision(),
+					btnValidar
 				};
 				modeloTablaActivos.addRow(datos);
 			}
 			jTblActivosProceso.setModel(modeloTablaActivos);
+			jTblActivosProceso.setRowHeight(20);
 		} catch (Exception ex) {
 			JOptionPane.showMessageDialog(null, "Error: No se ha podido comunicar con el servidor");
 		}
@@ -175,6 +180,11 @@ public class IntDetalleProceso extends javax.swing.JFrame {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
+        jTblActivosProceso.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
+            public void mouseMoved(java.awt.event.MouseEvent evt) {
+                jTblActivosProcesoMouseMoved(evt);
+            }
+        });
         jScrollPane2.setViewportView(jTblActivosProceso);
 
         jLabel1.setText("ID PROCESO:");
@@ -319,6 +329,15 @@ public class IntDetalleProceso extends javax.swing.JFrame {
 		}
 		//System.out.println(evt.getPoint().toString());
     }//GEN-LAST:event_jTblUsuariosMouseMoved
+
+    private void jTblActivosProcesoMouseMoved(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTblActivosProcesoMouseMoved
+        // TODO add your handling code here:
+		if (jTblActivosProceso.columnAtPoint(evt.getPoint()) == 10) {
+			jTblActivosProceso.setCursor(new Cursor(Cursor.HAND_CURSOR));
+		} else {
+			jTblActivosProceso.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+		}
+    }//GEN-LAST:event_jTblActivosProcesoMouseMoved
 
 	private void eliminarUsuario(java.awt.event.MouseEvent evt) {
 		int column = jTblUsuarios.getColumnModel().getColumnIndexAtX(evt.getX());

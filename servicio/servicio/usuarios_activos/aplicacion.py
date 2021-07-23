@@ -1,5 +1,5 @@
 from .data import DataActivo, DataUsuario, DataProceso
-from .entidades import Usuario, Activo, UsuarioActivo, Proceso
+from .entidades import Usuario, Item, Activo, Proceso
 
 
 # Devuelve una lista de tuplas con el usuario y su cantidad de activos
@@ -26,7 +26,7 @@ def get_activos_por_usuario(usuario):
     repo_usuario_activo = DataActivo()
     activos_usuario = []
     for data_activo in repo_usuario_activo.get_activos_por_usuario(usuario):
-        activos_usuario.append(UsuarioActivo(**data_activo, activo=Activo(**data_activo)))
+        activos_usuario.append(Activo(**data_activo, item=Item(**data_activo)))
     return activos_usuario
 
 
@@ -53,7 +53,7 @@ def get_proceso_por_id(id_proceso):
 # Devuelve una lista de activos en base a un proceso
 def get_activos_por_proceso(proceso):
     repo_procesos = DataProceso()
-    activos = [UsuarioActivo(**data_activo, activo=Activo(**data_activo)) for data_activo in
+    activos = [Activo(**data_activo, item=Item(**data_activo)) for data_activo in
                repo_procesos.get_activos_por_proceso(proceso)]
     return activos
 
@@ -104,3 +104,9 @@ def eliminar_usuario_de_proceso(usuario, proceso):
 
 def agregar_usuario_proceso(usuario, proceso):
     return None
+
+
+def get_activo_por_id(id_activo):
+    repo_activos = DataActivo()
+    activo = repo_activos.get_activo_por_id(id_activo)
+    return activo

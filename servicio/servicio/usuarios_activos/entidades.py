@@ -25,12 +25,12 @@ class Usuario:
         self.__activos = activos
 
 
-class Activo:
+class Item:
 
     def __init__(self, **kwargs):
-        self.__id = kwargs.get("id_activo")
-        self.__nombre = kwargs.get("nombre_activo")
-        self.__descripcion = kwargs.get("descripcion_activo")
+        self.__id = kwargs.get("id_item")
+        self.__nombre = kwargs.get("nombre_item")
+        self.__descripcion = kwargs.get("descripcion_item")
 
     def get_id(self):
         return self.__id
@@ -42,23 +42,23 @@ class Activo:
         return self.__descripcion
 
 
-class UsuarioActivo:
+class Activo:
 
     def __init__(self, **kwargs):
-        self.__id_pertenencia = kwargs.get("id_pertenencia")
+        self.__id_pertenencia = kwargs.get("id_activo")
         self.__usuario = kwargs.get("usuario")
-        self.__activo = kwargs.get("activo")
+        self.__activo = kwargs.get("item")
         self.__revision = kwargs.get("revision_activo")
         self.__estado = kwargs.get("estado_revision_activo")
         self.__observacion = kwargs.get("observacion_revision")
 
-    def get_id_pertenencia(self):
+    def get_id(self):
         return self.__id_pertenencia
 
     def get_usuario(self):
         return self.__usuario
 
-    def get_activo(self):
+    def get_item(self):
         return self.__activo
 
     def get_revision(self):

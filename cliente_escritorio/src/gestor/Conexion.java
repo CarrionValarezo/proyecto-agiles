@@ -80,10 +80,10 @@ public class Conexion {
 		activos = new String[jArray.length()][4];
 		//Llenar la matriz segun los datos del JSON obtenido
 		for (int i = 0; i < jArray.length(); i++) {
-			activos[i][0] = String.valueOf(jArray.getJSONObject(i).getInt("id_pertenencia"));
-			activos[i][1] = jArray.getJSONObject(i).getString("id_activo");
-			activos[i][2] = jArray.getJSONObject(i).getString("nombre_activo");
-			activos[i][3] = jArray.getJSONObject(i).getString("descripcion_activo");
+			activos[i][0] = String.valueOf(jArray.getJSONObject(i).getInt("id_activo"));
+			activos[i][1] = jArray.getJSONObject(i).getString("id_item");
+			activos[i][2] = jArray.getJSONObject(i).getString("nombre_item");
+			activos[i][3] = jArray.getJSONObject(i).getString("descripcion_item");
 		}
 		return activos;
 	}
@@ -151,10 +151,10 @@ public class Conexion {
 		}
 
 		for (int i = 0; i < activos.length; i++) {
-			String idPertenencia = String.valueOf(jsonActivos.getJSONObject(i).getInt("id_pertenencia"));
-			String idActivo = jsonActivos.getJSONObject(i).getString("id_activo");
-			String nombreActivo = jsonActivos.getJSONObject(i).getString("nombre_activo");
-			String descripcionActivo = jsonActivos.getJSONObject(i).getString("descripcion_activo");
+			String idPertenencia = String.valueOf(jsonActivos.getJSONObject(i).getInt("id_activo"));
+			String idActivo = jsonActivos.getJSONObject(i).getString("id_item");
+			String nombreActivo = jsonActivos.getJSONObject(i).getString("nombre_item");
+			String descripcionActivo = jsonActivos.getJSONObject(i).getString("descripcion_item");
 
 			int revisionActivo = jsonActivos.getJSONObject(i).getInt("revision_activo");
 			String estadoRevisionActivo = jsonActivos.getJSONObject(i).getString("estado_revision_activo");
