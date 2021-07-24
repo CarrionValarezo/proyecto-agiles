@@ -5,6 +5,7 @@
  */
 package interfaces;
 
+import componentes.TablaActivosProceso;
 import gestor.Conexion;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -20,31 +21,33 @@ import javax.swing.JTable;
 public class IntValidarActivo extends javax.swing.JFrame {
 
 	Conexion conexion;
-	JTable tablaActivos;
+	TablaActivosProceso tablaActivos;
 	int posicion, idProceso;
-	IntDetalleProceso origen;
 
 	/**
 	 * Creates new form IntValidarActivo
 	 */
-	public IntValidarActivo(JTable tablaActivos, IntDetalleProceso origen, int idProceso, int posicion) {
+
+	public IntValidarActivo(TablaActivosProceso tabla, int idProceso, int posicion) {
 		initComponents();
 		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-		this.origen = origen;
 		this.conexion = new Conexion();
+
 		this.idProceso = idProceso;
-		this.tablaActivos = tablaActivos;
+		this.tablaActivos = tabla;
 		this.posicion = posicion;
+
 		this.jTxaObservacion.setEditable(false);
 		this.jRbtCorrecto.setSelected(true);
+
 		ButtonGroup grupo = new ButtonGroup();
 		grupo.add(jRbtCorrecto);
 		grupo.add(jRbtObservacion);
 
-		cargarDatos();
+		cargarDatosActivo();
 	}
 
-	public void cargarDatos() {
+	public void cargarDatosActivo() {
 		String idActivo = (String) tablaActivos.getValueAt(posicion, 0);
 		String cedula = (String) tablaActivos.getValueAt(posicion, 4);
 		jLabel1.setText(idActivo);
@@ -52,7 +55,7 @@ public class IntValidarActivo extends javax.swing.JFrame {
 	}
 
 	public void validarActivo() {
-		cargarDatos();
+		cargarDatosActivo();
 		String idActivo = (String) tablaActivos.getValueAt(posicion, 0);
 		String estadoActivo;
 		String observacionActivo;
@@ -77,10 +80,10 @@ public class IntValidarActivo extends javax.swing.JFrame {
 		this.posicion += 1;
 		if (this.posicion == tablaActivos.getRowCount()) {
 			JOptionPane.showMessageDialog(null, "Ha terminado el proceso de validacion!");
-			this.origen.actualizarVentana();
+			this.tablaActivos.cargarTabla(String.valueOf(idProceso)); 
 			this.dispose();
 		} else {
-			cargarDatos();
+			cargarDatosActivo();
 			this.jRbtCorrecto.setSelected(true);
 			this.jTxaObservacion.setText("");
 			this.jTxaObservacion.setEditable(false);
@@ -223,13 +226,14 @@ public class IntValidarActivo extends javax.swing.JFrame {
     private void jBtnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBtnGuardarActionPerformed
 		// TODO add your handling code here:
 		this.validarActivo();
-		this.origen.actualizarVentana();
+		this.tablaActivos.cargarTabla(String.valueOf(idProceso));
 		this.dispose();
     }//GEN-LAST:event_jBtnGuardarActionPerformed
 
     private void jBtnSiguienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBtnSiguienteActionPerformed
 		// TODO add your handling code here
 		this.validarYSiguiente();
+		this.tablaActivos.cargarTabla(String.valueOf(idProceso)); 
     }//GEN-LAST:event_jBtnSiguienteActionPerformed
 
     private void jRbtCorrectoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRbtCorrectoActionPerformed
@@ -238,7 +242,7 @@ public class IntValidarActivo extends javax.swing.JFrame {
 
     private void jBtnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBtnCancelarActionPerformed
 		// TODO add your handling code here:
-		this.origen.actualizarVentana();
+		this.tablaActivos.cargarTabla(String.valueOf(idProceso));
 		this.dispose();
     }//GEN-LAST:event_jBtnCancelarActionPerformed
 

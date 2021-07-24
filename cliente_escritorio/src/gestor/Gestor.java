@@ -5,6 +5,7 @@
  */
 package gestor;
 
+import entidades.Proceso;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.logging.Level;
@@ -46,11 +47,11 @@ public class Gestor {
 		}
 	}
 
-	public String[][] getProcesos(){
-		try { 
+	public String[][] getProcesos() {
+		try {
 			return this.conexion.getProcesos();
 		} catch (Exception ex) {
-			return null; 
+			return null;
 		}
 	}
 
@@ -58,7 +59,24 @@ public class Gestor {
 		try {
 			return this.conexion.getActivosUsuarios(cedula);
 		} catch (Exception ex) {
-			return null; 
+			return null;
+		}
+	}
+
+	public Proceso getProceso(String idProceso) {
+		try {
+			return conexion.getProceso(idProceso);
+		} catch (Exception ex) {
+			return null;
+		}
+
+	}
+
+	public void eliminarUsuario(String idProceso, String cedula) {
+		try{
+			this.conexion.eliminarUsuarioDeProceso(idProceso, cedula);
+		} catch (Exception ex) {
+			System.out.println("Ocurrio un ERROR");	
 		}
 	}
 

@@ -7,8 +7,10 @@ import com.itextpdf.text.Phrase;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
+import componentes.TablaActivosProceso;
 import java.io.FileOutputStream;
 import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -26,10 +28,13 @@ public class GeneradorPDF {
 
 	public GeneradorPDF(){
 		documento = new Document(); 
-		
 	}
 
-	public void generarPdf(JTable table, String path, String nombre) throws Exception{
+	public void generarPdf(TablaActivosProceso table, String path, String nombre) throws Exception{
+		int filasTabla = table.getRowCount(); 
+		int columnasTabla = table.getColumnCount(); 
+		System.out.println("FIlas: "+filasTabla);
+		System.out.println("Columnas: "+columnasTabla);
 		PdfWriter.getInstance(documento, new FileOutputStream(path+nombre+".pdf"));
 		documento.open();
 
@@ -48,9 +53,10 @@ public class GeneradorPDF {
 		//pdfTable.addCell(new PdfPCell(new Phrase(table.getColumnName(i),font)));
 
 		//extracting data from the JTable and inserting it to PdfPTable
-		for (int rows = 0; rows < table.getRowCount() ; rows++) {
-			for (int cols = 0; cols < table.getColumnCount(); cols++) {
-				String valor = table.getModel().getValueAt(rows, cols).toString();
+
+		for (int rows = 0; rows < filasTabla ; rows++) {
+			for (int cols = 0; cols < columnasTabla; cols++) {
+				String valor = ((DefaultTableModel)table.getModel()).getValueAt(rows, cols).toString();
 				pdfTable.addCell(new PdfPCell(new Phrase(valor,font)));
 			}
 		}
