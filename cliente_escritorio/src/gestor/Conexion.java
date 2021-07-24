@@ -60,25 +60,16 @@ public class Conexion {
 	}
 
 	public String[][] getActivosUsuarios(String cedula) throws Exception {
-		//Especificar la url a la cual voy a realizar la peticion
 		String url = "http://localhost:5000/usuarios/" + cedula + "/activos";
-		//Declaracion de la matriz usuarios a devolver
 		String[][] activos = null;
-		//Instanciar cliente Http
-		//Construccion de la request(peticion) que realizara el cliente
 		HttpRequest request = HttpRequest.newBuilder()
 				.uri(new URI(url))
 				.GET()
 				.build();
-		//Respuesta que obtiene el cliente al realizar la peticion especificada
-		//anteriormente
 		HttpResponse<String> response = this.cliente.send(request, HttpResponse.BodyHandlers.ofString());
 		System.out.println(response.body());
-		//Cuerpo de la peticion a un array de tipo JSON.
 		JSONArray jArray = new JSONArray(response.body());
-		//Declaracion de la matriz usuarios
 		activos = new String[jArray.length()][4];
-		//Llenar la matriz segun los datos del JSON obtenido
 		for (int i = 0; i < jArray.length(); i++) {
 			activos[i][0] = String.valueOf(jArray.getJSONObject(i).getInt("id_activo"));
 			activos[i][1] = jArray.getJSONObject(i).getString("id_item");
@@ -131,8 +122,6 @@ public class Conexion {
 
 		HttpResponse<String> response = clienteProceso.send(request, HttpResponse.BodyHandlers.ofString());
 		System.out.println(response.body());
-		//Cuerpo de la peticion a un array de tipo JSON.
-		//JSONArray jArray = new JSONArray(response.body());
 
 		JSONObject respuesta = new JSONObject(response.body());
 
@@ -178,25 +167,16 @@ public class Conexion {
 	}
 
 	public String[][] getProcesosUsuarios(String cedula) throws Exception{
-		//Especificar la url a la cual voy a realizar la peticion
 		String url = "http://localhost:5000/usuarios/" + cedula + "/procesos";
-		//Declaracion de la matriz usuarios a devolver
 		String[][] procesos = null;
-		//Instanciar cliente Http
-		//Construccion de la request(peticion) que realizara el cliente
 		HttpRequest request = HttpRequest.newBuilder()
 				.uri(new URI(url))
 				.GET()
 				.build();
-		//Respuesta que obtiene el cliente al realizar la peticion especificada
-		//anteriormente
 		HttpResponse<String> response = this.cliente.send(request, HttpResponse.BodyHandlers.ofString());
 		System.out.println(response.body());
-		//Cuerpo de la peticion a un array de tipo JSON.
 		JSONArray jArray = new JSONArray(response.body());
-		//Declaracion de la matriz usuarios
 		procesos = new String[jArray.length()][3];
-		//Llenar la matriz segun los datos del JSON obtenido
 		for (int i = 0; i < jArray.length(); i++) {
 			procesos[i][0] = String.valueOf(jArray.getJSONObject(i).getInt("id_proceso"));
 			procesos[i][1] = jArray.getJSONObject(i).getString("nombre_proceso");
@@ -205,25 +185,16 @@ public class Conexion {
 		return procesos;
 	}
 	public String[][] getProcesos() throws Exception{
-		//Especificar la url a la cual voy a realizar la peticion
 		String url = "http://localhost:5000/procesos";
-		//Declaracion de la matriz usuarios a devolver
 		String[][] procesos = null;
-		//Instanciar cliente Http
-		//Construccion de la request(peticion) que realizara el cliente
 		HttpRequest request = HttpRequest.newBuilder()
 				.uri(new URI(url))
 				.GET()
 				.build();
-		//Respuesta que obtiene el cliente al realizar la peticion especificada
-		//anteriormente
 		HttpResponse<String> response = this.cliente.send(request, HttpResponse.BodyHandlers.ofString());
 		System.out.println(response.body());
-		//Cuerpo de la peticion a un array de tipo JSON.
 		JSONArray jArray = new JSONArray(response.body());
-		//Declaracion de la matriz usuarios
 		procesos = new String[jArray.length()][4];
-		//Llenar la matriz segun los datos del JSON obtenido
 		for (int i = 0; i < jArray.length(); i++) {
 			procesos[i][0] = String.valueOf(jArray.getJSONObject(i).getInt("id_proceso"));
 			procesos[i][1] = jArray.getJSONObject(i).getString("nombre_proceso");
@@ -234,17 +205,29 @@ public class Conexion {
 	}
 
 	public void eliminarUsuarioDeProceso(String id_proceso, String cedula) throws Exception{
-		//Especificar la url a la cual voy a realizar la peticion
 		String url = "http://localhost:5000/procesos/"+id_proceso+"/usuarios/"+cedula;
-		//Declaracion de la matriz usuarios a devolver
-		//Instanciar cliente Http
-		//Construccion de la request(peticion) que realizara el cliente
 		HttpRequest request = HttpRequest.newBuilder()
 				.uri(new URI(url))
 				.DELETE()
 				.build();
-		//Respuesta que obtiene el cliente al realizar la peticion especificada
-		//anteriormente
+		HttpResponse<String> response = this.cliente.send(request, HttpResponse.BodyHandlers.ofString());
+		System.out.println(response.body());
+	}
+
+	public void validarActivo(String idActivo, int idProceso, 
+			String estadoActivo, String observacionActivo) throws Exception{
+		String url = "http://localhost:5000/procesos/"+idProceso+"/activos/"+idActivo;
+		
+		JSONObject jEnviar = new JSONObject(); 
+
+		jEnviar.put("estado_activo", estadoActivo);
+		jEnviar.put("observacion_activo", observacionActivo); 
+
+		HttpRequest request = HttpRequest.newBuilder()
+				.uri(new URI(url))
+				.header("Content-Type", "application/json")
+				.PUT(BodyPublishers.ofString(jEnviar.toString()))
+				.build(); 
 		HttpResponse<String> response = this.cliente.send(request, HttpResponse.BodyHandlers.ofString());
 		System.out.println(response.body());
 	}

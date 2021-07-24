@@ -90,7 +90,7 @@ public class IntDetalleProceso extends javax.swing.JFrame {
 		};
 		try {
 			for (Activo activo : this.proceso.getActivos()) {
-				JButton btnValidar = new JButton("Validar"); 
+				JButton btnValidar = new JButton("Validar");
 				btnValidar.setBackground(Color.green);
 				btnValidar.setForeground(Color.white);
 				String revision = "";
@@ -98,7 +98,7 @@ public class IntDetalleProceso extends javax.swing.JFrame {
 				if (activo.getRevisionActivo() == 1) {
 					revision = "REVISADO";
 				}
-				Object [] datos = {activo.getIdPertinencia(),
+				Object[] datos = {activo.getIdPertinencia(),
 					activo.getIdActivo(), activo.getNombreActivo(),
 					activo.getDescripcionActivo(),
 					activo.getUsuario().getCedula(),
@@ -183,6 +183,11 @@ public class IntDetalleProceso extends javax.swing.JFrame {
         jTblActivosProceso.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
             public void mouseMoved(java.awt.event.MouseEvent evt) {
                 jTblActivosProcesoMouseMoved(evt);
+            }
+        });
+        jTblActivosProceso.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTblActivosProcesoMouseClicked(evt);
             }
         });
         jScrollPane2.setViewportView(jTblActivosProceso);
@@ -331,7 +336,7 @@ public class IntDetalleProceso extends javax.swing.JFrame {
     }//GEN-LAST:event_jTblUsuariosMouseMoved
 
     private void jTblActivosProcesoMouseMoved(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTblActivosProcesoMouseMoved
-        // TODO add your handling code here:
+		// TODO add your handling code here:
 		if (jTblActivosProceso.columnAtPoint(evt.getPoint()) == 10) {
 			jTblActivosProceso.setCursor(new Cursor(Cursor.HAND_CURSOR));
 		} else {
@@ -339,23 +344,53 @@ public class IntDetalleProceso extends javax.swing.JFrame {
 		}
     }//GEN-LAST:event_jTblActivosProcesoMouseMoved
 
+    private void jTblActivosProcesoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTblActivosProcesoMouseClicked
+		// TODO add your handling code here:
+		validarActivo(evt);
+    }//GEN-LAST:event_jTblActivosProcesoMouseClicked
+
+	private void validarActivo(java.awt.event.MouseEvent evt) {
+		int column = jTblActivosProceso.getColumnModel().getColumnIndexAtX(evt.getX());
+		int row = evt.getY() / jTblActivosProceso.getRowHeight();
+
+		if (row < jTblActivosProceso.getRowCount() && row >= 0 && column < jTblActivosProceso.getColumnCount() && column >= 0) {
+
+			Object value = jTblActivosProceso.getValueAt(row, column);
+
+			if (value instanceof JButton) {
+				((JButton) value).doClick();
+				JButton btn = (JButton) value;
+				int id = Integer.parseInt(this.proceso.getIdProceso());
+				IntValidarActivo intValidacion = new IntValidarActivo(jTblActivosProceso, this, id, row);
+				intValidacion.setVisible(true);
+
+			}
+		}
+
+	}
+
+	public void actualizarVentana() {
+		IntDetalleProceso intDetalleRecarga = new IntDetalleProceso(this.proceso.getIdProceso());
+		this.dispose();
+		intDetalleRecarga.setVisible(true);
+	}
+
 	private void eliminarUsuario(java.awt.event.MouseEvent evt) {
 		int column = jTblUsuarios.getColumnModel().getColumnIndexAtX(evt.getX());
 		int row = evt.getY() / jTblUsuarios.getRowHeight();
 		if (row < jTblUsuarios.getRowCount() && row >= 0 && column < jTblUsuarios.getColumnCount() && column >= 0) {
 			Object value = jTblUsuarios.getValueAt(row, column);
 			String cedula = (String) jTblUsuarios.getValueAt(row, 0);
-			String nombre = (String) jTblUsuarios.getValueAt(row, 1); 
+			String nombre = (String) jTblUsuarios.getValueAt(row, 1);
 			if (value instanceof JButton) {
 				((JButton) value).doClick();
 				JButton btn = (JButton) value;
 				try {
-					int opcion = JOptionPane.showConfirmDialog(null, "Esta seguro de eliminar al usuario: "+cedula+" "+nombre+"  del proceso: " + this.proceso.getNombre());
+					int opcion = JOptionPane.showConfirmDialog(null,
+							"Esta seguro de eliminar al usuario: " + cedula + " " + nombre + "  del proceso: " + this.proceso.getNombre());
 					if (opcion == 0) {
 						this.conexion.eliminarUsuarioDeProceso(this.proceso.getIdProceso(), cedula);
-						IntDetalleProceso intDetalleRecarga = new IntDetalleProceso(this.proceso.getIdProceso());
-						this.dispose();
-						intDetalleRecarga.setVisible(true);
+						actualizarVentana(); 
 					}
 				} catch (Exception ex) {
 					JOptionPane.showConfirmDialog(null, "Ocurrio un error");
@@ -394,7 +429,7 @@ public class IntDetalleProceso extends javax.swing.JFrame {
 		/* Create and display the form */
 		java.awt.EventQueue.invokeLater(new Runnable() {
 			public void run() {
-				String id = "2";
+				String id = "11";
 				new IntDetalleProceso(id).setVisible(true);
 			}
 		});
