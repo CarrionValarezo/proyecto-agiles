@@ -14,14 +14,12 @@ def get_usuarios_cant_activos():
     return usuarios_activos
 
 
-# Devulve un usuario en base a la cedula
 def get_usuario_por_cedula(cedula):
     repos_usuario = DataUsuario()
     usuario = Usuario(**repos_usuario.get_usuario_por_cedula(cedula))
     return usuario
 
 
-# Devuelve una lista con los activos que le pertenecen al usuario
 def get_activos_por_usuario(usuario):
     repo_usuario_activo = DataActivo()
     activos_usuario = []
@@ -30,7 +28,6 @@ def get_activos_por_usuario(usuario):
     return activos_usuario
 
 
-# Crea un proceso, lo inicializa en base a los activos que poseen cada usuario enviado y retorno los datos del proceso
 def crear_proceso(proceso, usuarios):
     repo_procesos = DataProceso()
     nuevo_proceso = Proceso(**proceso)
@@ -43,18 +40,36 @@ def crear_proceso(proceso, usuarios):
     return nuevo_proceso
 
 
-# Devuelve un proceso en base a su id
+def asignar_estado_proceso(proceso, activos):
+    activos_revisados = 0
+    if proceso.get_estado() == "CREADO":
+        return "CREADO"
+    elif proceso.get_estado() == "FINALIZADO":
+        return "FINALIZADO"
+    elif proceso.get_estado() == "INICIADO":
+        for activo in activos:
+            if activo.get_revision():
+                activos_revisados += 1
+        if len(activos) == activos_revisados:
+            return "FINALIZADO"
+    return "INICIADO"
+
+
 def get_proceso_por_id(id_proceso):
     repo_procesos = DataProceso()
     proceso = Proceso(**repo_procesos.get_proceso_por_id(id_proceso))
     return proceso
 
 
-# Devuelve una lista de activos en base a un proceso
 def get_activos_por_proceso(proceso):
     repo_procesos = DataProceso()
     activos = [Activo(**data_activo, item=Item(**data_activo)) for data_activo in
                repo_procesos.get_activos_por_proceso(proceso)]
+    estado_actualizado = asignar_estado_proceso(proceso, activos)
+    if proceso.get_estado() != estado_actualizado:
+        proceso.set_estado(estado_actualizado)
+        repo_procesos.actualizar_estado(proceso)
+        proceso.set_estado(estado_actualizado)
     return activos
 
 
@@ -115,3 +130,6 @@ def get_activo_por_id(id_activo):
 def validar_activo(activo, proceso, estado, observacion):
     repo_procesos = DataProceso()
     repo_procesos.validar_activo(activo, proceso, estado, observacion)
+    if proceso.get_estado() == "CREADO":
+        proceso.set_estado("INICIADO")
+        DataProceso().actualizar_estado(proceso)

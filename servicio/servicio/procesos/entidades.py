@@ -70,6 +70,7 @@ class Activo:
     def get_observacion(self):
         return self.__observacion
 
+
 class Proceso:
 
     def __init__(self, **kwargs):
@@ -92,3 +93,6 @@ class Proceso:
 
     def set_id(self, id):
         self.__id = id
+
+    def set_estado(self, estado):
+        self.__estado = estado
