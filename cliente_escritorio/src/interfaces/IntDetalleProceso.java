@@ -5,6 +5,7 @@
  */
 package interfaces;
 
+import componentes.Render;
 import entidades.Activo;
 import entidades.Proceso;
 import entidades.Usuario;
@@ -12,15 +13,11 @@ import gestor.Conexion;
 import gestor.GeneradorPDF;
 import java.awt.Color;
 import java.awt.Cursor;
-import java.awt.Dimension;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseMotionListener;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
-import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
 /**
