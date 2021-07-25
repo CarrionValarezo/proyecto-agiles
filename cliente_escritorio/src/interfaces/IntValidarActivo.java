@@ -5,6 +5,7 @@
  */
 package interfaces;
 
+import componentes.PnlDetalleProceso;
 import componentes.TablaActivosProceso;
 import componentes.TablaUsuarios;
 import gestor.Conexion;
@@ -25,11 +26,11 @@ public class IntValidarActivo extends javax.swing.JFrame {
 	TablaActivosProceso tablaActivos;
 	int posicion, idProceso;
 	IntDetalleProceso intDetalle;
+	PnlDetalleProceso pnlDetalle; 
 
 	/**
 	 * Creates new form IntValidarActivo
 	 */
-
 	public IntValidarActivo(IntDetalleProceso intDetalle, TablaActivosProceso tabla, int idProceso, int posicion) {
 		initComponents();
 		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
@@ -39,7 +40,28 @@ public class IntValidarActivo extends javax.swing.JFrame {
 		this.tablaActivos = tabla;
 		this.posicion = posicion;
 
-		this.intDetalle = intDetalle; 
+		this.intDetalle = intDetalle;
+
+		this.jTxaObservacion.setEditable(false);
+		this.jRbtCorrecto.setSelected(true);
+
+		ButtonGroup grupo = new ButtonGroup();
+		grupo.add(jRbtCorrecto);
+		grupo.add(jRbtObservacion);
+
+		cargarDatosActivo();
+	}
+
+	public IntValidarActivo(PnlDetalleProceso intDetalle, TablaActivosProceso tabla, int idProceso, int posicion) {
+		initComponents();
+		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+		this.conexion = new Conexion();
+
+		this.idProceso = idProceso;
+		this.tablaActivos = tabla;
+		this.posicion = posicion;
+
+		this.pnlDetalle = intDetalle;
 
 		this.jTxaObservacion.setEditable(false);
 		this.jRbtCorrecto.setSelected(true);
@@ -317,7 +339,7 @@ public class IntValidarActivo extends javax.swing.JFrame {
 		// TODO add your handling code here:
 		this.validarActivo();
 		this.tablaActivos.cargarTabla(String.valueOf(idProceso));
-		this.intDetalle.setProceso(this.tablaActivos.getProceso());
+		this.pnlDetalle.setProceso(this.tablaActivos.getProceso());
 		this.dispose();
     }//GEN-LAST:event_jBtnGuardarActionPerformed
 
@@ -325,7 +347,7 @@ public class IntValidarActivo extends javax.swing.JFrame {
 		// TODO add your handling code here
 		this.validarYSiguiente();
 		this.tablaActivos.cargarTabla(String.valueOf(idProceso));
-		this.intDetalle.setProceso(this.tablaActivos.getProceso());
+		this.pnlDetalle.setProceso(this.tablaActivos.getProceso());
     }//GEN-LAST:event_jBtnSiguienteActionPerformed
 
     private void jRbtCorrectoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRbtCorrectoActionPerformed

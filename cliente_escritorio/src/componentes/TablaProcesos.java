@@ -44,8 +44,8 @@ public class TablaProcesos extends JTable {
 				int row = table.rowAtPoint(point);
 				if (mouseEvent.getClickCount() == 2 && table.getSelectedRow() != -1) {
 					String idProceso = tabla.getValueAt(tabla.getSelectedRow(), 0).toString();
-					IntDetalleProceso intDetalleProceso = new IntDetalleProceso(idProceso);
-					intDetalleProceso.setVisible(true);
+					IntDetalleProceso intDetalleProceso = IntDetalleProceso._getVentana();
+					intDetalleProceso.agregarDetalle(idProceso);
 				}
 			}
 		});

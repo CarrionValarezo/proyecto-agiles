@@ -8,7 +8,6 @@ package componentes;
 import entidades.Activo;
 import entidades.Proceso;
 import gestor.Gestor;
-import interfaces.IntDetalleProceso;
 import interfaces.IntValidarActivo;
 import java.awt.Color;
 import java.awt.Cursor;
@@ -17,7 +16,6 @@ import javax.swing.JButton;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingUtilities;
-import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -31,6 +29,7 @@ public class TablaActivosProceso extends JTable {
 	JButton btnValidar;
 	Proceso proceso;
 	ListSelectionModel model;
+	PnlDetalleProceso panel; 
 
 	public TablaActivosProceso() {
 		this.setRowSelectionAllowed(true);
@@ -42,6 +41,11 @@ public class TablaActivosProceso extends JTable {
 		crearBoton();
 		tablaClick();
 		tablaMoverCursor();
+		
+	}
+
+	public void imprimir(){
+		System.out.println(SwingUtilities.getRootPane(this));
 	}
 
 	public Proceso getProceso() {
@@ -116,11 +120,13 @@ public class TablaActivosProceso extends JTable {
 				((JButton) value).doClick();
 				JButton btn = (JButton) value;
 				int id = Integer.parseInt(this.proceso.getIdProceso());
-
-				IntDetalleProceso detalle = (IntDetalleProceso) SwingUtilities.getWindowAncestor(this);
-				IntValidarActivo intValidacion = new IntValidarActivo(detalle, this, id, row);
+				IntValidarActivo intValidacion = new IntValidarActivo(this.panel, this, id, row);
 				intValidacion.setVisible(true);
 			}
 		}
+	}
+
+	public void setPanel(PnlDetalleProceso panel) {
+		this.panel = panel; 
 	}
 }

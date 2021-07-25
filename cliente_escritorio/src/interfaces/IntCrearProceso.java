@@ -8,15 +8,7 @@ package interfaces;
 import entidades.Usuario;
 import gestor.Conexion;
 import gestor.Gestor;
-import java.awt.Point;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JOptionPane;
-import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -68,8 +60,8 @@ public class IntCrearProceso extends javax.swing.JFrame {
 			int opcion = JOptionPane.showConfirmDialog(null, "El proceso ha sido creado exitosamente \n "
 					+ "¿Desea ver el detalle del proceso creado?");
 			if (opcion == 0) {
-				IntDetalleProceso intDetalle = new IntDetalleProceso(idProceso);
-				intDetalle.setVisible(true);
+				IntDetalleProceso intDetalle = IntDetalleProceso._getVentana();
+				intDetalle.agregarDetalle(idProceso);
 				this.dispose();
 			}
 		}
