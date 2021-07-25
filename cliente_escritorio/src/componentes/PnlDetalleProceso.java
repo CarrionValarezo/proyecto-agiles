@@ -5,11 +5,9 @@
  */
 package componentes;
 
-import com.itextpdf.text.log.Level;
 import entidades.Proceso;
 import gestor.GeneradorPDF;
 import gestor.Gestor;
-import java.awt.Component;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JTabbedPane;

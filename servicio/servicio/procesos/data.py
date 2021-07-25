@@ -128,7 +128,8 @@ class DataProceso:
         cur = db.get_cursor()
         cur.execute(f'''select id_pro as id_proceso, 
                         nom_pro as nombre_proceso, 
-                        fec_cre_pro as fecha_proceso 
+                        fec_cre_pro as fecha_proceso, 
+                        est_pro as estado_proceso 
                         from proceso 
                         where id_pro in (
                             select id_pro_det 

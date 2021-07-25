@@ -80,4 +80,12 @@ public class Gestor {
 		}
 	}
 
+	public String[][] getProcesosUsuario(String cedula) {
+		try {
+			return conexion.getProcesosUsuarios(cedula);
+		} catch (Exception ex) {
+			return null;
+		}
+	}
+
 }

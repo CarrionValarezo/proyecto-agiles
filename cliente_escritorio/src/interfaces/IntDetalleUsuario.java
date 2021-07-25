@@ -32,6 +32,7 @@ public class IntDetalleUsuario extends javax.swing.JFrame {
 		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		this.usuario = usuario;
 		cargarDatosUsuario();
+		this.tablaProcesos.setUsuario(usuario.getCedula());
 		this.tablaProcesos.cargarTabla();
 		this.tablaActivos.cargarTabla(this.usuario.getCedula());
 	}

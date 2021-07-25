@@ -21,6 +21,7 @@ public class TablaProcesos extends JTable {
 	ModeloTabla modelo;
 	Gestor gestor;
 	String[] titulos;
+	String cedula; 
 
 	public TablaProcesos() {
 		this.modelo = new ModeloTabla();
@@ -29,8 +30,12 @@ public class TablaProcesos extends JTable {
 		accionClick(); 
 	}
 
+	public void setUsuario(String cedula){
+		this.cedula = cedula; 
+	}
+
 	public void cargarTabla() {
-		String[][] procesos = gestor.getProcesos();
+		String[][] procesos = (this.cedula==null)?gestor.getProcesos():gestor.getProcesosUsuario(this.cedula);
 		this.modelo = new ModeloTabla(procesos, this.titulos);
 		this.setModel(modelo);
 	}
