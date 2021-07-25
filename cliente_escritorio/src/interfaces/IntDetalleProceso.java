@@ -9,6 +9,7 @@ import componentes.PnlDetalleProceso;
 import entidades.Proceso;
 import gestor.Conexion;
 import java.awt.Component;
+import javax.swing.JFrame;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -30,9 +31,11 @@ public class IntDetalleProceso extends javax.swing.JFrame {
 			instancia =  new IntDetalleProceso();
 			instancia.setVisible(true);
 		}
-		if(!instancia.isVisible()){ 
+		if(instancia.getExtendedState() != 0 || !instancia.isVisible()){ 
 			instancia.setVisible(true);
+			instancia.setState(JFrame.NORMAL);
 		}
+		instancia.toFront();
 		return instancia;
 	}
 

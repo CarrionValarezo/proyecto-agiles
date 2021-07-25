@@ -6,6 +6,7 @@
 package interfaces;
 
 import gestor.Conexion;
+import javax.swing.JFrame;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -25,9 +26,11 @@ public class IntVerProcesos extends javax.swing.JFrame {
 			instancia = new IntVerProcesos(); 
 			instancia.setVisible(true);
 		}
-		if(!instancia.isVisible()){ 
+		if(instancia.getExtendedState() != 0 || !instancia.isVisible()){ 
 			instancia.setVisible(true);
+			instancia.setState(JFrame.NORMAL);
 		}
+		instancia.toFront();
 		instancia.tablaProcesos.cargarTabla();
 		return instancia;  
 	}
