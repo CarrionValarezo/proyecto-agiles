@@ -6,6 +6,7 @@
 package interfaces;
 
 import componentes.TablaActivosProceso;
+import componentes.TablaUsuarios;
 import gestor.Conexion;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -23,12 +24,13 @@ public class IntValidarActivo extends javax.swing.JFrame {
 	Conexion conexion;
 	TablaActivosProceso tablaActivos;
 	int posicion, idProceso;
+	IntDetalleProceso intDetalle;
 
 	/**
 	 * Creates new form IntValidarActivo
 	 */
 
-	public IntValidarActivo(TablaActivosProceso tabla, int idProceso, int posicion) {
+	public IntValidarActivo(IntDetalleProceso intDetalle, TablaActivosProceso tabla, int idProceso, int posicion) {
 		initComponents();
 		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		this.conexion = new Conexion();
@@ -36,6 +38,8 @@ public class IntValidarActivo extends javax.swing.JFrame {
 		this.idProceso = idProceso;
 		this.tablaActivos = tabla;
 		this.posicion = posicion;
+
+		this.intDetalle = intDetalle; 
 
 		this.jTxaObservacion.setEditable(false);
 		this.jRbtCorrecto.setSelected(true);
@@ -49,9 +53,16 @@ public class IntValidarActivo extends javax.swing.JFrame {
 
 	public void cargarDatosActivo() {
 		String idActivo = (String) tablaActivos.getValueAt(posicion, 0);
+		String nombreActivo = (String) tablaActivos.getValueAt(posicion, 2);
 		String cedula = (String) tablaActivos.getValueAt(posicion, 4);
-		jLabel1.setText(idActivo);
-		jLabel2.setText(cedula);
+		String nombreUsuario = (String) tablaActivos.getValueAt(posicion, 5);
+		String apellido = (String) tablaActivos.getValueAt(posicion, 6);
+		jLblID.setText(idActivo);
+		jLblNombreActivo.setText(nombreActivo);
+
+		jLblCedula.setText(cedula);
+		jLblNombreUsuario.setText(nombreUsuario);
+		jLblApellido.setText(apellido);
 	}
 
 	public void validarActivo() {
@@ -80,7 +91,7 @@ public class IntValidarActivo extends javax.swing.JFrame {
 		this.posicion += 1;
 		if (this.posicion == tablaActivos.getRowCount()) {
 			JOptionPane.showMessageDialog(null, "Ha terminado el proceso de validacion!");
-			this.tablaActivos.cargarTabla(String.valueOf(idProceso)); 
+			this.tablaActivos.cargarTabla(String.valueOf(idProceso));
 			this.dispose();
 		} else {
 			cargarDatosActivo();
@@ -114,8 +125,18 @@ public class IntValidarActivo extends javax.swing.JFrame {
         jBtnCancelar = new javax.swing.JButton();
         jBtnGuardar = new javax.swing.JButton();
         jBtnSiguiente = new javax.swing.JButton();
+        jLblID = new javax.swing.JLabel();
+        jLblCedula = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
+        jLabel5 = new javax.swing.JLabel();
+        jLabel6 = new javax.swing.JLabel();
+        jLblNombreActivo = new javax.swing.JLabel();
+        jLblNombreUsuario = new javax.swing.JLabel();
+        jLabel9 = new javax.swing.JLabel();
+        jLblApellido = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -168,9 +189,29 @@ public class IntValidarActivo extends javax.swing.JFrame {
             }
         });
 
-        jLabel1.setText("ID Activo");
+        jLblID.setText("ID Activo");
 
-        jLabel2.setText("Cedula Usuario");
+        jLblCedula.setText("Cedula Usuario");
+
+        jLabel1.setText("ID Activo:");
+
+        jLabel2.setText("Cedula:");
+
+        jLabel3.setText("Nombre:");
+
+        jLabel4.setText("Nombre:");
+
+        jLabel5.setText("Activo");
+
+        jLabel6.setText("Usuario");
+
+        jLblNombreActivo.setText("jLabel7");
+
+        jLblNombreUsuario.setText("jLabel8");
+
+        jLabel9.setText("Apellido:");
+
+        jLblApellido.setText("jLabel10");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -180,16 +221,49 @@ public class IntValidarActivo extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addGap(56, 56, 56)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jScrollPane1)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addComponent(jLabel1)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jLabel2))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addComponent(jRbtCorrecto)
-                                .addGap(63, 63, 63)
-                                .addComponent(jRbtObservacion))))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(8, 8, 8)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addGroup(layout.createSequentialGroup()
+                                                .addComponent(jLabel3)
+                                                .addGap(18, 18, 18)
+                                                .addComponent(jLblNombreActivo, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                            .addGroup(layout.createSequentialGroup()
+                                                .addGap(39, 39, 39)
+                                                .addComponent(jLabel5)))
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(jLabel1)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addComponent(jLblID)
+                                        .addGap(50, 50, 50)))
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(jLabel4)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(jLblNombreUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(jLabel2)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(jLblCedula, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGap(37, 37, 37)
+                                        .addComponent(jLabel6))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(jLabel9)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addComponent(jLblApellido, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(jRbtCorrecto)
+                                        .addGap(63, 63, 63)
+                                        .addComponent(jRbtObservacion))
+                                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(0, 0, Short.MAX_VALUE))))
                     .addGroup(layout.createSequentialGroup()
                         .addContainerGap()
                         .addComponent(jBtnCancelar)
@@ -197,20 +271,36 @@ public class IntValidarActivo extends javax.swing.JFrame {
                         .addComponent(jBtnGuardar)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jBtnSiguiente)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(22, 22, 22))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(22, 22, 22)
+                .addGap(19, 19, 19)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel5)
+                    .addComponent(jLabel6))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLblID)
                     .addComponent(jLabel1)
-                    .addComponent(jLabel2))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 89, Short.MAX_VALUE)
+                    .addComponent(jLabel2)
+                    .addComponent(jLblCedula))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel3)
+                    .addComponent(jLabel4)
+                    .addComponent(jLblNombreActivo)
+                    .addComponent(jLblNombreUsuario))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 8, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel9)
+                    .addComponent(jLblApellido))
+                .addGap(25, 25, 25)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jRbtCorrecto)
                     .addComponent(jRbtObservacion))
-                .addGap(31, 31, 31)
+                .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -227,13 +317,15 @@ public class IntValidarActivo extends javax.swing.JFrame {
 		// TODO add your handling code here:
 		this.validarActivo();
 		this.tablaActivos.cargarTabla(String.valueOf(idProceso));
+		this.intDetalle.setProceso(this.tablaActivos.getProceso());
 		this.dispose();
     }//GEN-LAST:event_jBtnGuardarActionPerformed
 
     private void jBtnSiguienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBtnSiguienteActionPerformed
 		// TODO add your handling code here
 		this.validarYSiguiente();
-		this.tablaActivos.cargarTabla(String.valueOf(idProceso)); 
+		this.tablaActivos.cargarTabla(String.valueOf(idProceso));
+		this.intDetalle.setProceso(this.tablaActivos.getProceso());
     }//GEN-LAST:event_jBtnSiguienteActionPerformed
 
     private void jRbtCorrectoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRbtCorrectoActionPerformed
@@ -301,6 +393,16 @@ public class IntValidarActivo extends javax.swing.JFrame {
     private javax.swing.JButton jBtnSiguiente;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel9;
+    private javax.swing.JLabel jLblApellido;
+    private javax.swing.JLabel jLblCedula;
+    private javax.swing.JLabel jLblID;
+    private javax.swing.JLabel jLblNombreActivo;
+    private javax.swing.JLabel jLblNombreUsuario;
     private javax.swing.JRadioButton jRbtCorrecto;
     private javax.swing.JRadioButton jRbtObservacion;
     private javax.swing.JScrollPane jScrollPane1;

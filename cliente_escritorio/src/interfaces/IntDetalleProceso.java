@@ -5,17 +5,12 @@
  */
 package interfaces;
 
-import componentes.Render;
-import entidades.Activo;
 import entidades.Proceso;
-import entidades.Usuario;
 import gestor.Conexion;
 import gestor.GeneradorPDF;
-import java.awt.Color;
-import java.awt.Cursor;
+import gestor.Gestor;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
@@ -29,6 +24,7 @@ public class IntDetalleProceso extends javax.swing.JFrame {
 	Conexion conexion;
 	DefaultTableModel modeloTablaActivos, modeloTablaUsuarios;
 	Proceso proceso;
+	String idProceso; 
 
 	/**
 	 * Creates new form IntDetalleProceso
@@ -37,18 +33,24 @@ public class IntDetalleProceso extends javax.swing.JFrame {
 		initComponents();
 		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		this.conexion = new Conexion();
-		try {
-			this.proceso = conexion.getProceso(idProceso);
-		} catch (Exception ex) {
-			JOptionPane.showMessageDialog(null, ex);
-		}
+		this.idProceso = idProceso; 
+		this.proceso = Gestor._getGestor().getProceso(idProceso); 
+		cargarDatos(); 
+		this.tablaUsuariosProceso1.cargarTabla(idProceso);
+		this.tablaUsuariosProceso1.setTablaActivos(tablaActivosProceso1);
+		this.tablaActivosProceso1.cargarTabla(idProceso);
+	}
+
+	public void setProceso(Proceso proceso){
+		this.proceso = proceso; 
+		cargarDatos();
+	} 
+
+	public void cargarDatos(){
 		jLblIdProceso.setText(idProceso);
 		jLblNombreProceso.setText(proceso.getNombre());
 		jLblFechaProceso.setText(proceso.getFecha());
 		jLblEstado.setText(proceso.getEstado());
-		this.tablaUsuariosProceso1.cargarTabla(idProceso);
-		this.tablaUsuariosProceso1.setTablaActivos(tablaActivosProceso1);
-		this.tablaActivosProceso1.cargarTabla(idProceso);
 	}
 
 	
@@ -74,6 +76,7 @@ public class IntDetalleProceso extends javax.swing.JFrame {
         tablaUsuariosProceso1 = new componentes.TablaUsuariosProceso();
         jScrollPane1 = new javax.swing.JScrollPane();
         tablaActivosProceso1 = new componentes.TablaActivosProceso();
+        jBtnLimpiar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -130,6 +133,13 @@ public class IntDetalleProceso extends javax.swing.JFrame {
         ));
         jScrollPane1.setViewportView(tablaActivosProceso1);
 
+        jBtnLimpiar.setText("Limpiar Selección");
+        jBtnLimpiar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jBtnLimpiarActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -163,7 +173,10 @@ public class IntDetalleProceso extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 912, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel5)
-                    .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 562, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 562, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(37, 37, 37)
+                        .addComponent(jBtnLimpiar)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -187,7 +200,9 @@ public class IntDetalleProceso extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jLabel4)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 163, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 163, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jBtnLimpiar))
                 .addGap(24, 24, 24)
                 .addComponent(jLabel5)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -220,6 +235,12 @@ public class IntDetalleProceso extends javax.swing.JFrame {
 		// TODO add your handling code here:
 		generarPdf();
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jBtnLimpiarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBtnLimpiarActionPerformed
+        // TODO add your handling code here:
+		this.tablaActivosProceso1.getSelectionModel().clearSelection();
+		this.tablaUsuariosProceso1.getSelectionModel().clearSelection();
+    }//GEN-LAST:event_jBtnLimpiarActionPerformed
 
 	
 
@@ -266,6 +287,7 @@ public class IntDetalleProceso extends javax.swing.JFrame {
 	}
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton jBtnLimpiar;
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;

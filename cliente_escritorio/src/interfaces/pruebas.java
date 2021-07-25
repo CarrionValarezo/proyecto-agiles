@@ -90,7 +90,7 @@ public class pruebas extends javax.swing.JFrame {
 				String path = jFlcDestinoPdf.getSelectedFile().getAbsolutePath() + "\\";
 				System.out.println(path);
 				GeneradorPDF gpdf = new GeneradorPDF();
-				gpdf.generarPdf(jTblActivosProceso, path, proceso.getNombre());
+				//gpdf.generarPdf(jTblActivosProceso, path, proceso.getNombre());
 			} catch (Exception ex) {
 				JOptionPane.showMessageDialog(null, ex);
 			}

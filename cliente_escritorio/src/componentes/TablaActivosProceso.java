@@ -8,12 +8,15 @@ package componentes;
 import entidades.Activo;
 import entidades.Proceso;
 import gestor.Gestor;
+import interfaces.IntDetalleProceso;
 import interfaces.IntValidarActivo;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.event.MouseEvent;
 import javax.swing.JButton;
 import javax.swing.JTable;
+import javax.swing.ListSelectionModel;
+import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -27,14 +30,22 @@ public class TablaActivosProceso extends JTable {
 	String[] titulos;
 	JButton btnValidar;
 	Proceso proceso;
+	ListSelectionModel model;
 
 	public TablaActivosProceso() {
+		this.setRowSelectionAllowed(true);
+		this.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+		this.model = this.getSelectionModel();
 		this.titulos = new String[]{"ID ACTIVO", "ID OBJETO", "NOMBRE", "DESCRIPCION", "CEDULA USUARIO",
 			"NOMBRE USUARIO", "APELLIDO USUARIO", "REVISADO", "ESTADO REVISION", "OBSERVACION REVISION", ""};
 		this.gestor = Gestor._getGestor();
 		crearBoton();
 		tablaClick();
 		tablaMoverCursor();
+	}
+
+	public Proceso getProceso() {
+		return this.proceso;
 	}
 
 	private void crearBoton() {
@@ -105,7 +116,9 @@ public class TablaActivosProceso extends JTable {
 				((JButton) value).doClick();
 				JButton btn = (JButton) value;
 				int id = Integer.parseInt(this.proceso.getIdProceso());
-				IntValidarActivo intValidacion = new IntValidarActivo(this, id, row);
+
+				IntDetalleProceso detalle = (IntDetalleProceso) SwingUtilities.getWindowAncestor(this);
+				IntValidarActivo intValidacion = new IntValidarActivo(detalle, this, id, row);
 				intValidacion.setVisible(true);
 			}
 		}

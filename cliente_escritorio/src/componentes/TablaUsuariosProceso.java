@@ -14,6 +14,7 @@ import java.awt.event.MouseEvent;
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
+import javax.swing.ListSelectionModel;
 
 /**
  *
@@ -35,6 +36,8 @@ public class TablaUsuariosProceso extends JTable {
 		tablaMoverCursor();
 		tablaClick();
 	}
+
+	
 
 	public void setTablaActivos(TablaActivosProceso tablaActivos){ 
 		this.tablaActivos = tablaActivos; 
@@ -70,8 +73,23 @@ public class TablaUsuariosProceso extends JTable {
 		this.addMouseListener(new java.awt.event.MouseAdapter() {
 			public void mouseClicked(java.awt.event.MouseEvent evt) {
 				accionEliminar(evt);
+				seleccionarActivos(evt);
 			}
 		});
+	}
+
+	private void seleccionarActivos(java.awt.event.MouseEvent evt){
+		int column = this.getColumnModel().getColumnIndexAtX(evt.getX());
+		int row = evt.getY() / this.getRowHeight();
+		if (row < this.getRowCount() && row >= 0 && column < this.getColumnCount() && column >= 0 && column != 3) {
+			this.tablaActivos.model.clearSelection();
+			String cedula = (String) this.getValueAt(row, 0);
+			for(int i = 0; i < tablaActivos.getRowCount(); i++){
+				if(tablaActivos.getValueAt(i,4).toString().equals(cedula)){
+					this.tablaActivos.model.addSelectionInterval(i, i);
+				}
+			}
+		}
 	}
 
 	private void accionEliminar(java.awt.event.MouseEvent evt) {
