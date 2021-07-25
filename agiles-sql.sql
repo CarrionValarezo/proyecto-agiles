@@ -1,3 +1,6 @@
+create database agiles_pruebas; 
+use agiles_pruebas; 
+
 create table usuario(
 ced_usu varchar(10) primary key,
 nom_usu varchar(15) not null, 
@@ -31,6 +34,7 @@ foreign key (id_pro_det) references proceso(id_pro),
 foreign key (id_act_det) references activo(id_act));
 
 
+
 insert into usuario values("123", "Richard", "Carrion"); 
 insert into usuario values("456", "Abraham", "Miranda"); 
 insert into usuario values("789", "Alejandro", "Barrera"); 
@@ -44,4 +48,5 @@ insert into activo values("2", "456", "002");
 insert into activo values("3", "789", "003"); 
 
 
-
+insert into activo values("4", "123", "002"); 
+insert into activo values("5", "123", "003"); 

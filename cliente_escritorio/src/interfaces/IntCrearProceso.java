@@ -7,15 +7,8 @@ package interfaces;
 
 import entidades.Usuario;
 import gestor.Conexion;
-import java.awt.Point;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import gestor.Gestor;
 import javax.swing.JOptionPane;
-import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -25,7 +18,8 @@ import javax.swing.table.DefaultTableModel;
 public class IntCrearProceso extends javax.swing.JFrame {
 
 	DefaultTableModel modeloTablaRegistrados;
-	Conexion conexion; 
+	Conexion conexion;
+	Gestor gestor;
 
 	/**
 	 * Creates new form Validacion
@@ -33,121 +27,48 @@ public class IntCrearProceso extends javax.swing.JFrame {
 	public IntCrearProceso() {
 		initComponents();
 		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-		this.conexion = new Conexion(); 
+		this.conexion = new Conexion();
 		this.setTitle("Proceso de Validación");
 		this.setLocationRelativeTo(null);
-		this.cargarTablaUsuariosProcesar();
-		this.cargarTablaUsuariosRegistrados();
-		this.jTblUsuariosRegistrados.addMouseListener(new MouseAdapter() {
-			public void mousePressed(MouseEvent mouseEvent) {
-				JTable table = (JTable) mouseEvent.getSource();
-				Point point = mouseEvent.getPoint();
-				int row = table.rowAtPoint(point);
-				if (mouseEvent.getClickCount() == 1 && table.getSelectedRow() != -1) {
-					cambiarUsuario(jTblUsuariosRegistrados, jTblUsuariosProcesar);
-					jTxtCantidadUsuarios.setText(String.valueOf(jTblUsuariosProcesar.getRowCount()));
-					jTxtCantidadActivos.setText(String.valueOf(getSumaActivos()));
-				}
-			}
-		});
-		this.jTblUsuariosProcesar.addMouseListener(new MouseAdapter() {
-			public void mousePressed(MouseEvent mouseEvent) {
-				JTable table = (JTable) mouseEvent.getSource();
-				Point point = mouseEvent.getPoint();
-				int row = table.rowAtPoint(point);
-				if (mouseEvent.getClickCount() == 1 && table.getSelectedRow() != -1) {
-					cambiarUsuario(jTblUsuariosProcesar, jTblUsuariosRegistrados);
-					jTxtCantidadUsuarios.setText(String.valueOf(jTblUsuariosProcesar.getRowCount()));
-					jTxtCantidadActivos.setText(String.valueOf(getSumaActivos()));
-				}
-			}
-		});
+		this.tablaUsuariosRegistrados.cargarTabla();
+		this.tablaUsuariosProcesar.cargarTablaSinDatos();
+		this.tablaUsuariosRegistrados.cambioTablas(tablaUsuariosProcesar,
+				this.jTxtCantidadUsuarios, this.jTxtCantidadActivos);
+		this.gestor = Gestor._getGestor();
+		//this.cargarTablaUsuariosProcesar();
+		//this.cargarTablaUsuariosRegistrados();
+
 	}
 
-	private int getSumaActivos(){
-		int suma = 0; 
-		for (int i = 0; i < jTblUsuariosProcesar.getRowCount(); i++){
-			suma += Integer.parseInt((String) jTblUsuariosProcesar.getValueAt(i, 3));
+	private String[] getCedulasTabla() {
+		DefaultTableModel modeloTablaProceso = (DefaultTableModel) tablaUsuariosProcesar.getModel();
+		String[] cedulas = new String[modeloTablaProceso.getRowCount()];
+		for (int i = 0; i < cedulas.length; i++) {
+			cedulas[i] = modeloTablaProceso.getValueAt(i, 0).toString();
 		}
-		return suma; 
+		return cedulas;
 	}
 
-	private void cargarTablaUsuariosProcesar() {
-		String[] titulos = {"CEDULA", "NOMBRE", "APELLIDO", "CANTIDAD DE ACTIVOS"};
-		DefaultTableModel modeloTablaProcesar = new DefaultTableModel(null, titulos) {
-			@Override
-			public boolean isCellEditable(int row, int column) {
-				return false;
+	private void crearProceso() {
+		if (this.tablaUsuariosProcesar.getRowCount() == 0) {
+			JOptionPane.showMessageDialog(null, "Debe seleccionar al menos a un usuario para procesar!");
+		} else if (jTxtNombreProceso.getText().isEmpty()) {
+			JOptionPane.showMessageDialog(null, "Debe ingresar un nombre al proceso!");
+			jTxtNombreProceso.requestFocus();
+		} else {
+			String idProceso = this.gestor.crearProceso(jTxtNombreProceso.getText(), getCedulasTabla());
+			int opcion = JOptionPane.showConfirmDialog(null, "El proceso ha sido creado exitosamente \n "
+					+ "¿Desea ver el detalle del proceso creado?");
+			if (opcion == 0) {
+				IntDetalleProceso intDetalle = IntDetalleProceso._getVentana();
+				intDetalle.agregarDetalle(idProceso);
+				this.dispose();
 			}
-		};
-		this.jTblUsuariosProcesar.setModel(modeloTablaProcesar);
-	}
-
-	private void cambiarUsuario(JTable origen, JTable destino) {
-		String cedula = origen.getValueAt(origen.getSelectedRow(), 0).toString();
-		String nombre = origen.getValueAt(origen.getSelectedRow(), 1).toString();
-		String apellido = origen.getValueAt(origen.getSelectedRow(), 2).toString();
-		String cantidad_activos = origen.getValueAt(origen.getSelectedRow(), 3).toString();
-		String[] usuarioTabla = {cedula, nombre, apellido, cantidad_activos};
-		((DefaultTableModel) destino.getModel()).addRow(usuarioTabla);
-		((DefaultTableModel) origen.getModel()).removeRow(origen.getSelectedRow());
-	}
-
-	private void cargarTablaUsuariosRegistrados() {
-		String [] titulos = {"CEDULA", "NOMBRE", "APELLIDO", "CANTIDAD DE ACTIVOS"}; 
-		this.modeloTablaRegistrados = new DefaultTableModel(null, titulos){
-			@Override
-			public boolean isCellEditable(int row, int column){
-				return false; 
-			}
-		};
-		try {
-			String[][] usuarios = this.conexion.getUsuarios();
-			for (String[] usuario : usuarios) {
-				this.modeloTablaRegistrados.addRow(usuario);
-			}
-			this.jTblUsuariosRegistrados.setModel(this.modeloTablaRegistrados);
-		} catch (Exception ex) {
-			JOptionPane.showMessageDialog(null, "Error: No se puede conectar al servidor.");
-		}
-	}
-
-	private String [] getCedulasTabla(){
-		DefaultTableModel modeloTablaProceso = (DefaultTableModel) jTblUsuariosProcesar.getModel(); 
-		String [] cedulas = new String[modeloTablaProceso.getRowCount()];
-		for (int i = 0; i < cedulas.length; i++){ 
-			cedulas[i] = modeloTablaProceso.getValueAt(i,0).toString(); 
-		}
-		return cedulas;	
-	}
-	private void crearProceso(){
-		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-		LocalDateTime ahora = LocalDateTime.now(); 
-		String fecha = dtf.format(ahora); 
-		String [] cedulas = getCedulasTabla(); 
-		try {
-			if(!jTxtNombreProceso.getText().isEmpty()){
-				String idProceso = this.conexion.crearProceso(jTxtNombreProceso.getText(), fecha, cedulas);
-				int opcion = JOptionPane.showConfirmDialog(null, "El proceso ha sido creado exitosamente \n ¿Desea ver el detalle del proceso creado?");
-				if(opcion == 0){ 
-					IntDetalleProceso intDetalle = new IntDetalleProceso(idProceso); 
-					intDetalle.setVisible(true);
-					this.dispose(); 
-				}
-			}
-			else{
-				JOptionPane.showMessageDialog(null, "Debe ingresar un nombre al proceso!");
-				jTxtNombreProceso.requestFocus();
-			}
-		} catch (Exception ex) {
-			JOptionPane.showMessageDialog(null, ex);
 		}
 	}
 
 	/**
-	 * This method is called from within the constructor to initialize the form.
-	 * WARNING: Do NOT modify this code. The content of this method is always
-	 * regenerated by the Form Editor.
+	 * This method is called from within the constructor to initialize the form. WARNING: Do NOT modify this code. The content of this method is always regenerated by the Form Editor.
 	 */
 	@SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -156,16 +77,16 @@ public class IntCrearProceso extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         jTxtNombreProceso = new javax.swing.JTextField();
         jBtnCrear = new javax.swing.JButton();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        jTblUsuariosRegistrados = new javax.swing.JTable();
-        jScrollPane2 = new javax.swing.JScrollPane();
-        jTblUsuariosProcesar = new javax.swing.JTable();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
         jTxtCantidadUsuarios = new javax.swing.JTextField();
         jTxtCantidadActivos = new javax.swing.JTextField();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        tablaUsuariosRegistrados = new componentes.TablaUsuarios();
+        jScrollPane4 = new javax.swing.JScrollPane();
+        tablaUsuariosProcesar = new componentes.TablaUsuarios();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -184,32 +105,6 @@ public class IntCrearProceso extends javax.swing.JFrame {
             }
         });
 
-        jTblUsuariosRegistrados.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
-            },
-            new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
-            }
-        ));
-        jScrollPane1.setViewportView(jTblUsuariosRegistrados);
-
-        jTblUsuariosProcesar.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
-            },
-            new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
-            }
-        ));
-        jScrollPane2.setViewportView(jTblUsuariosProcesar);
-
         jLabel2.setText("Usuarios Registrados");
 
         jLabel3.setText("Usuarios a Procesar");
@@ -222,45 +117,64 @@ public class IntCrearProceso extends javax.swing.JFrame {
 
         jTxtCantidadActivos.setEditable(false);
 
+        tablaUsuariosRegistrados.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        jScrollPane3.setViewportView(tablaUsuariosRegistrados);
+
+        tablaUsuariosProcesar.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        jScrollPane4.setViewportView(tablaUsuariosProcesar);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 351, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel2))
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(31, 31, 31)
-                        .addComponent(jLabel3)
-                        .addContainerGap(280, Short.MAX_VALUE))
+                        .addContainerGap()
+                        .addComponent(jLabel2)
+                        .addGap(273, 273, 273)
+                        .addComponent(jLabel3))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(35, 35, 35)
+                        .addComponent(jLabel1)
+                        .addGap(18, 18, 18)
+                        .addComponent(jTxtNombreProceso, javax.swing.GroupLayout.PREFERRED_SIZE, 178, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 369, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                        .addContainerGap())))
-            .addGroup(layout.createSequentialGroup()
-                .addGap(35, 35, 35)
-                .addComponent(jLabel1)
-                .addGap(18, 18, 18)
-                .addComponent(jTxtNombreProceso, javax.swing.GroupLayout.PREFERRED_SIZE, 178, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(jBtnCrear)
-                        .addContainerGap())
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel5)
-                            .addComponent(jLabel4))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jTxtCantidadUsuarios, javax.swing.GroupLayout.DEFAULT_SIZE, 70, Short.MAX_VALUE)
-                            .addComponent(jTxtCantidadActivos))
-                        .addGap(10, 10, 10))))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel5, javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.TRAILING))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(jTxtCantidadUsuarios, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jTxtCantidadActivos, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 363, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jBtnCrear))))
+                .addContainerGap(14, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -273,21 +187,22 @@ public class IntCrearProceso extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
                     .addComponent(jLabel3))
-                .addGap(7, 7, 7)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 167, Short.MAX_VALUE)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
                 .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel4)
-                    .addComponent(jTxtCantidadUsuarios, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel5)
-                    .addComponent(jTxtCantidadActivos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 16, Short.MAX_VALUE)
-                .addComponent(jBtnCrear)
-                .addContainerGap())
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 157, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(28, 28, 28)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel4)
+                            .addComponent(jTxtCantidadUsuarios, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel5)
+                            .addComponent(jTxtCantidadActivos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addComponent(jBtnCrear))
+                    .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 260, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(26, Short.MAX_VALUE))
         );
 
         pack();
@@ -299,7 +214,7 @@ public class IntCrearProceso extends javax.swing.JFrame {
 
     private void jBtnCrearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBtnCrearActionPerformed
 		// TODO add your handling code here:
-		crearProceso(); 
+		crearProceso();
     }//GEN-LAST:event_jBtnCrearActionPerformed
 
 	/**
@@ -347,12 +262,12 @@ public class IntCrearProceso extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
-    private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JTable jTblUsuariosProcesar;
-    private javax.swing.JTable jTblUsuariosRegistrados;
+    private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JTextField jTxtCantidadActivos;
     private javax.swing.JTextField jTxtCantidadUsuarios;
     private javax.swing.JTextField jTxtNombreProceso;
+    private componentes.TablaUsuarios tablaUsuariosProcesar;
+    private componentes.TablaUsuarios tablaUsuariosRegistrados;
     // End of variables declaration//GEN-END:variables
 }

@@ -128,7 +128,8 @@ class DataProceso:
         cur = db.get_cursor()
         cur.execute(f'''select id_pro as id_proceso, 
                         nom_pro as nombre_proceso, 
-                        fec_cre_pro as fecha_proceso 
+                        fec_cre_pro as fecha_proceso, 
+                        est_pro as estado_proceso 
                         from proceso 
                         where id_pro in (
                             select id_pro_det 
@@ -165,4 +166,11 @@ class DataProceso:
                             obs_act_det = '{observacion}'
                         where id_pro_det = {proceso.get_id()}
                         and id_act_det = '{activo.get_id()}';''')
+        cur.connection.commit()
+
+    def actualizar_estado(self, proceso):
+        cur = db.get_cursor()
+        cur.execute(f'''update proceso 
+                        set est_pro = '{proceso.get_estado()}'
+                        where id_pro = {proceso.get_id()};''')
         cur.connection.commit()

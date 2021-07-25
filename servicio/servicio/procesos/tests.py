@@ -1,6 +1,5 @@
 import json
-
-from .aplicacion import get_usuarios_cant_activos, get_activos_por_usuario, get_usuario_por_cedula
+from .aplicacion import get_usuarios_cant_activos, get_activos_por_usuario, get_usuario_por_cedula, get_activos_por_proceso, get_proceso_por_id
 from .entidades import Usuario
 from servicio.app import create_app
 import unittest
@@ -99,3 +98,11 @@ class TestProcesos(unittest.TestCase):
 
     def test_index(self):
         self.__endpoint_test("/")
+
+    def test_pruebas(self):
+        with self.app.app_context():
+            proceso = get_proceso_por_id("3")
+            activos = get_activos_por_proceso(proceso)
+            for activo in activos:
+                print(f"ID: {activo.get_id()}, estado: {type(activo.get_estado())}")
+

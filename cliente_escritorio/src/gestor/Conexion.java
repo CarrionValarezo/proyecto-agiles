@@ -176,11 +176,12 @@ public class Conexion {
 		HttpResponse<String> response = this.cliente.send(request, HttpResponse.BodyHandlers.ofString());
 		System.out.println(response.body());
 		JSONArray jArray = new JSONArray(response.body());
-		procesos = new String[jArray.length()][3];
+		procesos = new String[jArray.length()][4];
 		for (int i = 0; i < jArray.length(); i++) {
 			procesos[i][0] = String.valueOf(jArray.getJSONObject(i).getInt("id_proceso"));
 			procesos[i][1] = jArray.getJSONObject(i).getString("nombre_proceso");
 			procesos[i][2] = jArray.getJSONObject(i).getString("fecha_creacion_proceso");
+			procesos[i][3] = jArray.getJSONObject(i).getString("estado_proceso");
 		}
 		return procesos;
 	}
