@@ -16,14 +16,24 @@ public class IntVerProcesos extends javax.swing.JFrame {
 
 	DefaultTableModel modeloTablaProcesos;
 	Conexion conexion;
-
+	private static IntVerProcesos instancia = null; 
 	/**
 	 * Creates new form IntVerProcesos
 	 */
-	public IntVerProcesos() {
+	public static IntVerProcesos _getVentana(){
+		if(instancia == null){ 
+			instancia = new IntVerProcesos(); 
+			instancia.setVisible(true);
+		}
+		if(!instancia.isVisible()){ 
+			instancia.setVisible(true);
+		}
+		instancia.tablaProcesos.cargarTabla();
+		return instancia;  
+	}
+	private IntVerProcesos() {
 		initComponents();
 		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-		this.tablaProcesos.cargarTabla();
 	}
 
 	

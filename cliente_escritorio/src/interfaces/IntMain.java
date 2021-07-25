@@ -11,7 +11,6 @@ package interfaces;
  */
 public class IntMain extends javax.swing.JFrame {
 
-
 	/**
 	 * Creates new form IntUsuariosActivos
 	 */
@@ -115,8 +114,7 @@ public class IntMain extends javax.swing.JFrame {
 
     private void jBtnVerProcesosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBtnVerProcesosActionPerformed
 		// TODO add your handling code here:
-		IntVerProcesos intVerProcesos = new IntVerProcesos();
-		intVerProcesos.setVisible(true);
+		IntVerProcesos intVerProcesos = IntVerProcesos._getVentana();
     }//GEN-LAST:event_jBtnVerProcesosActionPerformed
 
 	/**
