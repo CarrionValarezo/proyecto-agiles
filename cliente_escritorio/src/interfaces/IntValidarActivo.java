@@ -56,7 +56,7 @@ public class IntValidarActivo extends javax.swing.JFrame {
 		initComponents();
 		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		this.conexion = new Conexion();
-
+		this.setTitle("Validar Activo");
 		this.idProceso = idProceso;
 		this.tablaActivos = tabla;
 		this.posicion = posicion;

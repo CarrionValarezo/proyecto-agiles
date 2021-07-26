@@ -41,6 +41,7 @@ public class IntDetalleProceso extends javax.swing.JFrame {
 
 	private IntDetalleProceso() {
 		initComponents();
+		this.setTitle("Detalles de los Procesos");
 		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		this.contador = 0;
 	}

@@ -36,6 +36,7 @@ public class IntVerProcesos extends javax.swing.JFrame {
 	}
 	private IntVerProcesos() {
 		initComponents();
+		this.setTitle("Ver Procesos");
 		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 	}
 

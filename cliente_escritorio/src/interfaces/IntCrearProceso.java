@@ -28,7 +28,7 @@ public class IntCrearProceso extends javax.swing.JFrame {
 		initComponents();
 		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		this.conexion = new Conexion();
-		this.setTitle("Proceso de Validación");
+		this.setTitle("Creacion de Proceso");
 		this.setLocationRelativeTo(null);
 		this.tablaUsuariosRegistrados.cargarTabla();
 		this.tablaUsuariosProcesar.cargarTablaSinDatos();
@@ -58,7 +58,7 @@ public class IntCrearProceso extends javax.swing.JFrame {
 		} else {
 			String idProceso = this.gestor.crearProceso(jTxtNombreProceso.getText(), getCedulasTabla());
 			int opcion = JOptionPane.showConfirmDialog(null, "El proceso ha sido creado exitosamente \n "
-					+ "¿Desea ver el detalle del proceso creado?");
+					+ "¿Desea ver el detalle del proceso creado?", "Confirmacion", JOptionPane.YES_NO_OPTION);
 			if (opcion == 0) {
 				IntDetalleProceso intDetalle = IntDetalleProceso._getVentana();
 				intDetalle.agregarDetalle(idProceso);

@@ -29,6 +29,7 @@ public class IntDetalleUsuario extends javax.swing.JFrame {
 	 */
 	public IntDetalleUsuario(Usuario usuario) {
 		initComponents();
+		this.setTitle("Detalles Usuario");
 		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		this.usuario = usuario;
 		cargarDatosUsuario();
