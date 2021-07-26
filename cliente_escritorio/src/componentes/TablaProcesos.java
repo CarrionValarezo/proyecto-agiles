@@ -7,9 +7,12 @@ package componentes;
 
 import gestor.Gestor;
 import interfaces.IntDetalleProceso;
+import java.awt.Color;
 import java.awt.Point;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import javax.swing.JButton;
+import javax.swing.JLabel;
 import javax.swing.JTable;
 
 /**
@@ -26,7 +29,7 @@ public class TablaProcesos extends JTable {
 	public TablaProcesos() {
 		this.modelo = new ModeloTabla();
 		this.gestor = Gestor._getGestor();
-		this.titulos = new String[]{"ID PROCESO", "NOMBRE PROCESO", "FECHA CREACION PROCESO", "ESTADO PROCESO"};
+		this.titulos = new String[]{"", "ID PROCESO", "NOMBRE PROCESO", "FECHA CREACION PROCESO", "ESTADO PROCESO"};
 		accionClick(); 
 	}
 
@@ -36,7 +39,21 @@ public class TablaProcesos extends JTable {
 
 	public void cargarTabla() {
 		String[][] procesos = (this.cedula==null)?gestor.getProcesos():gestor.getProcesosUsuario(this.cedula);
-		this.modelo = new ModeloTabla(procesos, this.titulos);
+		this.setDefaultRenderer(Object.class, new Render());
+		this.modelo = new ModeloTabla(null, this.titulos);
+		for(String[] proceso :procesos){ 
+			JButton btn = new JButton(); 
+			if(proceso[4].equals("CREADO")){ 
+				btn.setBackground(Color.white);
+			}
+			else if(!proceso[0].equals("0")){ 
+				btn.setBackground(new Color(255,103,0));
+			}else{ 
+				btn.setBackground(Color.GREEN);
+			}
+			Object [] datos  = {btn, proceso[1], proceso[2], proceso[3], proceso[4]}; 
+			this.modelo.addRow(datos);
+		}
 		this.setModel(modelo);
 	}
 
@@ -48,7 +65,7 @@ public class TablaProcesos extends JTable {
 				Point point = mouseEvent.getPoint();
 				int row = table.rowAtPoint(point);
 				if (mouseEvent.getClickCount() == 2 && table.getSelectedRow() != -1) {
-					String idProceso = tabla.getValueAt(tabla.getSelectedRow(), 0).toString();
+					String idProceso = tabla.getValueAt(tabla.getSelectedRow(), 1).toString();
 					IntDetalleProceso intDetalleProceso = IntDetalleProceso._getVentana();
 					intDetalleProceso.agregarDetalle(idProceso);
 				}

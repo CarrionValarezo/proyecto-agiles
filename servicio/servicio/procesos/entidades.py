@@ -78,6 +78,7 @@ class Proceso:
         self.__nombre = kwargs.get("nombre_proceso")
         self.__fecha = kwargs.get("fecha_proceso")
         self.__estado = kwargs.get("estado_proceso")
+        self.__cant_observaciones = kwargs.get("cantidad_observaciones")
 
     def get_id(self):
         return self.__id
@@ -96,3 +97,9 @@ class Proceso:
 
     def set_estado(self, estado):
         self.__estado = estado
+
+    def get_cant_observaciones(self):
+        return self.__cant_observaciones
+
+    def set_cant_observaciones(self, cantidad):
+        self.__cant_observaciones = cantidad

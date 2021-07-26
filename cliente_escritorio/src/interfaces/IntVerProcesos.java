@@ -116,7 +116,7 @@ public class IntVerProcesos extends javax.swing.JFrame {
 		/* Create and display the form */
 		java.awt.EventQueue.invokeLater(new Runnable() {
 			public void run() {
-				new IntVerProcesos().setVisible(true);
+				IntVerProcesos._getVentana(); 
 			}
 		});
 	}

@@ -13,14 +13,24 @@ public class Proceso {
 	String idProceso, nombre, fecha, estado; 	
 	Usuario [] usuarios; 
 	Activo [] activos; 
+	int cantObs; 
 
-	public Proceso(String idProceso, String nombre, String fecha, String estado, Usuario[] usuarios, Activo[] activos) {
+	public Proceso(String idProceso, String nombre, String fecha, String estado, Usuario[] usuarios, Activo[] activos, int cantObs) {
 		this.idProceso = idProceso;
 		this.nombre = nombre;
 		this.fecha = fecha;
 		this.estado = estado; 
 		this.usuarios = usuarios;
 		this.activos = activos;
+		this.cantObs = cantObs; 
+	}
+
+	public int getCantObs() {
+		return cantObs;
+	}
+
+	public void setCantObs(int cantObs) {
+		this.cantObs = cantObs;
 	}
 
 	public String getEstado() {
