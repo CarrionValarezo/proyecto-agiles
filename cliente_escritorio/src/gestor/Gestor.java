@@ -67,6 +67,7 @@ public class Gestor {
 		try {
 			return conexion.getProceso(idProceso);
 		} catch (Exception ex) {
+			System.out.println(ex);
 			return null;
 		}
 

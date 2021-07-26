@@ -20,7 +20,8 @@ def proceso_dic(proceso: Proceso) -> dict:
         "id_proceso": proceso.get_id(),
         "nombre_proceso": proceso.get_nombre(),
         "fecha_creacion_proceso": proceso.get_fecha(),
-        "estado_proceso": proceso.get_estado()
+        "estado_proceso": proceso.get_estado(),
+        "cantidad_observaciones": proceso.get_cant_observaciones()
     }
 
 

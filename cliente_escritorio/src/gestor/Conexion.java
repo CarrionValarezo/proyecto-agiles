@@ -161,8 +161,9 @@ public class Conexion {
 		String nombreProceso = jsonProceso.getString("nombre_proceso");
 		String fechaProceso = jsonProceso.getString("fecha_creacion_proceso");
 		String estadoProceso = jsonProceso.getString("estado_proceso"); 
+		int cantObs = jsonProceso.getInt("cantidad_observaciones"); 
 
-		p = new Proceso(idProceso, nombreProceso, fechaProceso, estadoProceso, usuarios, activos);
+		p = new Proceso(idProceso, nombreProceso, fechaProceso, estadoProceso, usuarios, activos, cantObs);
 		return p;
 	}
 
@@ -176,12 +177,13 @@ public class Conexion {
 		HttpResponse<String> response = this.cliente.send(request, HttpResponse.BodyHandlers.ofString());
 		System.out.println(response.body());
 		JSONArray jArray = new JSONArray(response.body());
-		procesos = new String[jArray.length()][4];
+		procesos = new String[jArray.length()][5];
 		for (int i = 0; i < jArray.length(); i++) {
-			procesos[i][0] = String.valueOf(jArray.getJSONObject(i).getInt("id_proceso"));
-			procesos[i][1] = jArray.getJSONObject(i).getString("nombre_proceso");
-			procesos[i][2] = jArray.getJSONObject(i).getString("fecha_creacion_proceso");
-			procesos[i][3] = jArray.getJSONObject(i).getString("estado_proceso");
+			procesos[i][0] = String.valueOf(jArray.getJSONObject(i).getInt("cantidad_observaciones"));
+			procesos[i][1] = String.valueOf(jArray.getJSONObject(i).getInt("id_proceso"));
+			procesos[i][2] = jArray.getJSONObject(i).getString("nombre_proceso");
+			procesos[i][3] = jArray.getJSONObject(i).getString("fecha_creacion_proceso");
+			procesos[i][4] = jArray.getJSONObject(i).getString("estado_proceso");
 		}
 		return procesos;
 	}
@@ -195,12 +197,13 @@ public class Conexion {
 		HttpResponse<String> response = this.cliente.send(request, HttpResponse.BodyHandlers.ofString());
 		System.out.println(response.body());
 		JSONArray jArray = new JSONArray(response.body());
-		procesos = new String[jArray.length()][4];
+		procesos = new String[jArray.length()][5];
 		for (int i = 0; i < jArray.length(); i++) {
-			procesos[i][0] = String.valueOf(jArray.getJSONObject(i).getInt("id_proceso"));
-			procesos[i][1] = jArray.getJSONObject(i).getString("nombre_proceso");
-			procesos[i][2] = jArray.getJSONObject(i).getString("fecha_creacion_proceso");
-			procesos[i][3] = jArray.getJSONObject(i).getString("estado_proceso");
+			procesos[i][0] = String.valueOf(jArray.getJSONObject(i).getInt("cantidad_observaciones"));
+			procesos[i][1] = String.valueOf(jArray.getJSONObject(i).getInt("id_proceso"));
+			procesos[i][2] = jArray.getJSONObject(i).getString("nombre_proceso");
+			procesos[i][3] = jArray.getJSONObject(i).getString("fecha_creacion_proceso");
+			procesos[i][4] = jArray.getJSONObject(i).getString("estado_proceso");
 		}
 		return procesos;
 	}

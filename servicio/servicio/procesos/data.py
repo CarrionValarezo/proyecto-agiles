@@ -62,6 +62,10 @@ class DataActivo:
                         WHERE a.ID_act = {id_activo}''')
         return cur.fetchone()
 
+    def get_activos_por_proceso(self, proceso):
+        cur = db.get_cursor()
+        cur.execute(f'''select ''')
+
 
 class DataProceso:
 
@@ -174,3 +178,22 @@ class DataProceso:
                         set est_pro = '{proceso.get_estado()}'
                         where id_pro = {proceso.get_id()};''')
         cur.connection.commit()
+
+    def get_cant_activos_observacion(self, proceso):
+        cur = db.get_cursor()
+        cur.execute(f'''select count(id_act_det) as cantidad_observaciones
+                        from detalle_proceso
+                        where est_act_det = "OBSERVACION"
+                        and id_pro_det = {proceso.get_id()} ; ''')
+        return cur.fetchone()["cantidad_observaciones"]
+
+    def get_cant_activos_observacion_usuario(self, proceso, usuario):
+        cur = db.get_cursor()
+        cur.execute(f'''select count(id_act_det) as cantidad_observaciones
+                        from detalle_proceso
+                        where est_act_det = "OBSERVACION"
+                        and id_act_det in (select id_act
+                            from activo
+                            where ced_usu_act = '{usuario.get_cedula()}')
+                        and id_pro_det = {proceso.get_id()} ; ''')
+        return cur.fetchone()["cantidad_observaciones"]

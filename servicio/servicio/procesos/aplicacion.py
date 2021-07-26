@@ -58,6 +58,7 @@ def asignar_estado_proceso(proceso, activos):
 def get_proceso_por_id(id_proceso):
     repo_procesos = DataProceso()
     proceso = Proceso(**repo_procesos.get_proceso_por_id(id_proceso))
+    proceso.set_cant_observaciones(repo_procesos.get_cant_activos_observacion(proceso))
     return proceso
 
 
@@ -102,12 +103,21 @@ def get_cantidad_activos_proceso(proceso):
 def get_procesos_por_usuario(usuario):
     repo_procesos = DataProceso()
     procesos = [Proceso(**data_procesos) for data_procesos in repo_procesos.get_procesos_por_usuario(usuario)]
+    for proceso in procesos:
+        proceso.set_cant_observaciones(repo_procesos.get_cant_activos_observacion_usuario(proceso, usuario))
     return procesos
+
+
+def asignar_color(proceso):
+    repo_activos = DataActivo()
+    activos = [Activo(**activo) for activo in repo_activos.get_activos_por_proceso(proceso)]
 
 
 def get_procesos():
     repo_procesos = DataProceso()
     procesos = [Proceso(**data_procesos) for data_procesos in repo_procesos.get_procesos()]
+    for proceso in procesos:
+        proceso.set_cant_observaciones(repo_procesos.get_cant_activos_observacion(proceso))
     return procesos
 
 
