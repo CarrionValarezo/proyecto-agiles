@@ -52,7 +52,7 @@ public class TablaUsuariosProceso extends JTable {
 			this.modelo.addRow(datos);
 		}
 		this.setModel(this.modelo);
-		this.setRowHeight(20);
+		this.setRowHeight(25);
 	}
 
 	private void crearBoton() {

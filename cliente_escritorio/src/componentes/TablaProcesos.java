@@ -8,6 +8,7 @@ package componentes;
 import gestor.Gestor;
 import interfaces.IntDetalleProceso;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -29,7 +30,7 @@ public class TablaProcesos extends JTable {
 	public TablaProcesos() {
 		this.modelo = new ModeloTabla();
 		this.gestor = Gestor._getGestor();
-		this.titulos = new String[]{"", "ID PROCESO", "NOMBRE PROCESO", "FECHA CREACION PROCESO", "ESTADO PROCESO"};
+		this.titulos = new String[]{"OBS", "ID PROCESO", "NOMBRE PROCESO", "FECHA CREACION PROCESO", "ESTADO PROCESO"};
 		accionClick(); 
 	}
 
@@ -41,6 +42,7 @@ public class TablaProcesos extends JTable {
 		String[][] procesos = (this.cedula==null)?gestor.getProcesos():gestor.getProcesosUsuario(this.cedula);
 		this.setDefaultRenderer(Object.class, new Render());
 		this.modelo = new ModeloTabla(null, this.titulos);
+		this.getColumnModel().getColumn(0).setMaxWidth(5);
 		for(String[] proceso :procesos){ 
 			JButton btn = new JButton(); 
 			if(proceso[4].equals("CREADO")){ 
@@ -48,6 +50,8 @@ public class TablaProcesos extends JTable {
 			}
 			else if(!proceso[0].equals("0")){ 
 				btn.setBackground(new Color(255,103,0));
+				btn.setText(proceso[0]);
+				btn.setForeground(Color.white);
 			}else{ 
 				btn.setBackground(Color.GREEN);
 			}

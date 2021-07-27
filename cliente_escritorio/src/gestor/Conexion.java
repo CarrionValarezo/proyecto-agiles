@@ -67,7 +67,7 @@ public class Conexion {
 				.GET()
 				.build();
 		HttpResponse<String> response = this.cliente.send(request, HttpResponse.BodyHandlers.ofString());
-		System.out.println(response.body());
+		////System.out.println(response.body());
 		JSONArray jArray = new JSONArray(response.body());
 		activos = new String[jArray.length()][4];
 		for (int i = 0; i < jArray.length(); i++) {
@@ -87,7 +87,7 @@ public class Conexion {
 		jEnviar.put("proceso", jProceso);
 		JSONArray jArray = new JSONArray();
 		for (String cedula : cedulas) {
-			System.out.println(cedula);
+			//System.out.println(cedula);
 			JSONObject jCedula = new JSONObject();
 			jCedula.put("cedula_usuario", cedula);
 			jArray.put(jCedula);
@@ -102,7 +102,7 @@ public class Conexion {
 				.build();
 
 		HttpResponse<String> response = this.cliente.send(request, HttpResponse.BodyHandlers.ofString());
-		System.out.println(response.body());
+		//System.out.println(response.body());
 		JSONObject jsonResponse = new JSONObject(response.body());
 		return String.valueOf(jsonResponse.getInt("id_proceso")); 
 	}
@@ -121,7 +121,7 @@ public class Conexion {
 				.build();
 
 		HttpResponse<String> response = clienteProceso.send(request, HttpResponse.BodyHandlers.ofString());
-		System.out.println(response.body());
+		//System.out.println(response.body());
 
 		JSONObject respuesta = new JSONObject(response.body());
 
@@ -175,7 +175,7 @@ public class Conexion {
 				.GET()
 				.build();
 		HttpResponse<String> response = this.cliente.send(request, HttpResponse.BodyHandlers.ofString());
-		System.out.println(response.body());
+		//System.out.println(response.body());
 		JSONArray jArray = new JSONArray(response.body());
 		procesos = new String[jArray.length()][5];
 		for (int i = 0; i < jArray.length(); i++) {
@@ -195,7 +195,7 @@ public class Conexion {
 				.GET()
 				.build();
 		HttpResponse<String> response = this.cliente.send(request, HttpResponse.BodyHandlers.ofString());
-		System.out.println(response.body());
+		//System.out.println(response.body());
 		JSONArray jArray = new JSONArray(response.body());
 		procesos = new String[jArray.length()][5];
 		for (int i = 0; i < jArray.length(); i++) {
@@ -215,7 +215,7 @@ public class Conexion {
 				.DELETE()
 				.build();
 		HttpResponse<String> response = this.cliente.send(request, HttpResponse.BodyHandlers.ofString());
-		System.out.println(response.body());
+		//System.out.println(response.body());
 	}
 
 	public void validarActivo(String idActivo, int idProceso, 
@@ -233,7 +233,7 @@ public class Conexion {
 				.PUT(BodyPublishers.ofString(jEnviar.toString()))
 				.build(); 
 		HttpResponse<String> response = this.cliente.send(request, HttpResponse.BodyHandlers.ofString());
-		System.out.println(response.body());
+		////System.out.println(response.body());
 	}
 
 }

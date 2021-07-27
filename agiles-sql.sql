@@ -33,6 +33,13 @@ obs_act_det text,
 foreign key (id_pro_det) references proceso(id_pro),
 foreign key (id_act_det) references activo(id_act));
 
+select count(id_act_det) as cantidad_observaciones
+from detalle_proceso 
+where est_act_det = "OBSERVACION"
+and id_act_det in (select id_act 
+	from activo 
+    where ced_usu_act = "123")
+and id_pro_det = 2;
 
 
 insert into usuario values("123", "Richard", "Carrion"); 

@@ -22,7 +22,7 @@ public class IntDetalleProceso extends javax.swing.JFrame {
 	DefaultTableModel modeloTablaActivos, modeloTablaUsuarios;
 	Proceso proceso;
 	String idProceso;
-	int contador;
+	private int contador;
 
 	private static IntDetalleProceso instancia = null;
 
@@ -50,7 +50,17 @@ public class IntDetalleProceso extends javax.swing.JFrame {
 		PnlDetalleProceso detalle = new PnlDetalleProceso(idProceso);
 		this.jTbpDetalles.add(detalle);
 		this.jTbpDetalles.setTitleAt(this.contador, detalle.getNombreProceso());
+		jTbpDetalles.setSelectedIndex(contador);
 		this.contador++;
+	}
+
+	public void ultimaPestana(){ 
+		if (jTbpDetalles.getTabCount() == 0){
+			jTbpDetalles.setSelectedIndex(instancia.jTbpDetalles.getTabCount()-1);
+		}
+		else{
+			jTbpDetalles.setSelectedIndex(instancia.jTbpDetalles.getTabCount());
+		}
 	}
 
 	/**
