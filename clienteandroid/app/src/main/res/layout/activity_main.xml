@@ -23,6 +23,7 @@
         android:layout_marginBottom="36dp"
         android:text="Procesos"
         android:textSize="34sp"
+        android:paddingLeft="40px"
         app:layout_constraintBottom_toTopOf="@+id/recyclerView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
