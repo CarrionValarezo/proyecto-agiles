@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="30px"
+    android:orientation="vertical">
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/nombreProceso"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:paddingLeft="40px"
+            android:text="TextView"
+            android:textSize="20sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/idProceso"
+            android:layout_width="102dp"
+            android:layout_height="19dp"
+            android:layout_marginTop="15dp"
+            android:paddingLeft="40px"
+            android:text="TextView"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/nombreProceso" />
+
+        <TextView
+            android:id="@+id/fechaProceso"
+            android:layout_width="168dp"
+            android:layout_height="21dp"
+            android:layout_marginTop="8dp"
+            android:paddingLeft="40px"
+            android:text="TextView"
+            app:layout_constraintTop_toBottomOf="@+id/estadoProceso"
+            app:layout_constraintLeft_toLeftOf="parent"
+            tools:layout_editor_absoluteX="0dp" />
+
+        <TextView
+            android:id="@+id/estadoProceso"
+            android:layout_width="162dp"
+            android:layout_height="23dp"
+            android:layout_marginTop="8dp"
+            android:paddingLeft="40px"
+            android:text="TextView"
+            app:layout_constraintTop_toBottomOf="@+id/idProceso"
+            app:layout_constraintLeft_toLeftOf="parent"
+            tools:layout_editor_absoluteX="0dp" />
+
+        <Button
+            android:id="@+id/button"
+            android:layout_width="215dp"
+            android:layout_height="46dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginRight="16dp"
+            android:text="Ver Proceso"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintLeft_toRightOf="@+id/idProceso"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/nombreProceso" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+</androidx.cardview.widget.CardView>
