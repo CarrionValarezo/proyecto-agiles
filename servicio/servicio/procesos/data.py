@@ -197,3 +197,5 @@ class DataProceso:
                             where ced_usu_act = '{usuario.get_cedula()}')
                         and id_pro_det = {proceso.get_id()} ; ''')
         return cur.fetchone()["cantidad_observaciones"]
+
+

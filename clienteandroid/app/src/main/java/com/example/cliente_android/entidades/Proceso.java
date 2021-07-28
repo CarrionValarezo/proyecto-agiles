@@ -1,4 +1,4 @@
-package com.example.cliente_android;
+package com.example.cliente_android.entidades;
 
 import org.json.JSONArray;
 import org.json.JSONException;

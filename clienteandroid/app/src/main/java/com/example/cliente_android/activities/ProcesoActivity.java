@@ -1,15 +1,16 @@
-package com.example.cliente_android;
+package com.example.cliente_android.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.Toast;
 
-import com.loopj.android.http.JsonHttpResponseHandler;
+import com.example.cliente_android.ClienteServicio;
+import com.example.cliente_android.adapters.ProcesoAdapter;
+import com.example.cliente_android.R;
+import com.example.cliente_android.entidades.Proceso;
 
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
@@ -18,7 +19,6 @@ import org.json.JSONException;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import cz.msebera.android.httpclient.Header;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.OkHttpClient;

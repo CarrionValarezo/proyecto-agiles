@@ -1,4 +1,4 @@
-package com.example.cliente_android;
+package com.example.cliente_android.activities;
 
 import android.app.Activity;
 import android.content.Context;
@@ -9,11 +9,20 @@ import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.cliente_android.R;
+import com.example.cliente_android.adapters.UsuarioAdapter;
+import com.example.cliente_android.entidades.Proceso;
+import com.example.cliente_android.entidades.Usuario;
+
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -28,6 +37,10 @@ public class DetalleProcesoActivity extends Activity {
     ImageView ivCirculoDetalle;
     Proceso proceso = null;
     Context context;
+    ArrayList<Usuario> usuarios = new ArrayList<Usuario>();
+    RecyclerView rvUsuarios;
+    UsuarioAdapter usuarioAdapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,6 +55,8 @@ public class DetalleProcesoActivity extends Activity {
         tvCantActivos = (TextView)findViewById(R.id.tvCantActivos);
         tvCantObs = (TextView)findViewById(R.id.tvCantObservaciones);
         ivCirculoDetalle = (ImageView)findViewById(R.id.ivCirculoDetalle);
+        rvUsuarios = (RecyclerView)findViewById(R.id.rvUsuarios);
+        rvUsuarios.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         fetchProceso();
     }
 
@@ -61,7 +76,11 @@ public class DetalleProcesoActivity extends Activity {
                 try {
                     JSONObject jsonObject = new JSONObject(response.body().string());
                     proceso = Proceso.fromJson(jsonObject.getJSONObject("proceso"));
+                    usuarios = Usuario.fromJson(jsonObject.getJSONArray("usuarios"));
                     Log.e("JSON", "onSuccess: "+proceso.getNombre());
+                    for (Usuario usuario : usuarios) {
+                        Log.e("JSON", "onSuccess: "+usuario.getNombre());
+                    }
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -70,6 +89,8 @@ public class DetalleProcesoActivity extends Activity {
                     public void run() {
                         setLayout();
                         asignarColor(proceso);
+                        usuarioAdapter = new UsuarioAdapter(usuarios);
+                        rvUsuarios.setAdapter(usuarioAdapter);
                     }
                 });
             }

@@ -1,24 +1,20 @@
-package com.example.cliente_android;
+package com.example.cliente_android.adapters;
 
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
-import android.graphics.drawable.ShapeDrawable;
-import android.graphics.drawable.StateListDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
-import org.w3c.dom.Text;
+import com.example.cliente_android.R;
+import com.example.cliente_android.activities.DetalleProcesoActivity;
+import com.example.cliente_android.entidades.Proceso;
 
 import java.util.ArrayList;
 
@@ -96,7 +92,7 @@ public class ProcesoAdapter extends RecyclerView.Adapter<ProcesoAdapter.ViewHold
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.proceso_layout, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.proceso_item, parent, false);
         return new ViewHolder(view);
     }
 
