@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.cliente_android.R;
 import com.example.cliente_android.adapters.UsuarioAdapter;
@@ -31,7 +32,7 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 
-public class DetalleProcesoActivity extends Activity {
+public class DetalleProcesoActivity extends Activity implements SwipeRefreshLayout.OnRefreshListener {
     TextView tvNombre, tvFecha, tvId, tvEstado, tvCantUsuarios, tvCantActivos, tvCantObs;
     int idProceso;
     ImageView ivCirculoDetalle;
@@ -40,6 +41,7 @@ public class DetalleProcesoActivity extends Activity {
     ArrayList<Usuario> usuarios = new ArrayList<Usuario>();
     RecyclerView rvUsuarios;
     UsuarioAdapter usuarioAdapter;
+    private SwipeRefreshLayout swipeRefreshLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +60,8 @@ public class DetalleProcesoActivity extends Activity {
         rvUsuarios = (RecyclerView)findViewById(R.id.rvUsuarios);
         rvUsuarios.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         fetchProceso();
+        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipeUsuarios);
+        swipeRefreshLayout.setOnRefreshListener(this);
     }
 
     public void fetchProceso(){
@@ -79,7 +83,7 @@ public class DetalleProcesoActivity extends Activity {
                     usuarios = Usuario.fromJson(jsonObject.getJSONArray("usuarios"));
                     //Log.e("JSON", "onSuccess: "+proceso.getNombre());
                     //for (Usuario usuario : usuarios) {
-                        ////Log.e("JSON", "onSuccess: "+usuario.getNombre());
+                        //Log.e("JSON", "onSuccess: "+usuario.getNombre());
                     //}
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -118,5 +122,11 @@ public class DetalleProcesoActivity extends Activity {
         else {
             background.setColor(Color.LTGRAY);
         }
+    }
+
+    @Override
+    public void onRefresh() {
+        fetchProceso();
+        swipeRefreshLayout.setRefreshing(false);
     }
 }

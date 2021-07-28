@@ -3,18 +3,15 @@ package com.example.cliente_android.activities;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.content.Context;
-import android.graphics.Color;
-import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.cliente_android.R;
 import com.example.cliente_android.adapters.ActivoAdapter;
-import com.example.cliente_android.adapters.UsuarioAdapter;
 import com.example.cliente_android.entidades.Activo;
 import com.example.cliente_android.entidades.Proceso;
 import com.example.cliente_android.entidades.Usuario;
@@ -33,7 +30,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
-public class DetalleUsuarioActivity extends AppCompatActivity {
+public class DetalleUsuarioActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener {
     TextView tvNombreUsuario, tvApellidoUsuario, tvCedulaUsuario, tvCantObsUsuario, tvCantActUsuario;
     ImageView ivCirculoEstado;
     String cedulaUsuario;
@@ -44,6 +41,7 @@ public class DetalleUsuarioActivity extends AppCompatActivity {
     RecyclerView rvActivos;
     Context context;
     Proceso proceso;
+    SwipeRefreshLayout swipeRefreshLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +59,8 @@ public class DetalleUsuarioActivity extends AppCompatActivity {
         rvActivos = (RecyclerView) findViewById(R.id.rvActivos);
         rvActivos.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         fetchUsuario();
+        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipeActivos);
+        swipeRefreshLayout.setOnRefreshListener(this);
     }
 
 
@@ -108,4 +108,9 @@ public class DetalleUsuarioActivity extends AppCompatActivity {
        tvCantObsUsuario.setText("Observaciones: "+usuario.getCantObs());
     }
 
+    @Override
+    public void onRefresh() {
+        fetchUsuario();
+        swipeRefreshLayout.setRefreshing(false);
+    }
 }

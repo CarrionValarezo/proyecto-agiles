@@ -3,9 +3,9 @@ package com.example.cliente_android.activities;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.os.Bundle;
-import android.util.Log;
 
 import com.example.cliente_android.ClienteServicio;
 import com.example.cliente_android.adapters.ProcesoAdapter;
@@ -25,12 +25,14 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
-public class ProcesoActivity extends AppCompatActivity {
+public class ProcesoActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener {
 
     ClienteServicio cliente;
     ArrayList<Proceso> procesosViews = new ArrayList<Proceso>();
     RecyclerView recycler;
     ProcesoAdapter adapter;
+    private SwipeRefreshLayout swipeRefreshLayout;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,12 +42,15 @@ public class ProcesoActivity extends AppCompatActivity {
         recycler.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
 
         fetchProcesos();
+        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipeProceso);
+        swipeRefreshLayout.setOnRefreshListener(this);
+
     }
 
-    private void fetchProcesos(){
+    private void fetchProcesos() {
         OkHttpClient cliente = new OkHttpClient();
         String url = "http://192.168.0.50:5000/procesos";
-        Request request  = new Request.Builder()
+        Request request = new Request.Builder()
                 .url(url)
                 .build();
         cliente.newCall(request).enqueue(new Callback() {
@@ -59,7 +64,7 @@ public class ProcesoActivity extends AppCompatActivity {
                 try {
                     JSONArray jsonArray = new JSONArray(response.body().string());
                     procesosViews = Proceso.fromJson(jsonArray);
-                    for(Proceso proceso: procesosViews) {
+                    for (Proceso proceso : procesosViews) {
                         //Log.e("JSON", "onSuccess: "+proceso.getNombre());
                     }
                 } catch (JSONException e) {
@@ -74,5 +79,11 @@ public class ProcesoActivity extends AppCompatActivity {
                 });
             }
         });
+    }
+
+    @Override
+    public void onRefresh() {
+        fetchProcesos();
+        swipeRefreshLayout.setRefreshing(false);
     }
 }

@@ -157,7 +157,6 @@ public class ActivoAdapter extends RecyclerView.Adapter<ActivoAdapter.ViewHolder
             cliente.newCall(request).enqueue(new Callback() {
                 @Override
                 public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-
                 }
 
                 @Override
