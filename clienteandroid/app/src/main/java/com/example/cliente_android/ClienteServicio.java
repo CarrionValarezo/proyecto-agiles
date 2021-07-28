@@ -17,6 +17,11 @@ public class ClienteServicio {
         cliente.get(url, handler);
     }
 
+    public void getProceso(int idProceso, JsonHttpResponseHandler handler){
+        String url = getUrl("/procesos/"+idProceso);
+        cliente.get(url, handler);
+    }
+
     public String getUrl(String urlRelativa){
         return URL+urlRelativa;
     }

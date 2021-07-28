@@ -57,7 +57,7 @@ public class ProcesoAdapter extends RecyclerView.Adapter<ProcesoAdapter.ViewHold
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(itemView.getContext(), DetalleProcesoActivity.class);
-                    intent.putExtra("EXTRA_PROCESO_ID", proceso.getIdProces());
+                    intent.putExtra("EXTRA_ID_PROCESO", proceso.getIdProces());
                     itemView.getContext().startActivity(intent);
                 }
             });

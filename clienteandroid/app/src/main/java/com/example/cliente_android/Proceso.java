@@ -7,7 +7,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 public class Proceso {
-    private int idProces, cantObservaciones;
+    private int idProces, cantObservaciones, cantUsuarios, cantActivos;
     private String nombre, fecha, estado;
 
     public Proceso(int idProceso, String nombre, String fecha, String estado, int cantObs) {
@@ -22,7 +22,7 @@ public class Proceso {
 
     }
 
-    private static Proceso fromJson(JSONObject procesoJson) {
+    public static Proceso fromJson(JSONObject procesoJson) {
         Proceso p = new Proceso();
         try {
             p.idProces = procesoJson.getInt("id_proceso");
@@ -30,6 +30,11 @@ public class Proceso {
             p.fecha = procesoJson.getString("fecha_creacion_proceso");
             p.estado = procesoJson.getString("estado_proceso");
             p.cantObservaciones = procesoJson.getInt("cantidad_observaciones");
+            if(procesoJson.has("cantidad_usuarios_proceso") &&
+                    procesoJson.has("cantidad_activos_proceso")) {
+                p.cantUsuarios = procesoJson.getInt("cantidad_usuarios_proceso");
+                p.cantActivos = procesoJson.getInt("cantidad_activos_proceso");
+            }
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -73,4 +78,12 @@ public class Proceso {
     public int getCantObservaciones() {
         return cantObservaciones;
     }
+    public int getCantUsuarios() {
+        return cantUsuarios;
+    }
+
+    public int getCantActivos() {
+        return cantActivos;
+    }
+
 }
