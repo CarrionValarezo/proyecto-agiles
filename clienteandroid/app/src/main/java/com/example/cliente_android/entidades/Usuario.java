@@ -10,6 +10,23 @@ public class Usuario {
     private String cedula, nombre, apellido;
     int cantObs;
 
+    public static Usuario fromJson(JSONArray jsonArray, String cedula) {
+        Usuario u = null;
+        for (int i = 0; i < jsonArray.length(); i++) {
+            JSONObject usuarioJson = null;
+            try {
+                usuarioJson = jsonArray.getJSONObject(i);
+            } catch (JSONException e) {
+                e.printStackTrace();
+                continue;
+            }
+            u = Usuario.fromJson(usuarioJson);
+            if (u.cedula.equals(cedula)) {
+                return u;
+            }
+        }
+        return null;
+    }
     public static Usuario fromJson(JSONObject usuarioJson) {
         Usuario u = new Usuario();
         try {

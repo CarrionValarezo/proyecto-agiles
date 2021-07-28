@@ -22,6 +22,8 @@ public class Proceso {
 
     }
 
+
+
     public static Proceso fromJson(JSONObject procesoJson) {
         Proceso p = new Proceso();
         try {

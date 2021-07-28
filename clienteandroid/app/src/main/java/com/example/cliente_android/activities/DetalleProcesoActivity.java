@@ -89,7 +89,7 @@ public class DetalleProcesoActivity extends Activity {
                     public void run() {
                         setLayout();
                         asignarColor(proceso);
-                        usuarioAdapter = new UsuarioAdapter(usuarios);
+                        usuarioAdapter = new UsuarioAdapter(usuarios, proceso);
                         rvUsuarios.setAdapter(usuarioAdapter);
                     }
                 });

@@ -5,7 +5,9 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginTop="1dp"
-    android:layout_marginBottom="30px"
+    android:paddingTop="5dp"
+    android:paddingBottom="5dp"
+    android:layout_marginBottom="8dp"
     android:orientation="vertical">
 
 
@@ -19,7 +21,7 @@
             android:layout_height="35dp"
             android:textColor="@color/white"
             android:gravity="center"
-            android:layout_marginTop="5dp"
+            android:layout_marginTop="14dp"
             android:layout_marginLeft="5dp"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -28,7 +30,8 @@
             android:id="@+id/tvNombreUsuario"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Nombre Usuario"
+            android:text="Nombre"
+            android:textSize="20dp"
             android:layout_marginTop="5dp"
             android:layout_marginLeft="10dp"
             app:layout_constraintLeft_toRightOf="@+id/tvCantObsUsuario"
@@ -39,9 +42,10 @@
             android:id="@+id/tvApellidoUsuario"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Apellido Usuario"
+            android:text="Apellido"
+            android:textSize="20dp"
             android:layout_marginLeft="10dp"
-            android:paddingBottom="2dp"
+            android:paddingBottom="5dp"
             app:layout_constraintLeft_toRightOf="@id/tvCantObsUsuario"
             app:layout_constraintTop_toBottomOf="@+id/tvNombreUsuario"
             />
