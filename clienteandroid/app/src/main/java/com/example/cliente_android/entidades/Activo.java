@@ -9,6 +9,34 @@ import java.util.ArrayList;
 public class Activo {
     private String id, idItem, nombreItem, desItem,  estado, observacion;
 
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public void setIdItem(String idItem) {
+        this.idItem = idItem;
+    }
+
+    public void setNombreItem(String nombreItem) {
+        this.nombreItem = nombreItem;
+    }
+
+    public void setDesItem(String desItem) {
+        this.desItem = desItem;
+    }
+
+    public void setEstado(String estado) {
+        this.estado = estado;
+    }
+
+    public void setObservacion(String observacion) {
+        this.observacion = observacion;
+    }
+
+    public void setRevision(int revision) {
+        this.revision = revision;
+    }
+
     private int revision;
 
     public Activo() {

@@ -77,10 +77,10 @@ public class DetalleProcesoActivity extends Activity {
                     JSONObject jsonObject = new JSONObject(response.body().string());
                     proceso = Proceso.fromJson(jsonObject.getJSONObject("proceso"));
                     usuarios = Usuario.fromJson(jsonObject.getJSONArray("usuarios"));
-                    Log.e("JSON", "onSuccess: "+proceso.getNombre());
-                    for (Usuario usuario : usuarios) {
-                        Log.e("JSON", "onSuccess: "+usuario.getNombre());
-                    }
+                    //Log.e("JSON", "onSuccess: "+proceso.getNombre());
+                    //for (Usuario usuario : usuarios) {
+                        ////Log.e("JSON", "onSuccess: "+usuario.getNombre());
+                    //}
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }

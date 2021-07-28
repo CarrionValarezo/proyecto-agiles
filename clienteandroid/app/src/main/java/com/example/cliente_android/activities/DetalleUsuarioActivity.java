@@ -43,6 +43,7 @@ public class DetalleUsuarioActivity extends AppCompatActivity {
     ActivoAdapter activoAdapter;
     RecyclerView rvActivos;
     Context context;
+    Proceso proceso;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,8 +81,9 @@ public class DetalleUsuarioActivity extends AppCompatActivity {
                     JSONObject jsonObject = new JSONObject(response.body().string());
                     JSONArray jsonActivos = jsonObject.getJSONArray("activos");
                     JSONArray jsonUsuarios = jsonObject.getJSONArray("usuarios");
+                    proceso = Proceso.fromJson(jsonObject.getJSONObject("proceso"));
                     usuario = Usuario.fromJson(jsonUsuarios, cedulaUsuario);
-                    Log.e("JSON USU", "onResponse: "+jsonObject.toString());
+                    //Log.e("JSON USU", "onResponse: "+jsonObject.toString());
                     activos = Activo.fromJson(jsonActivos, cedulaUsuario);
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -90,7 +92,7 @@ public class DetalleUsuarioActivity extends AppCompatActivity {
                     @Override
                     public void run() {
                         setLayout();
-                        activoAdapter = new ActivoAdapter(activos);
+                        activoAdapter = new ActivoAdapter(activos, proceso);
                         rvActivos.setAdapter(activoAdapter);
                     }
                 });

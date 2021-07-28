@@ -60,7 +60,7 @@ public class ProcesoActivity extends AppCompatActivity {
                     JSONArray jsonArray = new JSONArray(response.body().string());
                     procesosViews = Proceso.fromJson(jsonArray);
                     for(Proceso proceso: procesosViews) {
-                        Log.e("JSON", "onSuccess: "+proceso.getNombre());
+                        //Log.e("JSON", "onSuccess: "+proceso.getNombre());
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
