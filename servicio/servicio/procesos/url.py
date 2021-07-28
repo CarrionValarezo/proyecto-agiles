@@ -96,8 +96,11 @@ def get_detalle_proceso(id_proceso):
         "activos": []
     }
     for usuario in usuarios:
+        cant_act = len(aplicacion.get_cant_activos_usuario(usuario))
         cant_obs = aplicacion.get_cant_activos_observacion_usuario(usuario,proceso)
-        respuesta["usuarios"].append({**serializers.usuario_dict(usuario),"cantidad_observaciones_usuario": cant_obs})
+        respuesta["usuarios"].append({**serializers.usuario_dict(usuario),
+                                      "cantidad_observaciones_usuario": cant_obs,
+                                      "cantidad_activos_usuario":cant_act})
     for activo in aplicacion.get_activos_por_proceso(proceso):
         respuesta["proceso"]["estado_proceso"] = proceso.get_estado()
         usuario = aplicacion.get_usuario_por_activo(activo)

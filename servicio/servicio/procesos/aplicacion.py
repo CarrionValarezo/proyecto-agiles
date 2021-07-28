@@ -149,3 +149,7 @@ def get_cant_activos_observacion_usuario(usuario, proceso):
     repo_procesos = DataProceso()
     return repo_procesos.get_cant_activos_observacion_usuario(proceso, usuario)
 
+
+def get_cant_activos_usuario(usuario):
+    repo = DataActivo()
+    return repo.get_activos_por_usuario(usuario)

@@ -10,6 +10,12 @@ public class Usuario {
     private String cedula, nombre, apellido;
     int cantObs;
 
+    public int getCantActivos() {
+        return cantActivos;
+    }
+
+    int cantActivos;
+
     public static Usuario fromJson(JSONArray jsonArray, String cedula) {
         Usuario u = null;
         for (int i = 0; i < jsonArray.length(); i++) {
@@ -34,6 +40,7 @@ public class Usuario {
             u.nombre = usuarioJson.getString("nombre_usuario");
             u.apellido = usuarioJson.getString("apellido_usuario");
             u.cantObs = usuarioJson.getInt("cantidad_observaciones_usuario");
+            u.cantActivos = usuarioJson.getInt("cantidad_activos_usuario");
         } catch (JSONException e) {
             e.printStackTrace();
         }

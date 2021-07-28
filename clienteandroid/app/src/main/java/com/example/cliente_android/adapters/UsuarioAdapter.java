@@ -55,6 +55,7 @@ public class UsuarioAdapter extends RecyclerView.Adapter<UsuarioAdapter.ViewHold
             tvCedula.setText(usuario.getCedula());
             tvNombre.setText(usuario.getNombre());
             tvApellido.setText(usuario.getApellido());
+            tvCantActivos.setText("Activos: "+String.valueOf(usuario.getCantActivos()));
         }
         public void asignarColor(Usuario usuario){
             String cantObs = String.valueOf(usuario.getCantObs());
