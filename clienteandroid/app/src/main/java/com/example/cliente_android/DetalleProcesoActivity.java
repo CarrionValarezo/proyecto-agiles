@@ -11,5 +11,6 @@ public class DetalleProcesoActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.proceso_detalle);
+        int idProceso = getIntent().getIntExtra("EXTRA_ID_PROCESO", 0);
     }
 }

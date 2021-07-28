@@ -7,16 +7,18 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 public class Proceso {
-    private int idProces;
+    private int idProces, cantObservaciones;
     private String nombre, fecha, estado;
 
-    public Proceso(int idProceso, String nombre, String fecha, String estado){
+    public Proceso(int idProceso, String nombre, String fecha, String estado, int cantObs) {
         this.idProces = idProceso;
         this.nombre = nombre;
         this.fecha = fecha;
         this.estado = estado;
+        this.cantObservaciones = cantObs;
     }
-    public Proceso(){
+
+    public Proceso() {
 
     }
 
@@ -27,6 +29,7 @@ public class Proceso {
             p.nombre = procesoJson.getString("nombre_proceso");
             p.fecha = procesoJson.getString("fecha_creacion_proceso");
             p.estado = procesoJson.getString("estado_proceso");
+            p.cantObservaciones = procesoJson.getInt("cantidad_observaciones");
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -65,5 +68,9 @@ public class Proceso {
 
     public String getNombre() {
         return nombre;
+    }
+
+    public int getCantObservaciones() {
+        return cantObservaciones;
     }
 }
