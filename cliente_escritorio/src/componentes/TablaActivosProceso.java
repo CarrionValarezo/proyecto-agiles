@@ -36,7 +36,7 @@ public class TablaActivosProceso extends JTable {
 		this.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 		this.model = this.getSelectionModel();
 		this.titulos = new String[]{"ID ACTIVO", "ID OBJETO", "NOMBRE", "DESCRIPCION", "CEDULA USUARIO",
-			"NOMBRE USUARIO", "APELLIDO USUARIO", "REVISADO", "ESTADO REVISION", "OBSERVACION REVISION", ""};
+			"NOMBRE USUARIO", "APELLIDO USUARIO", "REVISADO", "ESTADO REVISION", "OBSERVACION REVISION"};
 		this.gestor = Gestor._getGestor();
 		crearBoton();
 		tablaClick();
@@ -78,8 +78,7 @@ public class TablaActivosProceso extends JTable {
 				activo.getUsuario().getApellido(),
 				revision,
 				activo.getEstadoRevisionActivo(),
-				activo.getObservacionRevision(),
-				this.btnValidar
+				activo.getObservacionRevision()
 			};
 			this.modelo.addRow(datos);
 		}
