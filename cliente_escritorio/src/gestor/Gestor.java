@@ -10,6 +10,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -18,6 +19,8 @@ import java.util.logging.Logger;
 public class Gestor {
 
 	private static Gestor instancia = null;
+
+	
 
 	public static Gestor _getGestor() {
 		if (instancia == null) {
@@ -28,6 +31,10 @@ public class Gestor {
 
 	Conexion conexion = new Conexion();
 
+	private void errorConexion(){
+		JOptionPane.showMessageDialog(null, "¡No se ha podido conectar con el servido, intentelo mas tarde!");
+	}
+
 	public String crearProceso(String nombre, String[] cedulas) {
 		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 		LocalDateTime ahora = LocalDateTime.now();
@@ -35,6 +42,7 @@ public class Gestor {
 		try {
 			return this.conexion.crearProceso(nombre, fecha, cedulas);
 		} catch (Exception ex) {
+			errorConexion();
 			return ex.toString();
 		}
 	}
@@ -43,6 +51,7 @@ public class Gestor {
 		try {
 			return this.conexion.getUsuarios();
 		} catch (Exception ex) {
+			errorConexion();
 			return null;
 		}
 	}
@@ -51,6 +60,7 @@ public class Gestor {
 		try {
 			return this.conexion.getProcesos();
 		} catch (Exception ex) {
+			errorConexion();
 			return null;
 		}
 	}
@@ -59,6 +69,7 @@ public class Gestor {
 		try {
 			return this.conexion.getActivosUsuarios(cedula);
 		} catch (Exception ex) {
+			errorConexion();
 			return null;
 		}
 	}
@@ -67,7 +78,7 @@ public class Gestor {
 		try {
 			return conexion.getProceso(idProceso);
 		} catch (Exception ex) {
-			System.out.println(ex);
+			errorConexion();
 			return null;
 		}
 
@@ -77,7 +88,7 @@ public class Gestor {
 		try{
 			this.conexion.eliminarUsuarioDeProceso(idProceso, cedula);
 		} catch (Exception ex) {
-			System.out.println("Ocurrio un ERROR");	
+			errorConexion();
 		}
 	}
 
@@ -85,6 +96,7 @@ public class Gestor {
 		try {
 			return conexion.getProcesosUsuarios(cedula);
 		} catch (Exception ex) {
+			errorConexion();
 			return null;
 		}
 	}

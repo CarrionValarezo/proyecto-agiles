@@ -5,7 +5,11 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import android.content.Context;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.widget.Toast;
 
 import com.example.cliente_android.ClienteServicio;
 import com.example.cliente_android.adapters.ProcesoAdapter;
@@ -31,13 +35,14 @@ public class ProcesoActivity extends AppCompatActivity implements SwipeRefreshLa
     ArrayList<Proceso> procesosViews = new ArrayList<Proceso>();
     RecyclerView recycler;
     ProcesoAdapter adapter;
+    Context context;
     private SwipeRefreshLayout swipeRefreshLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        context = this.getApplicationContext();
         recycler = (RecyclerView) findViewById(R.id.recyclerView);
         recycler.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
 
@@ -56,6 +61,7 @@ public class ProcesoActivity extends AppCompatActivity implements SwipeRefreshLa
         cliente.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                errorConexion();
             }
 
             @Override
@@ -86,4 +92,14 @@ public class ProcesoActivity extends AppCompatActivity implements SwipeRefreshLa
         fetchProcesos();
         swipeRefreshLayout.setRefreshing(false);
     }
+
+    public void errorConexion(){
+        new Handler(Looper.getMainLooper()).post(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(context, "No se ha podido conectar con el servicio,\nintentelo más tarde.", Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
 }

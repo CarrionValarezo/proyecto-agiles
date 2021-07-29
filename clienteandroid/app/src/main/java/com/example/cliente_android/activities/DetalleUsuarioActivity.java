@@ -7,8 +7,11 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.cliente_android.R;
 import com.example.cliente_android.adapters.ActivoAdapter;
@@ -73,6 +76,7 @@ public class DetalleUsuarioActivity extends AppCompatActivity implements SwipeRe
         cliente.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
+               errorConexion();
             }
 
             @Override
@@ -112,5 +116,13 @@ public class DetalleUsuarioActivity extends AppCompatActivity implements SwipeRe
     public void onRefresh() {
         fetchUsuario();
         swipeRefreshLayout.setRefreshing(false);
+    }
+    public void errorConexion(){
+        new Handler(Looper.getMainLooper()).post(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(context, "No se ha podido conectar con el servicio,\nintentelo más tarde.", Toast.LENGTH_LONG).show();
+            }
+        });
     }
 }

@@ -5,6 +5,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
+import android.os.Handler;
+import android.os.Looper;
 import android.text.InputType;
 import android.text.Layout;
 import android.util.Log;
@@ -14,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.widget.VectorEnabledTintResources;
 import androidx.recyclerview.widget.RecyclerView;
@@ -116,6 +119,7 @@ public class ActivoAdapter extends RecyclerView.Adapter<ActivoAdapter.ViewHolder
                             inflate(R.layout.validar_layout, null);
                     builder.setTitle("Validar Activo");
                     final EditText input = (EditText)inflater.findViewById(R.id.etObservacion);
+                    input.setText(activo.getObservacion());
                     builder.setView(inflater);
 
                     // Set up the buttons
@@ -157,14 +161,33 @@ public class ActivoAdapter extends RecyclerView.Adapter<ActivoAdapter.ViewHolder
             cliente.newCall(request).enqueue(new Callback() {
                 @Override
                 public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                    mensajeValidacion();
                 }
 
                 @Override
                 public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                    errorConexion();
+                }
+            });
+        }
+        public void errorConexion(){
+            new Handler(Looper.getMainLooper()).post(new Runnable() {
+                @Override
+                public void run() {
+                    Toast.makeText(context, "¡No se validó el activo, error de conexión con el servicio!", Toast.LENGTH_LONG).show();
+                }
+            });
+        }
+        public void mensajeValidacion(){
+            new Handler(Looper.getMainLooper()).post(new Runnable() {
+                @Override
+                public void run() {
+                    Toast.makeText(context, "¡Se validó el activo correctamente!", Toast.LENGTH_LONG).show();
                 }
             });
         }
     }
+
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {

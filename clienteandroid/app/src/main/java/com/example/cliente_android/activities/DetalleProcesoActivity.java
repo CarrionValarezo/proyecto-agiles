@@ -5,9 +5,12 @@ import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -73,6 +76,7 @@ public class DetalleProcesoActivity extends Activity implements SwipeRefreshLayo
         cliente.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                errorConexion();
             }
 
             @Override
@@ -81,10 +85,6 @@ public class DetalleProcesoActivity extends Activity implements SwipeRefreshLayo
                     JSONObject jsonObject = new JSONObject(response.body().string());
                     proceso = Proceso.fromJson(jsonObject.getJSONObject("proceso"));
                     usuarios = Usuario.fromJson(jsonObject.getJSONArray("usuarios"));
-                    //Log.e("JSON", "onSuccess: "+proceso.getNombre());
-                    //for (Usuario usuario : usuarios) {
-                        //Log.e("JSON", "onSuccess: "+usuario.getNombre());
-                    //}
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -128,5 +128,14 @@ public class DetalleProcesoActivity extends Activity implements SwipeRefreshLayo
     public void onRefresh() {
         fetchProceso();
         swipeRefreshLayout.setRefreshing(false);
+    }
+
+    public void errorConexion(){
+        new Handler(Looper.getMainLooper()).post(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(context, "No se ha podido conectar con el servicio,\nintentelo más tarde.", Toast.LENGTH_LONG).show();
+            }
+        });
     }
 }

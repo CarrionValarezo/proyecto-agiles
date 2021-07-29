@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="25dp"
-        android:text="Escriba una observacion. \n(En caso de que no se detalle ninguna, \nse guardar el activo como CORRECTO)"
+        android:text="Escriba una observación. \n(En caso de que no se detalle ninguna\nse guardará el activo como CORRECTO)"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
