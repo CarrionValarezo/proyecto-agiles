@@ -4,7 +4,7 @@ from . import serializers
 
 procesos_blueprint = Blueprint("usac", __name__)
 
-
+#Usuarios
 @procesos_blueprint.route('/usuarios/cantidad-activos')
 def get_usuarios_cant_activos():
     respuesta = []
@@ -37,7 +37,7 @@ def get_procesos_por_usuario(cedula):
         respuesta.append(serializers.proceso_dic(proceso))
     return jsonify(respuesta)
 
-
+#Procesos
 @procesos_blueprint.route('/procesos')
 def get_procesos():
     procesos = aplicacion.get_procesos()
