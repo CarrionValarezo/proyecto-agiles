@@ -4,7 +4,7 @@ from . import serializers
 
 procesos_blueprint = Blueprint("usac", __name__)
 
-
+#Usuarios
 @procesos_blueprint.route('/usuarios/cantidad-activos')
 def get_usuarios_cant_activos():
     respuesta = []
@@ -37,7 +37,7 @@ def get_procesos_por_usuario(cedula):
         respuesta.append(serializers.proceso_dic(proceso))
     return jsonify(respuesta)
 
-
+#Procesos
 @procesos_blueprint.route('/procesos')
 def get_procesos():
     procesos = aplicacion.get_procesos()
@@ -96,7 +96,11 @@ def get_detalle_proceso(id_proceso):
         "activos": []
     }
     for usuario in usuarios:
-        respuesta["usuarios"].append(serializers.usuario_dict(usuario))
+        cant_act = len(aplicacion.get_cant_activos_usuario(usuario))
+        cant_obs = aplicacion.get_cant_activos_observacion_usuario(usuario,proceso)
+        respuesta["usuarios"].append({**serializers.usuario_dict(usuario),
+                                      "cantidad_observaciones_usuario": cant_obs,
+                                      "cantidad_activos_usuario":cant_act})
     for activo in aplicacion.get_activos_por_proceso(proceso):
         respuesta["proceso"]["estado_proceso"] = proceso.get_estado()
         usuario = aplicacion.get_usuario_por_activo(activo)

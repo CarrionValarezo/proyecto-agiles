@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activities.DetalleUsuarioActivity">
+
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipeActivos"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cvDetalleUsuario"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:layout_editor_absoluteX="1dp"
+                tools:layout_editor_absoluteY="67dp">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <ImageView
+                        android:id="@+id/imgUsuario"
+                        android:layout_width="60dp"
+                        android:layout_height="60dp"
+                        android:src="@android:drawable/ic_menu_my_calendar"
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/tvCedUDetalle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="60dp"
+                        android:layout_marginTop="10dp"
+                        android:text="0804023508"
+                        android:textSize="25dp"
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        tools:layout_editor_absoluteX="14dp"
+                        tools:layout_editor_absoluteY="10dp" />
+
+                    <TextView
+                        android:id="@+id/tvNomUDetalle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginTop="10dp"
+                        android:text="Nombre"
+                        android:textSize="20dp"
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/tvCedUDetalle"
+                        tools:layout_editor_absoluteX="14dp"
+                        tools:layout_editor_absoluteY="43dp" />
+
+                    <TextView
+                        android:id="@+id/tvApeUDetalle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginTop="5dp"
+                        android:paddingBottom="5dp"
+                        android:text="Apellido"
+                        android:textSize="20dp"
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/tvNomUDetalle"
+                        tools:layout_editor_absoluteX="16dp"
+                        tools:layout_editor_absoluteY="76dp" />
+
+
+                    <TextView
+                        android:id="@+id/tvCantActUDetalle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginRight="15dp"
+                        android:text="Activos: 5"
+                        app:layout_constraintRight_toRightOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        tools:layout_editor_absoluteX="339dp"
+                        tools:layout_editor_absoluteY="19dp" />
+
+                    <TextView
+                        android:id="@+id/tvCantObsUDetalle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginRight="15dp"
+                        android:text="Observaciones: 5"
+                        app:layout_constraintRight_toRightOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/tvCantActUDetalle"
+                        tools:layout_editor_absoluteX="341dp"
+                        tools:layout_editor_absoluteY="55dp" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </androidx.cardview.widget.CardView>
+
+            <TextView
+                android:id="@+id/tituloActivos"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="ACTIVOS"
+                android:textSize="20dp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/cvDetalleUsuario" />
+
+            <ImageView
+                android:id="@+id/imageView2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:src="@android:drawable/ic_menu_info_details"
+                app:layout_constraintRight_toLeftOf="@+id/tituloActivos"
+                app:layout_constraintTop_toBottomOf="@+id/cvDetalleUsuario"
+                tools:layout_editor_absoluteX="73dp"
+                tools:layout_editor_absoluteY="86dp" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvActivos"
+                android:layout_width="match_parent"
+                android:layout_height="574dp"
+                android:layout_marginTop="10dp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tituloActivos"
+                tools:layout_editor_absoluteX="1dp"
+                tools:layout_editor_absoluteY="156dp" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

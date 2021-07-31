@@ -1,5 +1,6 @@
 import json
-from .aplicacion import get_usuarios_cant_activos, get_activos_por_usuario, get_usuario_por_cedula, get_activos_por_proceso, get_proceso_por_id
+from .aplicacion import get_usuarios_cant_activos, get_activos_por_usuario, get_usuario_por_cedula, \
+    get_activos_por_proceso, get_proceso_por_id
 from .entidades import Usuario
 from servicio.app import create_app
 import unittest
@@ -14,6 +15,7 @@ class TestProcesos(unittest.TestCase):
         self.tester = self.app.test_client()
         self.usuario = "123"
         self.proceso = "1"
+        self.activo = "1"
         self.usuario_data = [b"cedula_usuario", b"nombre_usuario", b"apellido_usuario"]
         self.proceso_data = [b"id_proceso", b"nombre_proceso", b"fecha_creacion_proceso", b"estado_proceso"]
         self.activo_data = [b"id_activo"]
@@ -32,20 +34,6 @@ class TestProcesos(unittest.TestCase):
         for key in data:
             print(key)
             self.assertTrue(key in data_json)
-
-    def test_crear_proceso(self):
-        dic = {
-            "proceso": {"nombre_proceso": "Proceso prueba",
-                        "fecha_proceso": "2021-06-06"},
-            "usuarios_proceso": [{"cedula_usuario": "123"},
-                                 {"cedula_usuario": "456"},
-                                 {"cedula_usuario": "789"}]
-        }
-        respuesta = self.tester.post('/procesos',
-                                     data=json.dumps(dic),
-                                     content_type="application/json")
-        self.assertEqual(respuesta.status_code, 200)
-        self.assertTrue(b"id_proceso" in respuesta.data)
 
     def test_usuarios_cantidad_activos(self):
         ruta = "/usuarios/cantidad-activos"
@@ -75,6 +63,21 @@ class TestProcesos(unittest.TestCase):
         self.__content_type_test(ruta)
         self.__data_test(ruta, self.proceso_data)
 
+    def test_crear_proceso(self):
+        dic = {
+            "proceso": {"nombre_proceso": "Proceso prueba",
+                        "fecha_proceso": "2021-06-06"},
+            "usuarios_proceso": [{"cedula_usuario": "123"},
+                                 {"cedula_usuario": "456"},
+                                 {"cedula_usuario": "789"}]
+        }
+        respuesta = self.tester.post('/procesos',
+                                     data=json.dumps(dic),
+                                     content_type="application/json")
+        self.proceso = respuesta.get_json().get("id_proceso")
+        self.assertEqual(respuesta.status_code, 200)
+        self.assertTrue(b"id_proceso" in respuesta.data)
+
     def test_usuarios_por_procesos(self):
         ruta = f"/procesos/{self.proceso}/usuarios"
         print("\n\n" + ruta)
@@ -95,6 +98,22 @@ class TestProcesos(unittest.TestCase):
         self.__endpoint_test(ruta)
         self.__content_type_test(ruta)
         self.__data_test(ruta, self.activo_data + self.item_data + self.proceso_data + self.usuario_data)
+
+    def test_eliminar_usuario_proceso(self):
+        respuesta = self.tester.delete(f'/procesos/{self.proceso}/usuarios/{self.usuario}')
+        self.assertEqual(respuesta.status_code, 200)
+        self.assertTrue(b"mensaje" in respuesta.data)
+
+    def test_validar_activo(self):
+        dic = {
+            "estado_activo": "Observacion",
+            "observacion_activo": "El activo no se encontro"
+        }
+        respuesta = self.tester.put(f'/procesos/{self.proceso}/activos/{self.activo}',
+                                    data=json.dumps(dic),
+                                    content_type="application/json")
+        self.assertEqual(respuesta.status_code, 200)
+        self.assertTrue(b"mensaje" in respuesta.data)
 
     def test_index(self):
         self.__endpoint_test("/")

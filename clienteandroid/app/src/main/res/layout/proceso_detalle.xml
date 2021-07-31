@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipeUsuarios"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvUsuarios"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tituloUsuarios" />
+
+            <TextView
+                android:id="@+id/tituloUsuarios"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="USUARIOS"
+                android:textSize="20dp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/cvDetalle" />
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cvDetalle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="1dp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <ImageView
+                        android:id="@+id/ivCirculoDetalle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="15dp"
+                        android:layout_marginRight="5dp"
+                        android:background="@drawable/circle"
+                        app:layout_constraintRight_toLeftOf="@+id/tvEstadoDetalle"
+                        app:layout_constraintTop_toBottomOf="@+id/tvNombreDetalle"
+                        tools:layout_editor_absoluteX="129dp"
+                        tools:layout_editor_absoluteY="66dp" />
+
+                    <TextView
+                        android:id="@+id/tvNombreDetalle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginTop="10dp"
+                        android:text="Nombre del Proceso"
+                        android:textSize="20sp"
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        tools:layout_editor_absoluteX="15dp"
+                        tools:layout_editor_absoluteY="8dp" />
+
+                    <TextView
+                        android:id="@+id/tvIdDetalle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginTop="10dp"
+                        android:text="ID: 1"
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/tvNombreDetalle"
+                        tools:layout_editor_absoluteX="15dp"
+                        tools:layout_editor_absoluteY="59dp" />
+
+
+                    <TextView
+                        android:id="@+id/tvEstadoDetalle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="100dp"
+                        android:layout_marginTop="10dp"
+                        android:text="INICIADO"
+                        app:layout_constraintLeft_toRightOf="@+id/tvIdDetalle"
+                        app:layout_constraintTop_toBottomOf="@+id/tvNombreDetalle"
+                        tools:layout_editor_absoluteX="139dp"
+                        tools:layout_editor_absoluteY="59dp" />
+
+                    <TextView
+                        android:id="@+id/tvFechaDetalle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginTop="10dp"
+                        android:paddingBottom="10dp"
+                        android:text="12-04-2021, Tues, "
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/tvIdDetalle"
+                        tools:layout_editor_absoluteX="15dp"
+                        tools:layout_editor_absoluteY="93dp" />
+
+
+                    <TextView
+                        android:id="@+id/tvCantUsuarios"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginRight="15dp"
+                        android:text="TextView"
+                        app:layout_constraintRight_toRightOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        tools:layout_editor_absoluteX="343dp"
+                        tools:layout_editor_absoluteY="38dp" />
+
+                    <TextView
+                        android:id="@+id/tvCantActivos"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginRight="15dp"
+                        android:text="TextView"
+                        app:layout_constraintRight_toRightOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/tvCantUsuarios"
+                        tools:layout_editor_absoluteX="343dp"
+                        tools:layout_editor_absoluteY="66dp" />
+
+                    <TextView
+                        android:id="@+id/tvCantObservaciones"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginRight="15dp"
+                        android:text="TextView"
+                        app:layout_constraintRight_toRightOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/tvCantActivos"
+                        tools:layout_editor_absoluteX="343dp"
+                        tools:layout_editor_absoluteY="93dp" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </androidx.cardview.widget.CardView>
+
+            <ImageView
+                android:id="@+id/imageView3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:src="@android:drawable/ic_menu_myplaces"
+                app:layout_constraintRight_toLeftOf="@+id/tituloUsuarios"
+                app:layout_constraintTop_toBottomOf="@+id/cvDetalle" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
