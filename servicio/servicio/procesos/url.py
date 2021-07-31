@@ -89,7 +89,6 @@ def get_detalle_proceso(id_proceso):
     for activo in aplicacion.get_activos_por_proceso(proceso):
         respuesta["proceso"]["estado_proceso"] = proceso.get_estado()
         usuario = aplicacion.get_usuario_por_activo(activo)
-        item = activo.get_item()
         respuesta["activos"].append({**activo.to_dict(),
                                      **activo.get_item().to_dict(),
                                      **usuario.to_dict(),
