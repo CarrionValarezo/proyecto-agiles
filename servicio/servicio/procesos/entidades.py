@@ -24,6 +24,14 @@ class Usuario:
     def set_activos(self, activos):
         self.__activos = activos
 
+    def to_dict(self) -> dict:
+        return {
+            "cedula_usuario": self.__cedula,
+            "nombre_usuario": self.__nombre,
+            "apellido_usuario": self.__apellido
+        }
+
+
 
 class Item:
 
@@ -40,6 +48,13 @@ class Item:
 
     def get_descripcion(self):
         return self.__descripcion
+
+    def to_dict(self) -> dict:
+        return {
+            "id_item": self.get_id(),
+            "nombre_item": self.get_nombre(),
+            "descripcion_item": self.get_descripcion()
+        }
 
 
 class Activo:
@@ -69,6 +84,11 @@ class Activo:
 
     def get_observacion(self):
         return self.__observacion
+
+    def to_dict(self) -> dict:
+        return {
+            "id_activo": self.get_id(),
+        }
 
 
 class Proceso:
@@ -103,3 +123,18 @@ class Proceso:
 
     def set_cant_observaciones(self, cantidad):
         self.__cant_observaciones = cantidad
+
+    def to_dict(self) -> dict:
+        return {
+            "id_proceso": self.get_id(),
+            "nombre_proceso": self.get_nombre(),
+            "fecha_creacion_proceso": self.get_fecha(),
+            "estado_proceso": self.get_estado(),
+            "cantidad_observaciones": self.get_cant_observaciones()
+        }
+
+    @staticmethod
+    def procesos_to_dict(procesos):
+        return [proceso.to_dict() for proceso in procesos]
+
+

@@ -1,6 +1,6 @@
 from flask import Blueprint, jsonify, request
-from aplicacion import Aplicacion
-from . import serializers
+from servicio.procesos.aplicacion import Aplicacion
+from servicio.procesos.entidades import Proceso
 
 procesos_blueprint = Blueprint("usac", __name__)
 aplicacion = Aplicacion()
@@ -9,24 +9,17 @@ aplicacion = Aplicacion()
 # Usuarios
 @procesos_blueprint.route('/usuarios/cantidad-activos')
 def get_usuarios_cant_activos():
-    respuesta = []
     usuarios_cant_activos = aplicacion.get_usuarios_cant_activos()
-    for usuario, cant_activos in usuarios_cant_activos:
-        data_usuario = serializers.usuario_dict(usuario)
-        data_usuario["cantidad_activos_usuario"] = cant_activos
-        respuesta.append(data_usuario)
+    respuesta = [{**usuario.to_dict(), "cantidad_activos_usuario": cant_activos}
+                 for usuario, cant_activos in usuarios_cant_activos]
     return jsonify(respuesta)
 
 
 @procesos_blueprint.route('/usuarios/<cedula>/activos')
 def get_activos_por_usuario(cedula):
     usuario = aplicacion.get_usuario_por_cedula(cedula)
-    respuesta = []
     activos_usuario = aplicacion.get_activos_por_usuario(usuario)
-    for activo in activos_usuario:
-        data_activo = serializers.activo_dict(activo)
-        data_item = serializers.item_dic(activo.get_item())
-        respuesta.append({**data_activo, **data_item})
+    respuesta = [{**activo.to_dict(), **activo.get_item().to_dict()} for activo in activos_usuario]
     return jsonify(respuesta)
 
 
@@ -34,9 +27,7 @@ def get_activos_por_usuario(cedula):
 def get_procesos_por_usuario(cedula):
     usuario = aplicacion.get_usuario_por_cedula(cedula)
     procesos = aplicacion.get_procesos_por_usuario(usuario)
-    respuesta = []
-    for proceso in procesos:
-        respuesta.append(serializers.proceso_dic(proceso))
+    respuesta = [proceso.to_dict() for proceso in procesos]
     return jsonify(respuesta)
 
 
@@ -44,9 +35,7 @@ def get_procesos_por_usuario(cedula):
 @procesos_blueprint.route('/procesos')
 def get_procesos():
     procesos = aplicacion.get_procesos()
-    respuesta = []
-    for proceso in procesos:
-        respuesta.append(serializers.proceso_dic(proceso))
+    respuesta = Proceso.procesos_to_dict(procesos)
     return jsonify(respuesta)
 
 
@@ -64,9 +53,7 @@ def crear_proceso():
 def get_usuarios_por_proceso(id_proceso):
     proceso = aplicacion.get_proceso_por_id(id_proceso)
     usuarios = aplicacion.get_usuarios_por_proceso(proceso)
-    respuesta = []
-    for usuario in usuarios:
-        respuesta.append(serializers.usuario_dict(usuario))
+    respuesta = [usuario.to_dict() for usuario in usuarios]
     return jsonify(respuesta)
 
 
@@ -75,14 +62,9 @@ def get_activos_por_proceso(id_proceso):
     proceso = aplicacion.get_proceso_por_id(id_proceso)
     usuarios = aplicacion.get_usuarios_por_proceso(proceso)
     activos = []
-    respuesta = []
     for usuario in usuarios:
         activos = activos + aplicacion.get_activos_por_usuario(usuario)
-    for activo in activos:
-        item = activo.get_item()
-        data_activo = serializers.activo_dict(activo)
-        data_item = serializers.item_dic(item)
-        respuesta.append({**data_activo, **data_item})
+    respuesta = [{**activo.to_dict(), **activo.get_item().to_dict()} for activo in activos]
     return jsonify(respuesta)
 
 
@@ -91,7 +73,7 @@ def get_detalle_proceso(id_proceso):
     proceso = aplicacion.get_proceso_por_id(id_proceso)
     usuarios = aplicacion.get_usuarios_por_proceso(proceso)
     respuesta = {"proceso": {
-        **serializers.proceso_dic(proceso),
+        **proceso.to_dict(),
         "cantidad_usuarios_proceso": len(usuarios),
         "cantidad_activos_proceso": aplicacion.get_cantidad_activos_proceso(proceso),
     },
@@ -101,16 +83,16 @@ def get_detalle_proceso(id_proceso):
     for usuario in usuarios:
         cant_act = len(aplicacion.get_cant_activos_usuario(usuario))
         cant_obs = aplicacion.get_cant_activos_observacion_usuario(usuario, proceso)
-        respuesta["usuarios"].append({**serializers.usuario_dict(usuario),
+        respuesta["usuarios"].append({**usuario.to_dict(),
                                       "cantidad_observaciones_usuario": cant_obs,
                                       "cantidad_activos_usuario": cant_act})
     for activo in aplicacion.get_activos_por_proceso(proceso):
         respuesta["proceso"]["estado_proceso"] = proceso.get_estado()
         usuario = aplicacion.get_usuario_por_activo(activo)
         item = activo.get_item()
-        respuesta["activos"].append({**serializers.activo_dict(activo),
-                                     **serializers.item_dic(item),
-                                     **serializers.usuario_dict(usuario),
+        respuesta["activos"].append({**activo.to_dict(),
+                                     **activo.get_item().to_dict(),
+                                     **usuario.to_dict(),
                                      "revision_activo": activo.get_revision(),
                                      "estado_revision_activo": activo.get_estado(),
                                      "observacion_revision": activo.get_observacion()
