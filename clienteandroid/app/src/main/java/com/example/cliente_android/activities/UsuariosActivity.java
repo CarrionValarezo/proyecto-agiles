@@ -35,7 +35,7 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 
-public class DetalleProcesoActivity extends Activity implements SwipeRefreshLayout.OnRefreshListener {
+public class UsuariosActivity extends Activity implements SwipeRefreshLayout.OnRefreshListener {
     TextView tvNombre, tvFecha, tvId, tvEstado, tvCantUsuarios, tvCantActivos, tvCantObs;
     int idProceso;
     ImageView ivCirculoDetalle;

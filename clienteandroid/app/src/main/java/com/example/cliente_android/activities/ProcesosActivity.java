@@ -29,7 +29,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
-public class ProcesoActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener {
+public class ProcesosActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener {
 
     ClienteServicio cliente;
     ArrayList<Proceso> procesosViews = new ArrayList<Proceso>();

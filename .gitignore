@@ -1,2 +1,3 @@
 /cliente_escritorio/dist/
 *.pdf
+/cliente_escritorio/build

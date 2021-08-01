@@ -12,15 +12,15 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Clienteandroid"
         android:usesCleartextTraffic="true">
-        <activity android:name=".activities.DetalleUsuarioActivity"></activity>
-        <activity android:name=".activities.ProcesoActivity">
+        <activity android:name=".activities.ActivosActivity"></activity>
+        <activity android:name=".activities.ProcesosActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activities.DetalleProcesoActivity"></activity>
+        <activity android:name=".activities.UsuariosActivity"></activity>
     </application>
 
 </manifest>

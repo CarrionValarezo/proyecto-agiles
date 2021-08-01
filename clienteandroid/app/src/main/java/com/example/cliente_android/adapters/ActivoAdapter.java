@@ -7,9 +7,6 @@ import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Handler;
 import android.os.Looper;
-import android.text.InputType;
-import android.text.Layout;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,17 +15,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.appcompat.widget.VectorEnabledTintResources;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.cliente_android.R;
-import com.example.cliente_android.activities.DetalleUsuarioActivity;
 import com.example.cliente_android.entidades.Activo;
 import com.example.cliente_android.entidades.Proceso;
-import com.example.cliente_android.entidades.Usuario;
 
 import org.jetbrains.annotations.NotNull;
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -37,7 +30,6 @@ import java.util.ArrayList;
 
 import okhttp3.Call;
 import okhttp3.Callback;
-import okhttp3.FormBody;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -54,9 +46,6 @@ public class ActivoAdapter extends RecyclerView.Adapter<ActivoAdapter.ViewHolder
         this.activos = activos;
         this.proceso = proceso;
         activoAdapter = this;
-    }
-    public interface AdapterInteracciones{
-        public void refrescar();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
@@ -121,7 +110,6 @@ public class ActivoAdapter extends RecyclerView.Adapter<ActivoAdapter.ViewHolder
                     final EditText input = (EditText)inflater.findViewById(R.id.etObservacion);
                     input.setText(activo.getObservacion());
                     builder.setView(inflater);
-
                     // Set up the buttons
                     builder.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
                         @Override
@@ -153,6 +141,8 @@ public class ActivoAdapter extends RecyclerView.Adapter<ActivoAdapter.ViewHolder
             } catch (JSONException e) {
                 e.printStackTrace();
             }
+            activo.setObservacion(m_Text);
+            activo.setEstado(estado);
             RequestBody requestBody = RequestBody.create(enviar.toString(), JSON);
             Request request  = new Request.Builder()
                     .url(url)
@@ -161,7 +151,8 @@ public class ActivoAdapter extends RecyclerView.Adapter<ActivoAdapter.ViewHolder
             cliente.newCall(request).enqueue(new Callback() {
                 @Override
                 public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                    mensajeValidacion();
+                    actualizar(activo);
+
                 }
 
                 @Override
@@ -178,10 +169,12 @@ public class ActivoAdapter extends RecyclerView.Adapter<ActivoAdapter.ViewHolder
                 }
             });
         }
-        public void mensajeValidacion(){
+        public void actualizar(Activo activo){
             new Handler(Looper.getMainLooper()).post(new Runnable() {
                 @Override
                 public void run() {
+                    asignarDatos(activo);
+                    asignarColor(activo);
                     Toast.makeText(context, "¡Se validó el activo correctamente!", Toast.LENGTH_LONG).show();
                 }
             });

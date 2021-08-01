@@ -13,7 +13,7 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.cliente_android.R;
-import com.example.cliente_android.activities.DetalleProcesoActivity;
+import com.example.cliente_android.activities.UsuariosActivity;
 import com.example.cliente_android.entidades.Proceso;
 
 import java.util.ArrayList;
@@ -52,7 +52,7 @@ public class ProcesoAdapter extends RecyclerView.Adapter<ProcesoAdapter.ViewHold
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(itemView.getContext(), DetalleProcesoActivity.class);
+                    Intent intent = new Intent(itemView.getContext(), UsuariosActivity.class);
                     intent.putExtra("EXTRA_ID_PROCESO", proceso.getIdProces());
                     itemView.getContext().startActivity(intent);
                 }

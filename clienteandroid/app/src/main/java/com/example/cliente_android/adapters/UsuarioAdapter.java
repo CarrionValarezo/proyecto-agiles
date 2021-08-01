@@ -11,8 +11,7 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.cliente_android.R;
-import com.example.cliente_android.activities.DetalleProcesoActivity;
-import com.example.cliente_android.activities.DetalleUsuarioActivity;
+import com.example.cliente_android.activities.ActivosActivity;
 import com.example.cliente_android.entidades.Proceso;
 import com.example.cliente_android.entidades.Usuario;
 
@@ -43,7 +42,7 @@ public class UsuarioAdapter extends RecyclerView.Adapter<UsuarioAdapter.ViewHold
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(itemView.getContext(), DetalleUsuarioActivity.class);
+                    Intent intent = new Intent(itemView.getContext(), ActivosActivity.class);
                     intent.putExtra("EXTRA_ID_PROCESO", proceso.getIdProces());
                     intent.putExtra("EXTRA_CEDULA_USUARIO", usuario.getCedula());
                     itemView.getContext().startActivity(intent);

@@ -33,7 +33,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
-public class DetalleUsuarioActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener {
+public class ActivosActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener {
     TextView tvNombreUsuario, tvApellidoUsuario, tvCedulaUsuario, tvCantObsUsuario, tvCantActUsuario;
     ImageView ivCirculoEstado;
     String cedulaUsuario;
