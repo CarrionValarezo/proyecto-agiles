@@ -56,7 +56,7 @@ public class IntCrearProceso extends javax.swing.JFrame {
 			JOptionPane.showMessageDialog(null, "Debe ingresar un nombre al proceso!");
 			jTxtNombreProceso.requestFocus();
 		} else {
-			String idProceso = this.gestor.crearProceso(jTxtNombreProceso.getText(), getCedulasTabla());
+			int idProceso = this.gestor.crearProceso(jTxtNombreProceso.getText(), getCedulasTabla());
 			int opcion = JOptionPane.showConfirmDialog(null, "El proceso ha sido creado exitosamente \n "
 					+ "¿Desea ver el detalle del proceso creado?", "Confirmacion", JOptionPane.YES_NO_OPTION);
 			if (opcion == 0) {

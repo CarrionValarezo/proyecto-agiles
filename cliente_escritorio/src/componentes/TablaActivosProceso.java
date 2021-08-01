@@ -6,9 +6,9 @@
 package componentes;
 
 import entidades.Activo;
+import entidades.ActivoProcesado;
 import entidades.Proceso;
 import gestor.Gestor;
-import interfaces.IntValidarActivo;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.event.MouseEvent;
@@ -23,13 +23,13 @@ import javax.swing.SwingUtilities;
  */
 public class TablaActivosProceso extends JTable {
 
-	ModeloTabla modelo;
+ModeloTabla modelo;
 	Gestor gestor;
 	String[] titulos;
 	JButton btnValidar;
 	Proceso proceso;
 	ListSelectionModel model;
-	PnlDetalleProceso panel; 
+	PnlDetalleProceso panel;
 
 	public TablaActivosProceso() {
 		this.setRowSelectionAllowed(true);
@@ -41,10 +41,10 @@ public class TablaActivosProceso extends JTable {
 		crearBoton();
 		tablaClick();
 		tablaMoverCursor();
-		
+
 	}
 
-	public void imprimir(){
+	public void imprimir() {
 		System.out.println(SwingUtilities.getRootPane(this));
 	}
 
@@ -58,32 +58,37 @@ public class TablaActivosProceso extends JTable {
 		btnValidar.setForeground(Color.white);
 	}
 
-	public void cargarTabla(String idProceso) {
+	public void cargarTabla(int idProceso) {
 		this.proceso = gestor.getProceso(idProceso);
 
 		this.setDefaultRenderer(Object.class, new Render());
-
 		this.modelo = new ModeloTabla(null, titulos);
 
-		for (Activo activo : this.proceso.getActivos()) {
-			String revision = "";
-			if (activo.getRevisionActivo() == 1) {
-				revision = "REVISADO";
+		if (proceso != null) {
+			for (Activo activo : this.proceso.getActivos()) {
+				String revision = "";
+				if (((ActivoProcesado) activo).estaRevisado() == 1) {
+					revision = "REVISADO";
+				}
+				Object[] datos = {activo.id(),
+					activo.idItem(), activo.nombreItem(),
+					activo.descripcionItem(),
+					activo.getUsuario().getCedula(),
+					activo.getUsuario().getNombre(),
+					activo.getUsuario().getApellido(),
+					revision,
+					((ActivoProcesado) activo).estadoRevision(),
+					((ActivoProcesado) activo).obsRevision()
+				};
+				this.modelo.addRow(datos);
 			}
-			Object[] datos = {activo.getIdPertinencia(),
-				activo.getIdActivo(), activo.getNombreActivo(),
-				activo.getDescripcionActivo(),
-				activo.getUsuario().getCedula(),
-				activo.getUsuario().getNombre(),
-				activo.getUsuario().getApellido(),
-				revision,
-				activo.getEstadoRevisionActivo(),
-				activo.getObservacionRevision()
-			};
-			this.modelo.addRow(datos);
+			this.setModel(this.modelo);
+			this.setRowHeight(20);
+
+		}else{
+			this.modelo = new ModeloTabla(null, this.titulos);
+			this.setModel(modelo);
 		}
-		this.setModel(this.modelo);
-		this.setRowHeight(20);
 	}
 
 	private void tablaMoverCursor() {
@@ -118,14 +123,14 @@ public class TablaActivosProceso extends JTable {
 			if (value instanceof JButton) {
 				((JButton) value).doClick();
 				JButton btn = (JButton) value;
-				int id = Integer.parseInt(this.proceso.getIdProceso());
-				IntValidarActivo intValidacion = new IntValidarActivo(this.panel, this, id, row);
-				intValidacion.setVisible(true);
+				int id = proceso.id();
+				//IntValidarActivo intValidacion = new IntValidarActivo(this.panel, this, id, row);
+				//intValidacion.setVisible(true);
 			}
 		}
 	}
 
 	public void setPanel(PnlDetalleProceso panel) {
-		this.panel = panel; 
-	}
+		this.panel = panel;
+	}	
 }

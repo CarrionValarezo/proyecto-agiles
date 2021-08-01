@@ -14,6 +14,7 @@ import javax.swing.JTable;
 import java.awt.Point;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 
@@ -24,11 +25,11 @@ import javax.swing.table.DefaultTableModel;
 public class TablaUsuarios extends JTable {
 
 	ModeloTabla modelo;
-	Gestor gestor; 
+	Gestor gestor;
 	String[] titulos;
 
 	public TablaUsuarios() {
-		this.gestor = Gestor._getGestor(); 
+		this.gestor = Gestor._getGestor();
 		this.titulos = new String[]{"CEDULA", "NOMBRE", "APELLIDO", "CANTIDAD DE ACTIVOS"};
 	}
 
@@ -38,9 +39,13 @@ public class TablaUsuarios extends JTable {
 	}
 
 	public void cargarTabla() {
-		String[][] usuarios = this.gestor.getUsuarios();
-		this.modelo = new ModeloTabla(usuarios, titulos);
-		this.setModel(this.modelo);
+		ArrayList<Usuario> usuarios = this.gestor.getUsuarios();
+		if (usuarios != null) {
+			this.modelo = new ModeloTabla(Usuario.matriz(usuarios), titulos);
+			this.setModel(this.modelo);
+		}else{ 
+			cargarTablaSinDatos();
+		}
 	}
 
 	public void accionDobleClick() {
@@ -107,5 +112,4 @@ public class TablaUsuarios extends JTable {
 		((DefaultTableModel) origen.getModel()).removeRow(origen.getSelectedRow());
 		((DefaultTableModel) destino.getModel()).addRow(usuarioTabla);
 	}
-
 }

@@ -46,7 +46,7 @@ public class IntDetalleProceso extends javax.swing.JFrame {
 		this.contador = 0;
 	}
 
-	public void agregarDetalle(String idProceso) {
+	public void agregarDetalle(int idProceso) {
 		PnlDetalleProceso detalle = new PnlDetalleProceso(idProceso);
 		this.jTbpDetalles.add(detalle);
 		this.jTbpDetalles.setTitleAt(this.contador, detalle.getNombreProceso());
@@ -145,9 +145,9 @@ public class IntDetalleProceso extends javax.swing.JFrame {
 		java.awt.EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				IntDetalleProceso ventana = IntDetalleProceso._getVentana();
-				ventana.agregarDetalle("11");
+				ventana.agregarDetalle(11);
 				IntDetalleProceso ventana2 = IntDetalleProceso._getVentana();
-				ventana2.agregarDetalle("18");
+				ventana2.agregarDetalle(18);
 
 			}
 		});

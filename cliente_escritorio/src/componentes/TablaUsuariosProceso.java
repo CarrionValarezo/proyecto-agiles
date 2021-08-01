@@ -21,8 +21,7 @@ import javax.swing.ListSelectionModel;
  * @author carri
  */
 public class TablaUsuariosProceso extends JTable {
-
-	ModeloTabla modelo;
+ModeloTabla modelo;
 	Gestor gestor;
 	String[] titulos;
 	JButton btnEliminar;
@@ -43,16 +42,21 @@ public class TablaUsuariosProceso extends JTable {
 		this.tablaActivos = tablaActivos; 
 	}
 
-	public void cargarTabla(String idProceso) {
+	public void cargarTabla(int idProceso) {
 		this.proceso = this.gestor.getProceso(idProceso);
 		this.setDefaultRenderer(Object.class, new Render());
 		this.modelo = new ModeloTabla(null, titulos);
-		for (Usuario usuario : proceso.getUsuarios()) {
-			Object[] datos = {usuario.getCedula(), usuario.getNombre(), usuario.getApellido(), this.btnEliminar};
-			this.modelo.addRow(datos);
+		if(proceso != null){
+			for (Usuario usuario : proceso.getUsuarios()) {
+				Object[] datos = {usuario.getCedula(), usuario.getNombre(), usuario.getApellido(), this.btnEliminar};
+				this.modelo.addRow(datos);
+			}
+			this.setModel(this.modelo);
+			this.setRowHeight(25);
+		}else{ 
+			this.modelo = new ModeloTabla(null, this.titulos);
+			this.setModel(modelo);
 		}
-		this.setModel(this.modelo);
-		this.setRowHeight(25);
 	}
 
 	private void crearBoton() {
@@ -103,12 +107,12 @@ public class TablaUsuariosProceso extends JTable {
 				((JButton) value).doClick();
 				JButton btn = (JButton) value;
 				int opcion = JOptionPane.showConfirmDialog(null,
-						"Esta seguro de eliminar al usuario: " + cedula + " " + nombre + "  del proceso: " + this.proceso.getNombre());
+						"Esta seguro de eliminar al usuario: " + cedula + " " + nombre + "  del proceso: " + this.proceso.nombre());
 				if (opcion == 0) {
-					this.gestor.eliminarUsuario(this.proceso.getIdProceso(), cedula);
-					cargarTabla(this.proceso.getIdProceso());
+					this.gestor.eliminarUsuario(this.proceso.id(), cedula);
+					cargarTabla(this.proceso.id());
 					if (this.tablaActivos != null){
-						this.tablaActivos.cargarTabla(this.proceso.getIdProceso());
+						this.tablaActivos.cargarTabla(this.proceso.id());
 					}
 				}
 			}

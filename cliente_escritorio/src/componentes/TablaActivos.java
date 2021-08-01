@@ -5,7 +5,9 @@
  */
 package componentes;
 
+import entidades.Activo;
 import gestor.Gestor;
+import java.util.ArrayList;
 import javax.swing.JTable;
 
 /**
@@ -25,8 +27,8 @@ public class TablaActivos extends JTable{
 	}
 
 	public void cargarTabla(String cedula) {
-		String[][] activos = gestor.getActivos(cedula);
-		this.modelo = new ModeloTabla(activos, this.titulos);
+		ArrayList<Activo> activos = gestor.getActivos(cedula);
+		this.modelo = new ModeloTabla(Activo.matriz(activos), this.titulos);
 		this.setModel(modelo);
 	}
 }

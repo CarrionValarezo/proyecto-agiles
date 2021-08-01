@@ -5,56 +5,88 @@
  */
 package entidades;
 
+import java.util.ArrayList;
+import java.util.Vector;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 /**
  *
  * @author carri
  */
 public class Activo {
-	String idPertenencia, idActivo, nombreActivo, descripcionActivo,estadoRevisionActivo,observacionRevision; 
-	int revisionActivo; 
-	Usuario usuario; 
+	protected String id, idItem, nomItem, desItem; 
+	protected Usuario usuario; 
 
-	public Activo(String idPertinencia, String idActivo, String nombreActivo, String descripcionActivo, 
-					int revisionActivo, String estadoRevisionActivo, String observacionRevision) {
-		this.idPertenencia = idPertinencia; 
-		this.idActivo = idActivo;
-		this.nombreActivo = nombreActivo;
-		this.descripcionActivo = descripcionActivo;
-		this.revisionActivo = revisionActivo; 
-		this.estadoRevisionActivo = estadoRevisionActivo; 
-		this.observacionRevision = observacionRevision; 
+	public Activo(String idPertinencia, String idItem, String nomItem, String desItem) {
+		this.id = idPertinencia; 
+		this.idItem = idItem;
+		this.nomItem = nomItem;
+		this.desItem = desItem; 
 	}
 
-	public String getIdPertenencia() {
-		return idPertenencia;
+
+	public static Activo fromJson(JSONObject json){
+		Activo a = new Activo();
+        try {
+            a.id = json.getString("id_activo");
+            a.idItem = json.getString("id_item");
+            a.nomItem = json.getString("nombre_item");
+            a.desItem = json.getString("descripcion_item");
+	   } catch (JSONException e) {
+        }
+        return a;
 	}
 
-	public String getEstadoRevisionActivo() {
-		return estadoRevisionActivo;
+	public static ArrayList<Activo> fromJson(JSONArray jsonArray) {
+        ArrayList<Activo> activos = new ArrayList<Activo>(jsonArray.length());
+        for (int i = 0; i < jsonArray.length(); i++) {
+            JSONObject activoJson = null;
+            try {
+                activoJson = jsonArray.getJSONObject(i);
+                Activo activo = Activo.fromJson(activoJson);
+                if (activo != null) {
+                    activos.add(activo);
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        return activos;
+    }
+
+	public static String[][] matriz(ArrayList<Activo> activos){ 
+		int contador = 0; 
+		String [][] datosActivos = new String[activos.size()][];
+		for(Activo activo: activos){ 
+			datosActivos[contador] = new String[]{activo.id, activo.idItem, activo.nomItem, activo.desItem};
+			contador++;
+		}
+		return datosActivos;
+	}
+	
+
+	public Activo() {
+	}
+	public String getId() {
+		return id;
 	}
 
-	public String getObservacionRevision() {
-		return observacionRevision;
+	public String idItem() {
+		return idItem;
 	}
 
-	public int getRevisionActivo() {
-		return revisionActivo;
+	public String nombreItem() {
+		return nomItem;
 	}
 
-	public String getIdActivo() {
-		return idActivo;
+	public String descripcionItem() {
+		return desItem;
 	}
 
-	public String getNombreActivo() {
-		return nombreActivo;
-	}
-
-	public String getDescripcionActivo() {
-		return descripcionActivo;
-	}
-
-	public String getIdPertinencia(){
-		return idPertenencia; 
+	public String id(){
+		return id; 
 	}
 
 	public void setUsuario(Usuario usuario){
@@ -66,6 +98,6 @@ public class Activo {
 	}
 	@Override
 	public String toString(){
-		return this.idPertenencia +" "+this.idActivo+" "+this.nombreActivo + " "+this.revisionActivo+ " "+this.estadoRevisionActivo+" "+this.observacionRevision;  
+		return this.id +" "+this.idItem+" "+this.nomItem;  
 	}	
 }
