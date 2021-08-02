@@ -28,10 +28,10 @@ public class IntDetalleProceso extends javax.swing.JFrame {
 
 	public static IntDetalleProceso _getVentana() {
 		if (instancia == null) {
-			instancia =  new IntDetalleProceso();
+			instancia = new IntDetalleProceso();
 			instancia.setVisible(true);
 		}
-		if(instancia.getExtendedState() != 0 || !instancia.isVisible()){ 
+		if (instancia.getExtendedState() != 0 || !instancia.isVisible()) {
 			instancia.setVisible(true);
 			instancia.setState(JFrame.NORMAL);
 		}
@@ -47,18 +47,36 @@ public class IntDetalleProceso extends javax.swing.JFrame {
 	}
 
 	public void agregarDetalle(int idProceso) {
-		PnlDetalleProceso detalle = new PnlDetalleProceso(idProceso);
-		this.jTbpDetalles.add(detalle);
-		this.jTbpDetalles.setTitleAt(this.contador, detalle.getNombreProceso());
-		jTbpDetalles.setSelectedIndex(contador);
-		this.contador++;
+		boolean encontro = false;
+		if (contador == 0) {
+			PnlDetalleProceso detalle = new PnlDetalleProceso(idProceso);
+			this.jTbpDetalles.add(detalle);
+			this.jTbpDetalles.setTitleAt(this.contador, detalle.getNombreProceso());
+			jTbpDetalles.setSelectedIndex(contador);
+			this.contador++;
+		} else {
+			for (int i = 0; i < contador; i++) {
+				PnlDetalleProceso panel = (PnlDetalleProceso) jTbpDetalles.getComponent(i);
+				if (panel.getProceso().id() == idProceso) {
+					panel.actualizarTablas(idProceso);
+					jTbpDetalles.setSelectedIndex(i);
+					encontro = true;
+				}
+			}
+			if (!encontro) {
+				PnlDetalleProceso detalle = new PnlDetalleProceso(idProceso);
+				this.jTbpDetalles.add(detalle);
+				this.jTbpDetalles.setTitleAt(this.contador, detalle.getNombreProceso());
+				jTbpDetalles.setSelectedIndex(contador);
+				this.contador++;
+			}
+		}
 	}
 
-	public void ultimaPestana(){ 
-		if (jTbpDetalles.getTabCount() == 0){
-			jTbpDetalles.setSelectedIndex(instancia.jTbpDetalles.getTabCount()-1);
-		}
-		else{
+	public void ultimaPestana() {
+		if (jTbpDetalles.getTabCount() == 0) {
+			jTbpDetalles.setSelectedIndex(instancia.jTbpDetalles.getTabCount() - 1);
+		} else {
 			jTbpDetalles.setSelectedIndex(instancia.jTbpDetalles.getTabCount());
 		}
 	}
@@ -108,8 +126,8 @@ public class IntDetalleProceso extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
-		Component seleccionado = this.jTbpDetalles.getSelectedComponent(); 
+		// TODO add your handling code here:
+		Component seleccionado = this.jTbpDetalles.getSelectedComponent();
 		this.jTbpDetalles.remove(seleccionado);
 		this.contador--;
     }//GEN-LAST:event_jButton1ActionPerformed

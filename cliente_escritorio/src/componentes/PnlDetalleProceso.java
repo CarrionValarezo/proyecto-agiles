@@ -36,6 +36,16 @@ public class PnlDetalleProceso extends javax.swing.JPanel {
 		cargarDatos();
 	}
 
+	public Proceso getProceso(){
+		return proceso; 
+	}
+
+	public void actualizarTablas(int idProceso){ 
+		this.tablaActivosProceso1.cargarTabla(idProceso);
+		this.tablaUsuariosProceso1.cargarTabla(idProceso);
+		cargarDatos();
+	}
+
 	public void setProceso(Proceso proceso) {
 		this.proceso = proceso;
 		cargarDatos();
