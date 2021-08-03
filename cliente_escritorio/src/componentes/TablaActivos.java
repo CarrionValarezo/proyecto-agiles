@@ -14,8 +14,8 @@ import javax.swing.JTable;
  *
  * @author carri
  */
-public class TablaActivos extends JTable{
-	
+public class TablaActivos extends JTable {
+
 	ModeloTabla modelo;
 	Gestor gestor;
 	String[] titulos;
@@ -28,7 +28,12 @@ public class TablaActivos extends JTable{
 
 	public void cargarTabla(String cedula) {
 		ArrayList<Activo> activos = gestor.getActivos(cedula);
-		this.modelo = new ModeloTabla(Activo.matriz(activos), this.titulos);
-		this.setModel(modelo);
+		if (activos != null) {
+			this.modelo = new ModeloTabla(Activo.matriz(activos), this.titulos);
+			this.setModel(modelo);
+		} else {
+			this.modelo = new ModeloTabla(null, this.titulos);
+			this.setModel(modelo);
+		}
 	}
 }

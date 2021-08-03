@@ -41,6 +41,7 @@ public class PnlDetalleProceso extends javax.swing.JPanel {
 	}
 
 	public void actualizarTablas(int idProceso){ 
+		this.proceso = Gestor._getGestor().getProceso(idProceso);
 		this.tablaActivosProceso1.cargarTabla(idProceso);
 		this.tablaUsuariosProceso1.cargarTabla(idProceso);
 		cargarDatos();

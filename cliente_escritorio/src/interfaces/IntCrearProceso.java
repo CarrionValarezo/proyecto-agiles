@@ -51,18 +51,20 @@ public class IntCrearProceso extends javax.swing.JFrame {
 
 	private void crearProceso() {
 		if (this.tablaUsuariosProcesar.getRowCount() == 0) {
-			JOptionPane.showMessageDialog(null, "Debe seleccionar al menos a un usuario para procesar!");
+			JOptionPane.showMessageDialog(null, "¡Debe seleccionar al menos a un usuario para procesar!");
 		} else if (jTxtNombreProceso.getText().isEmpty()) {
-			JOptionPane.showMessageDialog(null, "Debe ingresar un nombre al proceso!");
+			JOptionPane.showMessageDialog(null, "¡Debe ingresar un nombre al proceso!");
 			jTxtNombreProceso.requestFocus();
 		} else {
 			int idProceso = this.gestor.crearProceso(jTxtNombreProceso.getText(), getCedulasTabla());
-			int opcion = JOptionPane.showConfirmDialog(null, "El proceso ha sido creado exitosamente \n "
-					+ "¿Desea ver el detalle del proceso creado?", "Confirmacion", JOptionPane.YES_NO_OPTION);
-			if (opcion == 0) {
-				IntDetalleProceso intDetalle = IntDetalleProceso._getVentana();
-				intDetalle.agregarDetalle(idProceso);
-				this.dispose();
+			if (idProceso != -1) {
+				int opcion = JOptionPane.showConfirmDialog(null, "El proceso ha sido creado exitosamente \n "
+						+ "¿Desea ver el detalle del proceso creado?", "Confirmación", JOptionPane.YES_NO_OPTION);
+				if (opcion == 0) {
+					IntDetalleProceso intDetalle = IntDetalleProceso._getVentana();
+					intDetalle.agregarDetalle(idProceso);
+					this.dispose();
+				}
 			}
 		}
 	}
