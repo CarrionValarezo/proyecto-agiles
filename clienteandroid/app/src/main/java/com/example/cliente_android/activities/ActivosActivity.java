@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -45,11 +46,13 @@ public class ActivosActivity extends AppCompatActivity implements SwipeRefreshLa
     Context context;
     Proceso proceso;
     SwipeRefreshLayout swipeRefreshLayout;
+    SharedPreferences preferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.usuario_detalle);
+        preferences = getSharedPreferences("com.example.cliente_android", Context.MODE_PRIVATE);
         context = getApplicationContext();
         cedulaUsuario = getIntent().getStringExtra("EXTRA_CEDULA_USUARIO");
         idProceso = getIntent().getIntExtra("EXTRA_ID_PROCESO", 0);
@@ -68,40 +71,44 @@ public class ActivosActivity extends AppCompatActivity implements SwipeRefreshLa
 
 
     private void fetchUsuario(){
-        OkHttpClient cliente = new OkHttpClient();
-        String url = "http://192.168.0.50:5000/procesos/"+idProceso;
-        Request request  = new Request.Builder()
-                .url(url)
-                .build();
-        cliente.newCall(request).enqueue(new Callback() {
-            @Override
-            public void onFailure(@NotNull Call call, @NotNull IOException e) {
-               errorConexion();
-            }
-
-            @Override
-            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                try {
-                    JSONObject jsonObject = new JSONObject(response.body().string());
-                    JSONArray jsonActivos = jsonObject.getJSONArray("activos");
-                    JSONArray jsonUsuarios = jsonObject.getJSONArray("usuarios");
-                    proceso = Proceso.fromJson(jsonObject.getJSONObject("proceso"));
-                    usuario = Usuario.fromJson(jsonUsuarios, cedulaUsuario);
-                    //Log.e("JSON USU", "onResponse: "+jsonObject.toString());
-                    activos = Activo.fromJson(jsonActivos, cedulaUsuario);
-                } catch (JSONException e) {
-                    e.printStackTrace();
+        String auth = preferences.getString("session", null);
+        if (auth != null) {
+            OkHttpClient cliente = new OkHttpClient();
+            String url = "http://192.168.0.50:5000/procesos/"+idProceso;
+            Request request  = new Request.Builder()
+                    .url(url)
+                    .header("Authorization", auth)
+                    .build();
+            cliente.newCall(request).enqueue(new Callback() {
+                @Override
+                public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                    errorConexion();
                 }
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        setLayout();
-                        activoAdapter = new ActivoAdapter(activos, proceso);
-                        rvActivos.setAdapter(activoAdapter);
+
+                @Override
+                public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                    try {
+                        JSONObject jsonObject = new JSONObject(response.body().string());
+                        JSONArray jsonActivos = jsonObject.getJSONArray("activos");
+                        JSONArray jsonUsuarios = jsonObject.getJSONArray("usuarios");
+                        proceso = Proceso.fromJson(jsonObject.getJSONObject("proceso"));
+                        usuario = Usuario.fromJson(jsonUsuarios, cedulaUsuario);
+                        //Log.e("JSON USU", "onResponse: "+jsonObject.toString());
+                        activos = Activo.fromJson(jsonActivos, cedulaUsuario);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
                     }
-                });
-            }
-        });
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            setLayout();
+                            activoAdapter = new ActivoAdapter(activos, proceso);
+                            rvActivos.setAdapter(activoAdapter);
+                        }
+                    });
+                }
+            });
+        }
     }
 
     public void setLayout(){
