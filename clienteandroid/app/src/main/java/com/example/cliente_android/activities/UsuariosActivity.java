@@ -1,7 +1,10 @@
 package com.example.cliente_android.activities;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
@@ -9,6 +12,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -21,6 +26,8 @@ import com.example.cliente_android.R;
 import com.example.cliente_android.adapters.UsuarioAdapter;
 import com.example.cliente_android.entidades.Proceso;
 import com.example.cliente_android.entidades.Usuario;
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
 
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
@@ -68,8 +75,57 @@ public class UsuariosActivity extends Activity implements SwipeRefreshLayout.OnR
         fetchProceso();
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipeUsuarios);
         swipeRefreshLayout.setOnRefreshListener(this);
+
+        Button btnScanner = (Button)findViewById(R.id.btnScanner);
+        btnScanner.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+               scanCode();
+            }
+        });
     }
 
+    private void scanCode() {
+        IntentIntegrator integrator = new IntentIntegrator(this);
+        integrator.setDesiredBarcodeFormats(IntentIntegrator.ONE_D_CODE_TYPES);
+        integrator.setPrompt("Escanee un codigo de barras");
+        integrator.setOrientationLocked(false);
+        integrator.setCameraId(0);  // Use a specific camera of the device
+        integrator.setBeepEnabled(false);
+        integrator.setBarcodeImageEnabled(true);
+        integrator.setCaptureActivity(ScanActivity.class);
+        integrator.initiateScan();
+    }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        IntentResult resultado = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
+        if (resultado != null) {
+            if (resultado.getContents() != null) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setMessage(resultado.getContents());
+                builder.setTitle("Escaneando Resultados");
+                builder.setPositiveButton("Escanear de nuevo", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        scanCode();
+                    }
+
+                }).setNegativeButton("Terminado", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                    }
+                });
+                AlertDialog dialog = builder.create();
+                dialog.show();
+
+            } else {
+                Toast.makeText(this, "No se encuentran resultados", Toast.LENGTH_LONG).show();
+
+            }
+        } else {
+            super.onActivityResult(requestCode, resultCode, data);
+        }
+    }
     public void fetchProceso(){
         String auth = preferences.getString("session", null);
         if (auth != null ) {
