@@ -2,6 +2,7 @@ package com.example.cliente_android.activities;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
@@ -45,11 +46,13 @@ public class UsuariosActivity extends Activity implements SwipeRefreshLayout.OnR
     RecyclerView rvUsuarios;
     UsuarioAdapter usuarioAdapter;
     private SwipeRefreshLayout swipeRefreshLayout;
+    SharedPreferences preferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.proceso_detalle);
+        preferences = getSharedPreferences("com.example.cliente_android", Context.MODE_PRIVATE);
         idProceso = getIntent().getIntExtra("EXTRA_ID_PROCESO", 0);
         context = getApplicationContext();
         tvNombre = (TextView)findViewById(R.id.tvNombreDetalle);
@@ -68,37 +71,42 @@ public class UsuariosActivity extends Activity implements SwipeRefreshLayout.OnR
     }
 
     public void fetchProceso(){
-        OkHttpClient cliente = new OkHttpClient();
-        String url = "http://192.168.0.50:5000/procesos/"+idProceso;
-        Request request  = new Request.Builder()
-                .url(url)
-                .build();
-        cliente.newCall(request).enqueue(new Callback() {
-            @Override
-            public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                errorConexion();
-            }
-
-            @Override
-            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                try {
-                    JSONObject jsonObject = new JSONObject(response.body().string());
-                    proceso = Proceso.fromJson(jsonObject.getJSONObject("proceso"));
-                    usuarios = Usuario.fromJson(jsonObject.getJSONArray("usuarios"));
-                } catch (JSONException e) {
-                    e.printStackTrace();
+        String auth = preferences.getString("session", null);
+        if (auth != null ) {
+            OkHttpClient cliente = new OkHttpClient();
+            String url = "http://192.168.0.50:5000/procesos/"+idProceso;
+            Request request  = new Request.Builder()
+                    .url(url)
+                    .header("Authorization", auth)
+                    .build();
+            cliente.newCall(request).enqueue(new Callback() {
+                @Override
+                public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                    errorConexion();
                 }
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        setLayout();
-                        asignarColor(proceso);
-                        usuarioAdapter = new UsuarioAdapter(usuarios, proceso);
-                        rvUsuarios.setAdapter(usuarioAdapter);
+
+                @Override
+                public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                    try {
+                        JSONObject jsonObject = new JSONObject(response.body().string());
+                        proceso = Proceso.fromJson(jsonObject.getJSONObject("proceso"));
+                        usuarios = Usuario.fromJson(jsonObject.getJSONArray("usuarios"));
+                    } catch (JSONException e) {
+                        e.printStackTrace();
                     }
-                });
-            }
-        });
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            setLayout();
+                            asignarColor(proceso);
+                            usuarioAdapter = new UsuarioAdapter(usuarios, proceso);
+                            rvUsuarios.setAdapter(usuarioAdapter);
+                        }
+                    });
+                }
+            });
+        }
+
     }
     private void setLayout(){
         tvNombre.setText(proceso.getNombre());

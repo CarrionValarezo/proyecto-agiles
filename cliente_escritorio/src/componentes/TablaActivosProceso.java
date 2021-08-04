@@ -36,7 +36,7 @@ ModeloTabla modelo;
 		this.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 		this.model = this.getSelectionModel();
 		this.titulos = new String[]{"ID ACTIVO", "ID ITEM", "NOMBRE", "DESCRIPCION", "CEDULA USUARIO",
-			"NOMBRE USUARIO", "APELLIDO USUARIO", "REVISADO", "ESTADO REVISION", "OBSERVACION REVISION"};
+			"NOMBRE USUARIO", "APELLIDO USUARIO", "REVISADO", "ESTADO REVISION", "OBSERVACION REVISION", "ADMIN REVISOR"};
 		this.gestor = Gestor._getGestor();
 		crearBoton();
 		tablaClick();
@@ -78,7 +78,8 @@ ModeloTabla modelo;
 					activo.getUsuario().getApellido(),
 					revision,
 					((ActivoProcesado) activo).estadoRevision(),
-					((ActivoProcesado) activo).obsRevision()
+					((ActivoProcesado) activo).obsRevision(),
+					((ActivoProcesado) activo).getAdminRevisor()
 				};
 				this.modelo.addRow(datos);
 			}

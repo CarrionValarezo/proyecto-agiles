@@ -79,10 +79,10 @@ class DataProceso:
                         where id_pro = {id_proceso}''')
         return cur.fetchone()
 
-    def crear_proceso(self, proceso):
+    def crear_proceso(self, proceso, admin):
         cur = db.get_cursor()
         cur.execute(f'''insert into proceso
-                        values(null,'{proceso.get_nombre()}','{proceso.get_fecha()}','CREADO');''')
+                        values(null,'{proceso.get_nombre()}','{proceso.get_fecha()}','CREADO', '{admin.get_cedula()}');''')
         cur.connection.commit()
         cur.execute(f"select last_insert_id();")
         return cur.fetchone()['last_insert_id()']
@@ -90,7 +90,7 @@ class DataProceso:
     def agregar_activo(self, proceso, activo):
         cur = db.get_cursor()
         cur.execute(f'''insert into detalle_proceso
-                        values({proceso.get_id()},'{activo.get_id()}',0,'','');''')
+                        values({proceso.get_id()},'{activo.get_id()}',0,'','', null);''')
         cur.connection.commit()
 
     def get_activos_por_proceso(self, proceso):
@@ -99,6 +99,7 @@ class DataProceso:
                         dp.rev_act_det as revision_activo,                    
                         dp.est_act_det as estado_revision_activo, 
                         dp.obs_act_det as observacion_revision,
+                        dp.ced_adm_rev_det as admin_revisor,
                         i.ID_ite AS id_item, 
                         i.NOM_ite AS nombre_item, 
                         i.DES_ite AS descripcion_item
@@ -162,12 +163,13 @@ class DataProceso:
                             where ced_usu_act = '{usuario.get_cedula()}');''')
         cur.connection.commit()
 
-    def validar_activo(self, activo, proceso, estado, observacion):
+    def validar_activo(self, activo, proceso, estado, observacion, admin):
         cur = db.get_cursor()
         cur.execute(f'''update detalle_proceso 
                         set rev_act_det = true, 
                             est_act_det = '{estado}', 
-                            obs_act_det = '{observacion}'
+                            obs_act_det = '{observacion}', 
+                            ced_adm_rev_det = '{admin.get_cedula()}'
                         where id_pro_det = {proceso.get_id()}
                         and id_act_det = '{activo.get_id()}';''')
         cur.connection.commit()

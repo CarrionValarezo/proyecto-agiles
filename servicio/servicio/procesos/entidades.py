@@ -32,7 +32,6 @@ class Usuario:
         }
 
 
-
 class Item:
 
     def __init__(self, **kwargs):
@@ -66,9 +65,13 @@ class Activo:
         self.__revision = kwargs.get("revision_activo")
         self.__estado = kwargs.get("estado_revision_activo")
         self.__observacion = kwargs.get("observacion_revision")
+        self.__admin_revisor = kwargs.get("admin_revisor")
 
     def get_id(self):
         return self.__id
+
+    def get_revisor(self):
+        return self.__admin_revisor
 
     def get_usuario(self):
         return self.__usuario
@@ -99,6 +102,10 @@ class Proceso:
         self.__fecha = kwargs.get("fecha_proceso")
         self.__estado = kwargs.get("estado_proceso")
         self.__cant_observaciones = kwargs.get("cantidad_observaciones")
+        self.__ced_admin_creador = kwargs.get("ced_admin_creador")
+
+    def get_ced_admin_creador(self):
+        return self.__ced_admin_creador
 
     def get_id(self):
         return self.__id
@@ -136,5 +143,3 @@ class Proceso:
     @staticmethod
     def procesos_to_dict(procesos):
         return [proceso.to_dict() for proceso in procesos]
-
-

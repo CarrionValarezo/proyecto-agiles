@@ -3,6 +3,7 @@ package com.example.cliente_android.adapters;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Handler;
@@ -57,6 +58,8 @@ public class ActivoAdapter extends RecyclerView.Adapter<ActivoAdapter.ViewHolder
         EditText editText;
         public final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
         private String m_Text = "";
+        SharedPreferences preferences;
+
         public ViewHolder(View itemView) {
             super(itemView);
             context = itemView.getContext();
@@ -69,6 +72,7 @@ public class ActivoAdapter extends RecyclerView.Adapter<ActivoAdapter.ViewHolder
             tvDesItem = (TextView) itemView.findViewById(R.id.tvDesItem);
             tvIdItem = (TextView) itemView.findViewById(R.id.tvIdItem);
             ivCirculoEstado = (ImageView)itemView.findViewById(R.id.ivCirEstadoAct);
+            preferences = context.getSharedPreferences("com.example.cliente_android", Context.MODE_PRIVATE);
         }
 
         public void asignarDatos(Activo activo){
@@ -110,7 +114,6 @@ public class ActivoAdapter extends RecyclerView.Adapter<ActivoAdapter.ViewHolder
                     final EditText input = (EditText)inflater.findViewById(R.id.etObservacion);
                     input.setText(activo.getObservacion());
                     builder.setView(inflater);
-                    // Set up the buttons
                     builder.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
@@ -129,37 +132,41 @@ public class ActivoAdapter extends RecyclerView.Adapter<ActivoAdapter.ViewHolder
             });
         }
         public void validarActivo(Activo activo, Proceso proceso, int position){
-            OkHttpClient cliente = new OkHttpClient();
-            String url = "http://192.168.0.50:5000/procesos/"+proceso.getIdProces()+"/activos/"+activo.getId();
-            JSONObject enviar = new JSONObject();
-            if (!m_Text.equals("")) {
-                estado = "OBSERVACION";
-            }
-            try {
-                enviar.put("estado_activo", estado);
-                enviar.put("observacion_activo", m_Text);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-            activo.setObservacion(m_Text);
-            activo.setEstado(estado);
-            RequestBody requestBody = RequestBody.create(enviar.toString(), JSON);
-            Request request  = new Request.Builder()
-                    .url(url)
-                    .put(requestBody)
-                    .build();
-            cliente.newCall(request).enqueue(new Callback() {
-                @Override
-                public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                    actualizar(activo);
-
+            String auth = preferences.getString("session", null);
+            if( auth != null) {
+                OkHttpClient cliente = new OkHttpClient();
+                String url = "http://192.168.0.50:5000/procesos/"+proceso.getIdProces()+"/activos/"+activo.getId();
+                JSONObject enviar = new JSONObject();
+                if (!m_Text.equals("")) {
+                    estado = "OBSERVACION";
                 }
-
-                @Override
-                public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                    errorConexion();
+                try {
+                    enviar.put("estado_activo", estado);
+                    enviar.put("observacion_activo", m_Text);
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
-            });
+                activo.setObservacion(m_Text);
+                activo.setEstado(estado);
+                RequestBody requestBody = RequestBody.create(enviar.toString(), JSON);
+                Request request  = new Request.Builder()
+                        .url(url)
+                        .header("Authorization", auth)
+                        .put(requestBody)
+                        .build();
+                cliente.newCall(request).enqueue(new Callback() {
+                    @Override
+                    public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                        actualizar(activo);
+
+                    }
+
+                    @Override
+                    public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                        errorConexion();
+                    }
+                });
+            }
         }
         public void errorConexion(){
             new Handler(Looper.getMainLooper()).post(new Runnable() {

@@ -1,5 +1,6 @@
 from flask import Flask
 from flask_cors import CORS
+from flask_httpauth import HTTPBasicAuth
 from .config import LocalConfig
 from .data_base_connection import DataBaseConnection
 
@@ -7,6 +8,7 @@ from .data_base_connection import DataBaseConnection
 app = Flask(__name__)
 db = DataBaseConnection(app)
 CORS(app)
+auth = HTTPBasicAuth(app)
 
 
 def create_app():
@@ -26,5 +28,8 @@ def create_app():
     # Registra blueprint
     from .procesos.url import procesos_blueprint
     app.register_blueprint(procesos_blueprint)
+
+    from .login.url import login_blueprint
+    app.register_blueprint(login_blueprint)
 
     return app

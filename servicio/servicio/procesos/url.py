@@ -1,6 +1,8 @@
 from flask import Blueprint, jsonify, request
 from servicio.procesos.aplicacion import Aplicacion
 from servicio.procesos.entidades import Proceso
+from servicio.app import auth
+from servicio.login.entidades import Administrador
 
 procesos_blueprint = Blueprint("usac", __name__)
 aplicacion = Aplicacion()
@@ -8,6 +10,7 @@ aplicacion = Aplicacion()
 
 # Usuarios
 @procesos_blueprint.route('/usuarios/cantidad-activos')
+@auth.login_required
 def get_usuarios_cant_activos():
     usuarios_cant_activos = aplicacion.get_usuarios_cant_activos()
     respuesta = [{**usuario.to_dict(), "cantidad_activos_usuario": cant_activos}
@@ -16,6 +19,7 @@ def get_usuarios_cant_activos():
 
 
 @procesos_blueprint.route('/usuarios/<cedula>/activos')
+@auth.login_required
 def get_activos_por_usuario(cedula):
     usuario = aplicacion.get_usuario_por_cedula(cedula)
     activos_usuario = aplicacion.get_activos_por_usuario(usuario)
@@ -24,6 +28,7 @@ def get_activos_por_usuario(cedula):
 
 
 @procesos_blueprint.route('/usuarios/<cedula>/procesos')
+@auth.login_required
 def get_procesos_por_usuario(cedula):
     usuario = aplicacion.get_usuario_por_cedula(cedula)
     procesos = aplicacion.get_procesos_por_usuario(usuario)
@@ -33,6 +38,7 @@ def get_procesos_por_usuario(cedula):
 
 # Procesos
 @procesos_blueprint.route('/procesos')
+@auth.login_required
 def get_procesos():
     procesos = aplicacion.get_procesos()
     respuesta = Proceso.procesos_to_dict(procesos)
@@ -40,16 +46,20 @@ def get_procesos():
 
 
 @procesos_blueprint.route('/procesos', methods=['POST'])
+@auth.login_required
+@auth.login_required(role="superadmin")
 def crear_proceso():
     data = request.get_json()
     proceso = data.get("proceso")
+    admin = auth.current_user()
     cedulas_usuarios = data.get("usuarios_proceso")
     usuarios = [aplicacion.get_usuario_por_cedula(usuario.get("cedula_usuario")) for usuario in cedulas_usuarios]
-    nuevo_proceso = aplicacion.crear_proceso(proceso, usuarios)
+    nuevo_proceso = aplicacion.crear_proceso(proceso, usuarios, admin)
     return jsonify({"id_proceso": nuevo_proceso.get_id()})
 
 
 @procesos_blueprint.route('/procesos/<id_proceso>/usuarios')
+@auth.login_required
 def get_usuarios_por_proceso(id_proceso):
     proceso = aplicacion.get_proceso_por_id(id_proceso)
     usuarios = aplicacion.get_usuarios_por_proceso(proceso)
@@ -58,6 +68,7 @@ def get_usuarios_por_proceso(id_proceso):
 
 
 @procesos_blueprint.route('/procesos/<id_proceso>/activos')
+@auth.login_required
 def get_activos_por_proceso(id_proceso):
     proceso = aplicacion.get_proceso_por_id(id_proceso)
     usuarios = aplicacion.get_usuarios_por_proceso(proceso)
@@ -69,6 +80,7 @@ def get_activos_por_proceso(id_proceso):
 
 
 @procesos_blueprint.route('/procesos/<id_proceso>')
+@auth.login_required
 def get_detalle_proceso(id_proceso):
     proceso = aplicacion.get_proceso_por_id(id_proceso)
     usuarios = aplicacion.get_usuarios_por_proceso(proceso)
@@ -94,12 +106,14 @@ def get_detalle_proceso(id_proceso):
                                      **usuario.to_dict(),
                                      "revision_activo": activo.get_revision(),
                                      "estado_revision_activo": activo.get_estado(),
-                                     "observacion_revision": activo.get_observacion()
+                                     "observacion_revision": activo.get_observacion(),
+                                     "admin_revisor": activo.get_revisor()
                                      })
     return jsonify(respuesta)
 
 
 @procesos_blueprint.route('/procesos/<id_proceso>/usuarios/<cedula>', methods=['DELETE'])
+@auth.login_required(role="superadmin")
 def eliminar_usuario_de_proceso(id_proceso, cedula):
     usuario = aplicacion.get_usuario_por_cedula(cedula)
     proceso = aplicacion.get_proceso_por_id(id_proceso)
@@ -108,6 +122,7 @@ def eliminar_usuario_de_proceso(id_proceso, cedula):
 
 
 @procesos_blueprint.route('/procesos/<id_proceso>/usuarios/<cedula>', methods=['POST'])
+@auth.login_required
 def agregar_usuario_a_proceso(id_proceso, cedula):
     usuario = aplicacion.get_usuario_por_cedula(cedula)
     proceso = aplicacion.get_proceso_por_id(id_proceso)
@@ -116,11 +131,13 @@ def agregar_usuario_a_proceso(id_proceso, cedula):
 
 
 @procesos_blueprint.route('/procesos/<id_proceso>/activos/<id_activo>', methods=['PUT'])
+@auth.login_required
 def validar_activo(id_proceso, id_activo):
     data = request.get_json()
     proceso = aplicacion.get_proceso_por_id(id_proceso)
     activo = aplicacion.get_activo_por_id(id_activo)
-    aplicacion.validar_activo(activo, proceso, data.get("estado_activo"), data.get("observacion_activo"))
+    admin = auth.current_user()
+    aplicacion.validar_activo(activo, proceso, data.get("estado_activo"), data.get("observacion_activo"), admin)
     return jsonify({"mensaje": "Activo validado"})
 
 
