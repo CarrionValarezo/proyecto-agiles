@@ -37,7 +37,7 @@ public class Gestor {
 	Conexion conexion = new Conexion();
 
 	private void errorConexion(){
-		JOptionPane.showMessageDialog(null, "¡No se ha podido conectar con el servido, intentelo mas tarde!");
+		JOptionPane.showMessageDialog(null, "¡No se ha podido conectar con el servicio, intentelo mas tarde!");
 	}
 
 	private JSONArray cedulasToJson(String [] cedulas){ 

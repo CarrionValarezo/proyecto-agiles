@@ -26,12 +26,12 @@ class Aplicacion:
             activos_usuario.append(Activo(**data_activo, item=Item(**data_activo)))
         return activos_usuario
 
-    def crear_proceso(self, proceso, usuarios):
+    def crear_proceso(self, proceso, usuarios, admin):
         nuevo_proceso = Proceso(**proceso)
         activos = []
         for usuario in usuarios:
             activos = activos + self.get_activos_por_usuario(usuario)
-        nuevo_proceso.set_id(self.repo_procesos.crear_proceso(nuevo_proceso))
+        nuevo_proceso.set_id(self.repo_procesos.crear_proceso(nuevo_proceso, admin))
         for activo in activos:
             self.repo_procesos.agregar_activo(nuevo_proceso, activo)
         return nuevo_proceso

@@ -79,10 +79,10 @@ class DataProceso:
                         where id_pro = {id_proceso}''')
         return cur.fetchone()
 
-    def crear_proceso(self, proceso):
+    def crear_proceso(self, proceso, admin):
         cur = db.get_cursor()
         cur.execute(f'''insert into proceso
-                        values(null,'{proceso.get_nombre()}','{proceso.get_fecha()}','CREADO');''')
+                        values(null,'{proceso.get_nombre()}','{proceso.get_fecha()}','CREADO', '{admin.get_cedula()}');''')
         cur.connection.commit()
         cur.execute(f"select last_insert_id();")
         return cur.fetchone()['last_insert_id()']
@@ -90,7 +90,7 @@ class DataProceso:
     def agregar_activo(self, proceso, activo):
         cur = db.get_cursor()
         cur.execute(f'''insert into detalle_proceso
-                        values({proceso.get_id()},'{activo.get_id()}',0,'','');''')
+                        values({proceso.get_id()},'{activo.get_id()}',0,'','', null);''')
         cur.connection.commit()
 
     def get_activos_por_proceso(self, proceso):

@@ -99,6 +99,10 @@ class Proceso:
         self.__fecha = kwargs.get("fecha_proceso")
         self.__estado = kwargs.get("estado_proceso")
         self.__cant_observaciones = kwargs.get("cantidad_observaciones")
+        self.__ced_admin_creador = kwargs.get("ced_admin_creador")
+
+    def get_ced_admin_creador(self):
+        return self.__ced_admin_creador
 
     def get_id(self):
         return self.__id
