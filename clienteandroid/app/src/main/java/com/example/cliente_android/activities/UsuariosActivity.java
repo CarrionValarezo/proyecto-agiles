@@ -24,6 +24,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.cliente_android.R;
 import com.example.cliente_android.adapters.UsuarioAdapter;
+import com.example.cliente_android.entidades.Activo;
 import com.example.cliente_android.entidades.Proceso;
 import com.example.cliente_android.entidades.Usuario;
 import com.google.zxing.integration.android.IntentIntegrator;
@@ -50,6 +51,7 @@ public class UsuariosActivity extends Activity implements SwipeRefreshLayout.OnR
     Proceso proceso = null;
     Context context;
     ArrayList<Usuario> usuarios = new ArrayList<Usuario>();
+    ArrayList<Activo> activos = new ArrayList<Activo>();
     RecyclerView rvUsuarios;
     UsuarioAdapter usuarioAdapter;
     private SwipeRefreshLayout swipeRefreshLayout;
@@ -147,6 +149,7 @@ public class UsuariosActivity extends Activity implements SwipeRefreshLayout.OnR
                         JSONObject jsonObject = new JSONObject(response.body().string());
                         proceso = Proceso.fromJson(jsonObject.getJSONObject("proceso"));
                         usuarios = Usuario.fromJson(jsonObject.getJSONArray("usuarios"));
+                        activos = Activo.fromJson(jsonObject.getJSONArray("activos"));
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
