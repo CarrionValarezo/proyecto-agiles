@@ -8,6 +8,27 @@ import java.util.ArrayList;
 
 public class Usuario {
     private String cedula, nombre, apellido;
+
+    public void setCedula(String cedula) {
+        this.cedula = cedula;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
+    public void setApellido(String apellido) {
+        this.apellido = apellido;
+    }
+
+    public void setCantObs(int cantObs) {
+        this.cantObs = cantObs;
+    }
+
+    public void setCantActivos(int cantActivos) {
+        this.cantActivos = cantActivos;
+    }
+
     int cantObs;
 
     public int getCantActivos() {

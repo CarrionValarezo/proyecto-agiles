@@ -9,6 +9,8 @@ import java.util.ArrayList;
 public class Activo {
     private String id, idItem, nombreItem, desItem,  estado, observacion;
 
+    private Usuario usuario;
+
     public void setId(String id) {
         this.id = id;
     }
@@ -39,12 +41,17 @@ public class Activo {
 
     private int revision;
 
+    public Usuario getUsuario() {
+        return usuario;
+    }
+
     public Activo() {
 
     }
 
     public static Activo fromJson(JSONObject activoJson) {
         Activo a = new Activo();
+        a.usuario = new Usuario();
         try {
             a.id = activoJson.getString("id_activo");
             a.idItem = activoJson.getString("id_item");
@@ -53,6 +60,9 @@ public class Activo {
             a.revision = activoJson.getInt("revision_activo");
             a.estado = activoJson.getString("estado_revision_activo");
             a.observacion = activoJson.getString("observacion_revision");
+            a.usuario.setCedula(activoJson.getString("cedula_usuario"));
+            a.usuario.setNombre(activoJson.getString("nombre_usuario"));
+            a.usuario.setApellido(activoJson.getString("apellido_usuario"));
         } catch (JSONException e) {
             e.printStackTrace();
         }

@@ -12,8 +12,10 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -39,13 +41,16 @@ import java.util.ArrayList;
 
 import okhttp3.Call;
 import okhttp3.Callback;
+import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.RequestBody;
 import okhttp3.Response;
 
 
 public class UsuariosActivity extends Activity implements SwipeRefreshLayout.OnRefreshListener {
     TextView tvNombre, tvFecha, tvId, tvEstado, tvCantUsuarios, tvCantActivos, tvCantObs;
+    public final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
     int idProceso;
     ImageView ivCirculoDetalle;
     Proceso proceso = null;
@@ -56,6 +61,7 @@ public class UsuariosActivity extends Activity implements SwipeRefreshLayout.OnR
     UsuarioAdapter usuarioAdapter;
     private SwipeRefreshLayout swipeRefreshLayout;
     SharedPreferences preferences;
+    String m_Text = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -101,22 +107,67 @@ public class UsuariosActivity extends Activity implements SwipeRefreshLayout.OnR
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         IntentResult resultado = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        boolean encontrado = false;
         if (resultado != null) {
             if (resultado.getContents() != null) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                builder.setMessage(resultado.getContents());
-                builder.setTitle("Escaneando Resultados");
-                builder.setPositiveButton("Escanear de nuevo", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        scanCode();
-                    }
+                for(Activo activo : activos) {
+                    if(resultado.getContents().equals(activo.getId())) {
+                        Usuario usuario = activo.getUsuario();
+                        View inflater = LayoutInflater.from(this).
+                                inflate(R.layout.validar_scanner, null);
+                        TextView cedula, nombre, apellido, idAct, nombreItem, desItem;
+                        EditText input;
+                        cedula = (TextView)inflater.findViewById(R.id.tvCedUsuVal);
+                        nombre = (TextView)inflater.findViewById(R.id.tvNomUsuVal);
+                        apellido = (TextView)inflater.findViewById(R.id.tvApeUsuVal);
+                        idAct = (TextView)inflater.findViewById(R.id.tvIdActVal);
+                        nombreItem = (TextView)inflater.findViewById(R.id.tvNomItemVal);
+                        desItem = (TextView)inflater.findViewById(R.id.tvDesItemVal);
+                        input = (EditText)inflater.findViewById(R.id.etObservacionValScanner);
 
-                }).setNegativeButton("Terminado", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
+
+                        cedula.setText(usuario.getCedula());
+                        nombre.setText(usuario.getNombre());
+                        apellido.setText(usuario.getApellido());
+
+                        idAct.setText(activo.getId());
+                        nombreItem.setText(activo.getNombreItem());
+                        desItem.setText(activo.getDesItem());
+
+                        builder.setView(inflater);
+                        builder.setTitle("Resultados");
+                        builder.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                m_Text = input.getText().toString();
+                                validarActivo(activo);
+                            }
+
+                        }).setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                            }
+                        });
+                        encontrado = true;
                     }
-                });
+                }
+                if(!encontrado) {
+                    builder.setMessage("No se han encontrado resultados");
+                    builder.setTitle("Resultados");
+                    builder.setPositiveButton("Escanear de nuevo", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            scanCode();
+                        }
+
+                    }).setNegativeButton("Terminado", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                        }
+                    });
+                }
+
                 AlertDialog dialog = builder.create();
                 dialog.show();
 
@@ -204,5 +255,41 @@ public class UsuariosActivity extends Activity implements SwipeRefreshLayout.OnR
                 Toast.makeText(context, "No se ha podido conectar con el servicio,\nintentelo más tarde.", Toast.LENGTH_LONG).show();
             }
         });
+    }
+    public void validarActivo(Activo activo){
+        String auth = preferences.getString("session", null);
+        if( auth != null) {
+            String estado = "CORRECTO";
+            OkHttpClient cliente = new OkHttpClient();
+            String url = "http://192.168.0.50:5000/procesos/"+proceso.getIdProces()+"/activos/"+activo.getId();
+            JSONObject enviar = new JSONObject();
+            if (!m_Text.equals("")) {
+                estado = "OBSERVACION";
+            }
+            try {
+                enviar.put("estado_activo", estado);
+                enviar.put("observacion_activo", m_Text);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            activo.setObservacion(m_Text);
+            activo.setEstado(estado);
+            RequestBody requestBody = RequestBody.create(enviar.toString(), JSON);
+            Request request  = new Request.Builder()
+                    .url(url)
+                    .header("Authorization", auth)
+                    .put(requestBody)
+                    .build();
+            cliente.newCall(request).enqueue(new Callback() {
+                @Override
+                public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                }
+
+                @Override
+                public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                    errorConexion();
+                }
+            });
+        }
     }
 }
