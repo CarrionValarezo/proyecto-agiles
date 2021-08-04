@@ -126,4 +126,13 @@ public class Gestor {
 		}
 	}
 
+	public Object login() {
+		try{ 
+			return conexion.login(); 
+		}catch(Exception e){ 
+			errorConexion(); 
+			return null;
+		}
+	}
+
 }

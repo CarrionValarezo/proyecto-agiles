@@ -8,6 +8,7 @@ package gestor;
 
 import entidades.Activo;
 import entidades.ActivoProcesado;
+import entidades.Admin;
 import entidades.Proceso;
 import entidades.Usuario;
 import java.io.IOException;
@@ -43,6 +44,7 @@ public class Conexion {
 		String url = "http://localhost:5000/usuarios/cantidad-activos";
 		HttpRequest request = HttpRequest.newBuilder()
 				.uri(new URI(url))
+				.header("Authorization", Admin.getAuth())
 				.GET()
 				.build();
 		HttpResponse<String> response = this.cliente.send(request, HttpResponse.BodyHandlers.ofString());
@@ -56,6 +58,7 @@ public class Conexion {
 		String url = "http://localhost:5000/usuarios/" + cedula + "/activos";
 		HttpRequest request = HttpRequest.newBuilder()
 				.uri(new URI(url))
+				.header("Authorization", Admin.getAuth())
 				.GET()
 				.build();
 		HttpResponse<String> response = this.cliente.send(request, HttpResponse.BodyHandlers.ofString());
@@ -73,6 +76,7 @@ public class Conexion {
 		HttpRequest request = HttpRequest.newBuilder()
 				.uri(new URI(url))
 				.GET()
+				.header("Authorization", Admin.getAuth())
 				.build();
 
 		HttpResponse<String> response = clienteProceso.send(request, HttpResponse.BodyHandlers.ofString());
@@ -97,6 +101,7 @@ public class Conexion {
 		String url = "http://localhost:5000/usuarios/" + cedula + "/procesos";
 		HttpRequest request = HttpRequest.newBuilder()
 				.uri(new URI(url))
+				.header("Authorization", Admin.getAuth())
 				.GET()
 				.build();
 		HttpResponse<String> response = this.cliente.send(request, HttpResponse.BodyHandlers.ofString());
@@ -111,6 +116,7 @@ public class Conexion {
 		String url = "http://localhost:5000/procesos";
 		HttpRequest request = HttpRequest.newBuilder()
 				.uri(new URI(url))
+				.header("Authorization", Admin.getAuth())
 				.GET()
 				.build();
 		HttpResponse<String> response = this.cliente.send(request, HttpResponse.BodyHandlers.ofString());
@@ -126,11 +132,13 @@ public class Conexion {
 			JOptionPane.showMessageDialog(null, "¡No tiene permisos para realizar esta acción!");
 		}
 	}
+	
 
 	public void eliminarUsuarioDeProceso(int id_proceso, String cedula) throws Exception{
 		String url = "http://localhost:5000/procesos/"+id_proceso+"/usuarios/"+cedula;
 		HttpRequest request = HttpRequest.newBuilder()
 				.uri(new URI(url))
+				.header("Authorization", Admin.getAuth())
 				.DELETE()
 				.build();
 		HttpResponse<String> response = this.cliente.send(request, HttpResponse.BodyHandlers.ofString());
@@ -149,6 +157,7 @@ public class Conexion {
 		HttpRequest request = HttpRequest.newBuilder()
 				.uri(new URI(url))
 				.header("Content-Type", "application/json")
+				.header("Authorization", Admin.getAuth())
 				.PUT(BodyPublishers.ofString(jEnviar.toString()))
 				.build(); 
 		HttpResponse<String> response = this.cliente.send(request, HttpResponse.BodyHandlers.ofString());
@@ -160,6 +169,7 @@ public class Conexion {
 		HttpRequest request = HttpRequest.newBuilder()
 				.uri(new URI(url))
 				.header("Content-Type", "application/json")
+				.header("Authorization", Admin.getAuth())
 				.POST(BodyPublishers.ofString(json.toString()))
 				.build();
 
@@ -172,4 +182,22 @@ public class Conexion {
 			return jsonResponse.getInt("id_proceso"); 
 		}
 	}
+
+	public Admin login() throws Exception{
+		String url = "http://localhost:5000/admin/login";
+		JSONObject jEnviar = new JSONObject(); 
+		HttpRequest request = HttpRequest.newBuilder()
+				.uri(new URI(url))
+				.header("Authorization", Admin.getAuth())
+				.build(); 
+
+		System.out.println(Admin.getAuth());
+		HttpResponse<String> response = this.cliente.send(request, HttpResponse.BodyHandlers.ofString());
+		System.out.println(response.toString());
+		if(response.statusCode() == 200){ 
+			return Admin._getAdmin();
+		}
+		return null;
+	}
+
 }	
