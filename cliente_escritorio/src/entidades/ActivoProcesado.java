@@ -16,18 +16,23 @@ import org.json.JSONObject;
  */
 public class ActivoProcesado extends Activo {
 
-	private String estadoRevision, obsRevision;
+	private String estadoRevision, obsRevision, adminRevisor;
 	private int estaRevisado;
 
 	public ActivoProcesado() {
 	}
 
 	public ActivoProcesado(String idPertinencia, String idItem, String nomItem, String desItem,
-			int estaRevisado, String estadoRevision, String obsRevision) {
+			int estaRevisado, String estadoRevision, String obsRevision, String adminRevisor) {
 		super(idPertinencia, idItem, nomItem, desItem);
 		this.estaRevisado = estaRevisado;
 		this.estadoRevision = estadoRevision;
 		this.obsRevision = obsRevision;
+		this.adminRevisor = adminRevisor; 
+	}
+
+	public String getAdminRevisor() {
+		return adminRevisor;
 	}
 
 	public static ActivoProcesado fromJson(JSONObject json) {
@@ -44,6 +49,7 @@ public class ActivoProcesado extends Activo {
 			a.estaRevisado = json.getInt("revision_activo");
 			a.estadoRevision = json.getString("estado_revision_activo");
 			a.obsRevision = json.getString("observacion_revision");
+			a.adminRevisor = json.getString("admin_revisor");
 		} catch (JSONException e) {
 		}
 		a.setUsuario(u);

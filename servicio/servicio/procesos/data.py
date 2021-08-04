@@ -99,6 +99,7 @@ class DataProceso:
                         dp.rev_act_det as revision_activo,                    
                         dp.est_act_det as estado_revision_activo, 
                         dp.obs_act_det as observacion_revision,
+                        dp.ced_adm_rev_det as admin_revisor,
                         i.ID_ite AS id_item, 
                         i.NOM_ite AS nombre_item, 
                         i.DES_ite AS descripcion_item
@@ -162,12 +163,13 @@ class DataProceso:
                             where ced_usu_act = '{usuario.get_cedula()}');''')
         cur.connection.commit()
 
-    def validar_activo(self, activo, proceso, estado, observacion):
+    def validar_activo(self, activo, proceso, estado, observacion, admin):
         cur = db.get_cursor()
         cur.execute(f'''update detalle_proceso 
                         set rev_act_det = true, 
                             est_act_det = '{estado}', 
-                            obs_act_det = '{observacion}'
+                            obs_act_det = '{observacion}', 
+                            ced_adm_rev_det = '{admin.get_cedula()}'
                         where id_pro_det = {proceso.get_id()}
                         and id_act_det = '{activo.get_id()}';''')
         cur.connection.commit()

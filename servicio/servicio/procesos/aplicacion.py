@@ -111,8 +111,8 @@ class Aplicacion:
         activo = Activo(**self.repo_activos.get_activo_por_id(id_activo))
         return activo
 
-    def validar_activo(self, activo, proceso, estado, observacion):
-        self.repo_procesos.validar_activo(activo, proceso, estado, observacion)
+    def validar_activo(self, activo, proceso, estado, observacion, admin):
+        self.repo_procesos.validar_activo(activo, proceso, estado, observacion, admin)
         if proceso.get_estado() == "CREADO":
             proceso.set_estado("INICIADO")
             DataProceso().actualizar_estado(proceso)

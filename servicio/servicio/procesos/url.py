@@ -106,7 +106,8 @@ def get_detalle_proceso(id_proceso):
                                      **usuario.to_dict(),
                                      "revision_activo": activo.get_revision(),
                                      "estado_revision_activo": activo.get_estado(),
-                                     "observacion_revision": activo.get_observacion()
+                                     "observacion_revision": activo.get_observacion(),
+                                     "admin_revisor": activo.get_revisor()
                                      })
     return jsonify(respuesta)
 
@@ -135,7 +136,8 @@ def validar_activo(id_proceso, id_activo):
     data = request.get_json()
     proceso = aplicacion.get_proceso_por_id(id_proceso)
     activo = aplicacion.get_activo_por_id(id_activo)
-    aplicacion.validar_activo(activo, proceso, data.get("estado_activo"), data.get("observacion_activo"))
+    admin = auth.current_user()
+    aplicacion.validar_activo(activo, proceso, data.get("estado_activo"), data.get("observacion_activo"), admin)
     return jsonify({"mensaje": "Activo validado"})
 
 
