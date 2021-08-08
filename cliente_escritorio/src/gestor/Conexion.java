@@ -214,7 +214,7 @@ public class Conexion {
 		return usuarios;
 	}
 
-	public void agregarUsuario(int idProceso, String cedula) throws Exception{
+	public boolean agregarUsuario(int idProceso, String cedula) throws Exception{
 		String url = "http://localhost:5000/procesos/"+idProceso+"/usuarios/"+cedula;
 		HttpRequest request = HttpRequest.newBuilder()
 				.uri(new URI(url))
@@ -222,6 +222,10 @@ public class Conexion {
 				.POST(BodyPublishers.noBody())
 				.build();
 		HttpResponse<String> response = this.cliente.send(request, HttpResponse.BodyHandlers.ofString());
+		if(response.statusCode() == 403){ 
+			return false; 
+		}
+		return true; 
 	}
 
 }	

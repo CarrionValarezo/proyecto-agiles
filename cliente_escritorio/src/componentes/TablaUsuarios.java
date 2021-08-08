@@ -90,9 +90,6 @@ public class TablaUsuarios extends JTable {
 						((DefaultTableModel) tabla.getModel()).removeRow(tabla.getSelectedRow());
 						panel.actualizarTablas(idProceso);
 					} 
-					else{ 
-						JOptionPane.showMessageDialog(null, "Ocurrio un error al agregar el usuario");
-					}
 				}
 			}
 		});

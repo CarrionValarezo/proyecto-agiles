@@ -146,8 +146,12 @@ public class Gestor {
 
 	public boolean agregarUsuario(int idProceso, String cedula) {
 		try { 
-			conexion.agregarUsuario(idProceso, cedula);
-			return true; 
+			if(conexion.agregarUsuario(idProceso, cedula))
+			{ 
+				return true; 
+			}
+			JOptionPane.showMessageDialog(null, "No tienes permisos para realizar esa accion");
+			return false; 
 		} catch (Exception ex) {
 			errorConexion();
 			return false; 

@@ -16,7 +16,6 @@ public class IntMain extends javax.swing.JFrame {
 	 */
 	public IntMain() {
 		initComponents();
-		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		this.setTitle("Activos Empresa");
 		this.setLocationRelativeTo(null);
 		this.tablaUsuarios.cargarTabla();
