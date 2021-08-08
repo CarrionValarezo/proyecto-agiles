@@ -48,6 +48,16 @@ public class TablaUsuarios extends JTable {
 		}
 	}
 
+	public void cargarTablaFaltantes(int idProceso) {
+		ArrayList<Usuario> usuarios = this.gestor.getUsuariosFaltantes(idProceso);
+		if (usuarios != null) {
+			this.modelo = new ModeloTabla(Usuario.matriz(usuarios), titulos);
+			this.setModel(this.modelo);
+		}else{ 
+			cargarTablaSinDatos();
+		}
+	}
+
 	public void accionDobleClick() {
 		TablaUsuarios tabla = this;
 		this.addMouseListener(new MouseAdapter() {
@@ -62,6 +72,27 @@ public class TablaUsuarios extends JTable {
 					Usuario usuarioSeleccionado = new Usuario(cedula, nombre, apellido);
 					IntDetalleUsuario intActivosUsuario = new IntDetalleUsuario(usuarioSeleccionado);
 					intActivosUsuario.setVisible(true);
+				}
+			}
+		});
+	}
+
+	public void dobleClickAgregarUsuario(int idProceso, PnlDetalleProceso panel){ 
+		TablaUsuarios tabla = this;
+		this.addMouseListener(new MouseAdapter() {
+			public void mousePressed(MouseEvent mouseEvent) {
+				JTable table = (JTable) mouseEvent.getSource();
+				Point point = mouseEvent.getPoint();
+				int row = table.rowAtPoint(point);
+				if (mouseEvent.getClickCount() == 2 && table.getSelectedRow() != -1) {
+					String cedula = tabla.getValueAt(tabla.getSelectedRow(), 0).toString();
+					if(gestor.agregarUsuario(idProceso, cedula)){ 
+						((DefaultTableModel) tabla.getModel()).removeRow(tabla.getSelectedRow());
+						panel.actualizarTablas(idProceso);
+					} 
+					else{ 
+						JOptionPane.showMessageDialog(null, "Ocurrio un error al agregar el usuario");
+					}
 				}
 			}
 		});
@@ -112,4 +143,5 @@ public class TablaUsuarios extends JTable {
 		((DefaultTableModel) origen.getModel()).removeRow(origen.getSelectedRow());
 		((DefaultTableModel) destino.getModel()).addRow(usuarioTabla);
 	}
+
 }

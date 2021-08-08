@@ -79,6 +79,25 @@ def get_activos_por_proceso(id_proceso):
     return jsonify(respuesta)
 
 
+@procesos_blueprint.route('/procesos/<id_proceso>/usuarios/<cedula>', methods=['POST'])
+@auth.login_required(role="superadmin")
+def agregar_usuario_a_proceso(id_proceso, cedula):
+    usuario = aplicacion.get_usuario_por_cedula(cedula)
+    proceso = aplicacion.get_proceso_por_id(id_proceso)
+    aplicacion.agregar_usuario_proceso(usuario, proceso)
+    return jsonify({"mensaje": "Usuario agregado correctamente"})
+
+
+@procesos_blueprint.route('/procesos/<id_proceso>/usuarios-faltantes')
+@auth.login_required
+def get_usuarios_faltante(id_proceso):
+    proceso = aplicacion.get_proceso_por_id(id_proceso)
+    usuarios_cant_activos = aplicacion.get_usuarios_faltantes(proceso)
+    respuesta = [{**usuario.to_dict(), "cantidad_activos_usuario": cant_activos}
+                 for usuario, cant_activos in usuarios_cant_activos]
+    return jsonify(respuesta)
+
+
 @procesos_blueprint.route('/procesos/<id_proceso>')
 @auth.login_required
 def get_detalle_proceso(id_proceso):
@@ -119,15 +138,6 @@ def eliminar_usuario_de_proceso(id_proceso, cedula):
     proceso = aplicacion.get_proceso_por_id(id_proceso)
     aplicacion.eliminar_usuario_de_proceso(usuario, proceso)
     return jsonify({"mensaje": "Usuario eliminado correctamente"})
-
-
-@procesos_blueprint.route('/procesos/<id_proceso>/usuarios/<cedula>', methods=['POST'])
-@auth.login_required
-def agregar_usuario_a_proceso(id_proceso, cedula):
-    usuario = aplicacion.get_usuario_por_cedula(cedula)
-    proceso = aplicacion.get_proceso_por_id(id_proceso)
-    aplicacion.agregar_usuario_proceso(usuario, proceso)
-    return jsonify({"mensaje": "No implementado"})
 
 
 @procesos_blueprint.route('/procesos/<id_proceso>/activos/<id_activo>', methods=['PUT'])

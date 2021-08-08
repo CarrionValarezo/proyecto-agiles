@@ -135,4 +135,23 @@ public class Gestor {
 		}
 	}
 
+	public ArrayList<Usuario> getUsuariosFaltantes(int idProceso) {
+		try{ 
+			return conexion.getUsuariosFaltantes(idProceso); 
+		}catch(Exception e){
+			errorConexion();
+			return null; 
+		}
+	}
+
+	public boolean agregarUsuario(int idProceso, String cedula) {
+		try { 
+			conexion.agregarUsuario(idProceso, cedula);
+			return true; 
+		} catch (Exception ex) {
+			errorConexion();
+			return false; 
+		}
+	}
+
 }
