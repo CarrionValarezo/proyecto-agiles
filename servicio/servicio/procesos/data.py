@@ -200,4 +200,18 @@ class DataProceso:
                         and id_pro_det = {proceso.get_id()} ; ''')
         return cur.fetchone()["cantidad_observaciones"]
 
+    def get_usuarios_faltante(self, proceso):
+        cur = db.get_cursor()
+        cur.execute(f'''SELECT ced_usu as cedula_usuario, 
+                       nom_usu as nombre_usuario,
+                       ape_usu as apellido_usuario
+                       FROM usuario
+                       where ced_usu not in (select u.ced_usu
+                            from usuario u, proceso p, activo a, detalle_proceso dp 
+                            where dp.id_act_det = a.id_act
+                            and a.ced_usu_act = u.ced_usu
+                            and p.id_pro = dp.id_pro_det
+                            and p.id_pro = {proceso.get_id()}); ''')
+        return cur.fetchall()
+
 

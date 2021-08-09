@@ -135,4 +135,27 @@ public class Gestor {
 		}
 	}
 
+	public ArrayList<Usuario> getUsuariosFaltantes(int idProceso) {
+		try{ 
+			return conexion.getUsuariosFaltantes(idProceso); 
+		}catch(Exception e){
+			errorConexion();
+			return null; 
+		}
+	}
+
+	public boolean agregarUsuario(int idProceso, String cedula) {
+		try { 
+			if(conexion.agregarUsuario(idProceso, cedula))
+			{ 
+				return true; 
+			}
+			JOptionPane.showMessageDialog(null, "No tienes permisos para realizar esa accion");
+			return false; 
+		} catch (Exception ex) {
+			errorConexion();
+			return false; 
+		}
+	}
+
 }

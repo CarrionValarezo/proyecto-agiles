@@ -200,4 +200,32 @@ public class Conexion {
 		return null;
 	}
 
+	public ArrayList<Usuario> getUsuariosFaltantes(int idProceso) throws Exception{
+		String url = "http://localhost:5000/procesos/"+idProceso+"/usuarios-faltantes";
+		HttpRequest request = HttpRequest.newBuilder()
+				.uri(new URI(url))
+				.header("Authorization", Admin.getAuth())
+				.GET()
+				.build();
+		HttpResponse<String> response = this.cliente.send(request, HttpResponse.BodyHandlers.ofString());
+		JSONArray jsonArray = new JSONArray(response.body());
+
+		ArrayList<Usuario> usuarios = Usuario.fromJson(jsonArray); 
+		return usuarios;
+	}
+
+	public boolean agregarUsuario(int idProceso, String cedula) throws Exception{
+		String url = "http://localhost:5000/procesos/"+idProceso+"/usuarios/"+cedula;
+		HttpRequest request = HttpRequest.newBuilder()
+				.uri(new URI(url))
+				.header("Authorization", Admin.getAuth())
+				.POST(BodyPublishers.noBody())
+				.build();
+		HttpResponse<String> response = this.cliente.send(request, HttpResponse.BodyHandlers.ofString());
+		if(response.statusCode() == 403){ 
+			return false; 
+		}
+		return true; 
+	}
+
 }	

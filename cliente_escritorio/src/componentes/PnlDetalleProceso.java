@@ -8,6 +8,7 @@ package componentes;
 import entidades.Proceso;
 import gestor.GeneradorPDF;
 import gestor.Gestor;
+import interfaces.IntUsuariosFaltantes;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JTabbedPane;
@@ -34,6 +35,11 @@ public class PnlDetalleProceso extends javax.swing.JPanel {
 		this.tablaActivosProceso1.cargarTabla(idProceso);
 		this.tablaActivosProceso1.setPanel(this);
 		cargarDatos();
+	}
+
+	private void cargarUsuariosFaltantes(){ 
+		IntUsuariosFaltantes usuariosFaltantes = new IntUsuariosFaltantes(this.proceso.id(),this); 
+		usuariosFaltantes.setVisible(true); 
 	}
 
 	public Proceso getProceso(){
@@ -91,6 +97,7 @@ public class PnlDetalleProceso extends javax.swing.JPanel {
         jLblFechaProceso = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
+        jBtnAgregarUsuarios = new javax.swing.JButton();
 
         jLabel6.setText("ESTADO:");
 
@@ -145,6 +152,13 @@ public class PnlDetalleProceso extends javax.swing.JPanel {
 
         jLabel5.setText("ACTIVOS DEL PROCESO");
 
+        jBtnAgregarUsuarios.setText("Agregar Usuarios");
+        jBtnAgregarUsuarios.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jBtnAgregarUsuariosActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -161,16 +175,22 @@ public class PnlDetalleProceso extends javax.swing.JPanel {
                             .addComponent(jLabel3)
                             .addComponent(jLabel2))
                         .addGap(18, 18, 18)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jLblFechaProceso, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLblIdProceso, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(jLblFechaProceso, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(jLblIdProceso, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addComponent(jLabel6)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(jLblEstado)))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLblNombreProceso, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jLabel6)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jLblEstado))
-                            .addComponent(jLblNombreProceso, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED, 18, Short.MAX_VALUE)
+                                .addComponent(jBtnAgregarUsuarios)
+                                .addGap(12, 12, 12)))
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(jLabel4)
@@ -197,11 +217,12 @@ public class PnlDetalleProceso extends javax.swing.JPanel {
                             .addComponent(jLabel6)
                             .addComponent(jLblEstado)
                             .addComponent(jLabel4))
-                        .addGap(15, 15, 15)
+                        .addGap(12, 12, 12)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel2)
-                            .addComponent(jLblNombreProceso))
-                        .addGap(12, 12, 12)
+                            .addComponent(jLblNombreProceso)
+                            .addComponent(jBtnAgregarUsuarios))
+                        .addGap(9, 9, 9)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel3)
                             .addComponent(jLblFechaProceso))))
@@ -219,8 +240,14 @@ public class PnlDetalleProceso extends javax.swing.JPanel {
 		this.tablaUsuariosProceso1.getSelectionModel().clearSelection();
     }//GEN-LAST:event_jBtnLimpiarActionPerformed
 
+    private void jBtnAgregarUsuariosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBtnAgregarUsuariosActionPerformed
+        // TODO add your handling code here:
+		cargarUsuariosFaltantes();
+    }//GEN-LAST:event_jBtnAgregarUsuariosActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton jBtnAgregarUsuarios;
     private javax.swing.JButton jBtnLimpiar;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;

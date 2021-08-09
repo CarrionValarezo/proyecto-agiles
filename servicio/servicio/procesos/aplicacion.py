@@ -104,8 +104,10 @@ class Aplicacion:
         self.repo_procesos.eliminar_usuario_de_proceso(usuario, proceso)
         return None
 
-    def agregar_usuario_proceso(usuario, proceso):
-        return None
+    def agregar_usuario_proceso(self, usuario, proceso):
+        activos = [Activo(**data) for data in self.repo_activos.get_activos_por_usuario(usuario)]
+        for activo in activos:
+            self.repo_procesos.agregar_activo(proceso, activo)
 
     def get_activo_por_id(self, id_activo):
         activo = Activo(**self.repo_activos.get_activo_por_id(id_activo))
@@ -122,3 +124,11 @@ class Aplicacion:
 
     def get_cant_activos_usuario(self, usuario):
         return self.repo_activos.get_activos_por_usuario(usuario)
+
+    def get_usuarios_faltantes(self, proceso):
+        usuarios = []
+        for data in self.repo_procesos.get_usuarios_faltante(proceso):
+            usuario = Usuario(**data)
+            cant_activos = self.repo_activos.get_cant_activos_por_usuario(usuario)
+            usuarios.append((usuario, cant_activos))
+        return usuarios
