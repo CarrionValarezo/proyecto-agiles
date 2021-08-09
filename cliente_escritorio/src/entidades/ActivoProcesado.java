@@ -16,7 +16,7 @@ import org.json.JSONObject;
  */
 public class ActivoProcesado extends Activo {
 
-	private String estadoRevision, obsRevision, adminRevisor;
+	private String estadoRevision, obsRevision, adminRevisor, nombreRevisor, apellidoRevisor;
 	private int estaRevisado;
 
 	public ActivoProcesado() {
@@ -50,10 +50,20 @@ public class ActivoProcesado extends Activo {
 			a.estadoRevision = json.getString("estado_revision_activo");
 			a.obsRevision = json.getString("observacion_revision");
 			a.adminRevisor = json.getString("admin_revisor");
+			a.nombreRevisor = json.getString("nombre_revisor"); 
+			a.apellidoRevisor = json.getString("apellido_revisor");
 		} catch (JSONException e) {
 		}
 		a.setUsuario(u);
 		return a;
+	}
+
+	public String getNombreRevisor() {
+		return nombreRevisor;
+	}
+
+	public String getApellidoRevisor() {
+		return apellidoRevisor;
 	}
 
 	public static ArrayList<Activo> fromJson(JSONArray jsonArray) {

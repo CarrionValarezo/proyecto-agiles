@@ -1,3 +1,4 @@
+from servicio.login.data import DataAdmin
 class Usuario:
 
     def __init__(self, **kwargs):
@@ -38,13 +39,23 @@ class Activo:
         self.revision = kwargs.get("revision_activo")
         self.estado = kwargs.get("estado_revision_activo")
         self.observacion = kwargs.get("observacion_revision")
-        self.admin_revisor = kwargs.get("admin_revisor")
-
+        self.cedula_revisor = kwargs.get("admin_revisor")
+        self.__set_revisor()
 
     def to_dict(self) -> dict:
         return {
             "id_activo": self.id,
         }
+
+    def __set_revisor(self):
+        if self.cedula_revisor is not None:
+            data_admin = DataAdmin().buscar(self.cedula_revisor)
+            self.nombre_revisor = data_admin.get("nombre_admin")
+            self.apellido_revisor = data_admin.get("apellido_admin")
+        else:
+            self.nombre_revisor = None
+            self.apellido_revisor = None
+
 
 
 class Proceso:

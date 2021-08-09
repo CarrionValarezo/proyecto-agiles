@@ -2,7 +2,6 @@ from flask import Blueprint, jsonify, request
 from servicio.procesos.aplicacion import Aplicacion
 from servicio.procesos.entidades import Proceso
 from servicio.app import auth
-from servicio.login.entidades import Administrador
 
 procesos_blueprint = Blueprint("usac", __name__)
 aplicacion = Aplicacion()
@@ -103,14 +102,12 @@ def get_usuarios_faltante(id_proceso):
 def get_detalle_proceso(id_proceso):
     proceso = aplicacion.get_proceso_por_id(id_proceso)
     usuarios = aplicacion.get_usuarios_por_proceso(proceso)
-    respuesta = {"proceso": {
-        **proceso.to_dict(),
-        "cantidad_usuarios_proceso": len(usuarios),
-        "cantidad_activos_proceso": aplicacion.get_cantidad_activos_proceso(proceso),
-    },
-        "usuarios": [],
-        "activos": []
-    }
+    respuesta = {"proceso": {**proceso.to_dict(),
+                             "cantidad_usuarios_proceso": len(usuarios),
+                             "cantidad_activos_proceso": aplicacion.get_cantidad_activos_proceso(proceso)},
+                 "usuarios": [],
+                 "activos": []
+                 }
     for usuario in usuarios:
         cant_act = len(aplicacion.get_cant_activos_usuario(usuario))
         cant_obs = aplicacion.get_cant_activos_observacion_usuario(usuario, proceso)
@@ -126,8 +123,9 @@ def get_detalle_proceso(id_proceso):
                                      "revision_activo": activo.revision,
                                      "estado_revision_activo": activo.estado,
                                      "observacion_revision": activo.observacion,
-                                     "admin_revisor": activo.admin_revisor
-                                     })
+                                     "admin_revisor": activo.cedula_revisor,
+                                     "nombre_revisor": activo.nombre_revisor,
+                                     "apellido_revisor": activo.apellido_revisor})
     return jsonify(respuesta)
 
 
