@@ -74,7 +74,8 @@ class DataProceso:
         cur.execute(f'''select id_pro as id_proceso, 
                         nom_pro as nombre_proceso, 
                         fec_cre_pro as fecha_proceso, 
-                        est_pro as estado_proceso
+                        est_pro as estado_proceso,
+                        ced_adm_cre_pro as cedula_admin_creador
                         from proceso 
                         where id_pro = {id_proceso}''')
         return cur.fetchone()

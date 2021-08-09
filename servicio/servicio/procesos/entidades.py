@@ -102,7 +102,7 @@ class Proceso:
         self.__fecha = kwargs.get("fecha_proceso")
         self.__estado = kwargs.get("estado_proceso")
         self.__cant_observaciones = kwargs.get("cantidad_observaciones")
-        self.__ced_admin_creador = kwargs.get("ced_admin_creador")
+        self.__ced_admin_creador = kwargs.get("cedula_admin_creador")
 
     def get_ced_admin_creador(self):
         return self.__ced_admin_creador
@@ -137,7 +137,8 @@ class Proceso:
             "nombre_proceso": self.get_nombre(),
             "fecha_creacion_proceso": self.get_fecha(),
             "estado_proceso": self.get_estado(),
-            "cantidad_observaciones": self.get_cant_observaciones()
+            "cantidad_observaciones": self.get_cant_observaciones(),
+            "cedula_admin_creador": self.get_ced_admin_creador()
         }
 
     @staticmethod

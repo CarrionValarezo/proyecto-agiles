@@ -110,4 +110,8 @@ public class Proceso {
 		return activos;
 	}
 
+	public String getCedulaCreador(){
+		return cedulaCreador; 
+	}
+
 }

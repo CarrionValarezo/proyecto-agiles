@@ -36,7 +36,7 @@ ModeloTabla modelo;
 		this.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 		this.model = this.getSelectionModel();
 		this.titulos = new String[]{"ID ACTIVO", "ID ITEM", "NOMBRE", "DESCRIPCION", "CEDULA USUARIO",
-			"NOMBRE USUARIO", "APELLIDO USUARIO", "REVISADO", "ESTADO REVISION", "OBSERVACION REVISION", "ADMIN REVISOR"};
+			"NOMBRE USUARIO", "APELLIDO USUARIO", "REVISADO", "ESTADO REVISION", "OBSERVACION REVISION", "REVISADO POR"};
 		this.gestor = Gestor._getGestor();
 		crearBoton();
 		tablaClick();
