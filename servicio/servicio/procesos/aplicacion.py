@@ -31,20 +31,20 @@ class Aplicacion:
         activos = []
         for usuario in usuarios:
             activos = activos + self.get_activos_por_usuario(usuario)
-        nuevo_proceso.set_id(self.repo_procesos.crear_proceso(nuevo_proceso, admin))
+        nuevo_proceso.id = self.repo_procesos.crear_proceso(nuevo_proceso, admin)
         for activo in activos:
             self.repo_procesos.agregar_activo(nuevo_proceso, activo)
         return nuevo_proceso
 
     def asignar_estado_proceso(self, proceso, activos):
         activos_revisados = 0
-        if proceso.get_estado() == "CREADO":
+        if proceso.estado == "CREADO":
             return "CREADO"
-        elif proceso.get_estado() == "FINALIZADO":
+        elif proceso.estado == "FINALIZADO":
             return "FINALIZADO"
-        elif proceso.get_estado() == "INICIADO":
+        elif proceso.estado == "INICIADO":
             for activo in activos:
-                if activo.get_revision():
+                if activo.revision:
                     activos_revisados += 1
             if len(activos) == activos_revisados:
                 return "FINALIZADO"
@@ -52,17 +52,17 @@ class Aplicacion:
 
     def get_proceso_por_id(self, id_proceso):
         proceso = Proceso(**self.repo_procesos.get_proceso_por_id(id_proceso))
-        proceso.set_cant_observaciones(self.repo_procesos.get_cant_activos_observacion(proceso))
+        proceso.cant_observaciones = self.repo_procesos.get_cant_activos_observacion(proceso)
         return proceso
 
     def get_activos_por_proceso(self, proceso):
         activos = [Activo(**data_activo, item=Item(**data_activo)) for data_activo in
                    self.repo_procesos.get_activos_por_proceso(proceso)]
         estado_actualizado = self.asignar_estado_proceso(proceso, activos)
-        if proceso.get_estado() != estado_actualizado:
-            proceso.set_estado(estado_actualizado)
+        if proceso.estado != estado_actualizado:
+            proceso.estado = estado_actualizado
             self.repo_procesos.actualizar_estado(proceso)
-            proceso.set_estado(estado_actualizado)
+            proceso.estado = estado_actualizado
         return activos
 
     def get_usuario_por_activo(self, activo):
@@ -71,7 +71,6 @@ class Aplicacion:
 
     # Devulve los usuarios que estan registrados en un proceso
     def get_usuarios_por_proceso(self, proceso):
-        repo_proceso = DataProceso()
         usuarios = {}
         for usuario in self.repo_procesos.get_usuarios_por_proceso(proceso):
             if usuario["cedula_usuario"] not in usuarios:
@@ -88,16 +87,15 @@ class Aplicacion:
         return DataProceso().get_cantidad_activos_por_proceso(proceso)
 
     def get_procesos_por_usuario(self, usuario):
-        repo_procesos = DataProceso()
         procesos = [Proceso(**data_procesos) for data_procesos in self.repo_procesos.get_procesos_por_usuario(usuario)]
         for proceso in procesos:
-            proceso.set_cant_observaciones(self.repo_procesos.get_cant_activos_observacion_usuario(proceso, usuario))
+            proceso.cant_observaciones = self.repo_procesos.get_cant_activos_observacion_usuario(proceso, usuario)
         return procesos
 
     def get_procesos(self):
         procesos = [Proceso(**data_procesos) for data_procesos in self.repo_procesos.get_procesos()]
         for proceso in procesos:
-            proceso.set_cant_observaciones(self.repo_procesos.get_cant_activos_observacion(proceso))
+            proceso.cant_observaciones = self.repo_procesos.get_cant_activos_observacion(proceso)
         return procesos
 
     def eliminar_usuario_de_proceso(self, usuario, proceso):
@@ -115,8 +113,8 @@ class Aplicacion:
 
     def validar_activo(self, activo, proceso, estado, observacion, admin):
         self.repo_procesos.validar_activo(activo, proceso, estado, observacion, admin)
-        if proceso.get_estado() == "CREADO":
-            proceso.set_estado("INICIADO")
+        if proceso.estado == "CREADO":
+            proceso.estado = "INICIADO"
             DataProceso().actualizar_estado(proceso)
 
     def get_cant_activos_observacion_usuario(self, usuario, proceso):
