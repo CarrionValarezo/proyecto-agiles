@@ -2,7 +2,6 @@ from flask import Blueprint, jsonify, request
 from servicio.procesos.aplicacion import Aplicacion
 from servicio.procesos.entidades import Proceso
 from servicio.app import auth
-from servicio.login.entidades import Administrador
 
 procesos_blueprint = Blueprint("usac", __name__)
 aplicacion = Aplicacion()
@@ -23,7 +22,7 @@ def get_usuarios_cant_activos():
 def get_activos_por_usuario(cedula):
     usuario = aplicacion.get_usuario_por_cedula(cedula)
     activos_usuario = aplicacion.get_activos_por_usuario(usuario)
-    respuesta = [{**activo.to_dict(), **activo.get_item().to_dict()} for activo in activos_usuario]
+    respuesta = [{**activo.to_dict(), **activo.item.to_dict()} for activo in activos_usuario]
     return jsonify(respuesta)
 
 
@@ -55,7 +54,7 @@ def crear_proceso():
     cedulas_usuarios = data.get("usuarios_proceso")
     usuarios = [aplicacion.get_usuario_por_cedula(usuario.get("cedula_usuario")) for usuario in cedulas_usuarios]
     nuevo_proceso = aplicacion.crear_proceso(proceso, usuarios, admin)
-    return jsonify({"id_proceso": nuevo_proceso.get_id()})
+    return jsonify({"id_proceso": nuevo_proceso.id})
 
 
 @procesos_blueprint.route('/procesos/<id_proceso>/usuarios')
@@ -75,7 +74,7 @@ def get_activos_por_proceso(id_proceso):
     activos = []
     for usuario in usuarios:
         activos = activos + aplicacion.get_activos_por_usuario(usuario)
-    respuesta = [{**activo.to_dict(), **activo.get_item().to_dict()} for activo in activos]
+    respuesta = [{**activo.to_dict(), **activo.item.to_dict()} for activo in activos]
     return jsonify(respuesta)
 
 
@@ -103,14 +102,12 @@ def get_usuarios_faltante(id_proceso):
 def get_detalle_proceso(id_proceso):
     proceso = aplicacion.get_proceso_por_id(id_proceso)
     usuarios = aplicacion.get_usuarios_por_proceso(proceso)
-    respuesta = {"proceso": {
-        **proceso.to_dict(),
-        "cantidad_usuarios_proceso": len(usuarios),
-        "cantidad_activos_proceso": aplicacion.get_cantidad_activos_proceso(proceso),
-    },
-        "usuarios": [],
-        "activos": []
-    }
+    respuesta = {"proceso": {**proceso.to_dict(),
+                             "cantidad_usuarios_proceso": len(usuarios),
+                             "cantidad_activos_proceso": aplicacion.get_cantidad_activos_proceso(proceso)},
+                 "usuarios": [],
+                 "activos": []
+                 }
     for usuario in usuarios:
         cant_act = len(aplicacion.get_cant_activos_usuario(usuario))
         cant_obs = aplicacion.get_cant_activos_observacion_usuario(usuario, proceso)
@@ -118,16 +115,17 @@ def get_detalle_proceso(id_proceso):
                                       "cantidad_observaciones_usuario": cant_obs,
                                       "cantidad_activos_usuario": cant_act})
     for activo in aplicacion.get_activos_por_proceso(proceso):
-        respuesta["proceso"]["estado_proceso"] = proceso.get_estado()
+        respuesta["proceso"]["estado_proceso"] = proceso.estado
         usuario = aplicacion.get_usuario_por_activo(activo)
         respuesta["activos"].append({**activo.to_dict(),
-                                     **activo.get_item().to_dict(),
+                                     **activo.item.to_dict(),
                                      **usuario.to_dict(),
-                                     "revision_activo": activo.get_revision(),
-                                     "estado_revision_activo": activo.get_estado(),
-                                     "observacion_revision": activo.get_observacion(),
-                                     "admin_revisor": activo.get_revisor()
-                                     })
+                                     "revision_activo": activo.revision,
+                                     "estado_revision_activo": activo.estado,
+                                     "observacion_revision": activo.observacion,
+                                     "admin_revisor": activo.cedula_revisor,
+                                     "nombre_revisor": activo.nombre_revisor,
+                                     "apellido_revisor": activo.apellido_revisor})
     return jsonify(respuesta)
 
 

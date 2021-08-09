@@ -109,7 +109,7 @@ public class IntDetalleProceso extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jTbpDetalles, javax.swing.GroupLayout.Alignment.TRAILING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(839, Short.MAX_VALUE)
+                .addContainerGap(858, Short.MAX_VALUE)
                 .addComponent(jButton1)
                 .addContainerGap())
         );

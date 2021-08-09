@@ -26,7 +26,7 @@ class DataUsuario:
                         u.ape_usu as apellido_usuario
                         from activo a, usuario u
                         where u.ced_usu = a.ced_usu_act
-                        and a.id_act = {activo.get_id()};
+                        and a.id_act = {activo.id};
                         ''')
         return cur.fetchone()
 
@@ -38,7 +38,7 @@ class DataActivo:
         cur = db.get_cursor()
         cur.execute(f'''SELECT COUNT(id_act) AS cantidad_activos
                         FROM activo 
-                        WHERE ced_USU_act = {usuario.get_cedula()} ''')
+                        WHERE ced_USU_act = {usuario.cedula} ''')
         return cur.fetchone()["cantidad_activos"]
 
     def get_activos_por_usuario(self, usuario):
@@ -49,7 +49,7 @@ class DataActivo:
                         i.DES_ite AS descripcion_item
                         FROM activo A, item i
                         WHERE i.ID_ite = A.id_ite_act
-                        AND ced_USU_act = {usuario.get_cedula()}; ''')
+                        AND ced_USU_act = {usuario.cedula}; ''')
         return cur.fetchall()
 
     def get_activo_por_id(self, id_activo):
@@ -61,10 +61,6 @@ class DataActivo:
                         FROM activo A, item i
                         WHERE a.ID_act = {id_activo}''')
         return cur.fetchone()
-
-    def get_activos_por_proceso(self, proceso):
-        cur = db.get_cursor()
-        cur.execute(f'''select ''')
 
 
 class DataProceso:
@@ -83,7 +79,7 @@ class DataProceso:
     def crear_proceso(self, proceso, admin):
         cur = db.get_cursor()
         cur.execute(f'''insert into proceso
-                        values(null,'{proceso.get_nombre()}','{proceso.get_fecha()}','CREADO', '{admin.get_cedula()}');''')
+                        values(null,'{proceso.nombre}','{proceso.fecha}','CREADO', '{admin.cedula}');''')
         cur.connection.commit()
         cur.execute(f"select last_insert_id();")
         return cur.fetchone()['last_insert_id()']
@@ -91,7 +87,7 @@ class DataProceso:
     def agregar_activo(self, proceso, activo):
         cur = db.get_cursor()
         cur.execute(f'''insert into detalle_proceso
-                        values({proceso.get_id()},'{activo.get_id()}',0,'','', null);''')
+                        values({proceso.id},'{activo.id}',0,'','', null);''')
         cur.connection.commit()
 
     def get_activos_por_proceso(self, proceso):
@@ -108,7 +104,7 @@ class DataProceso:
                         WHERE A.id_ite_act = i.ID_ite
                         and a.id_act = dp.id_act_det
                         and p.id_pro = dp.id_pro_det
-                        AND P.ID_PRO = {proceso.get_id()};''')
+                        AND P.ID_PRO = {proceso.id};''')
         return cur.fetchall()
 
     def get_usuarios_por_proceso(self, proceso):
@@ -120,14 +116,14 @@ class DataProceso:
                         where u.ced_usu = a.ced_usu_act
                         and a.id_act = dp.id_act_det
                         and p.id_pro = dp.id_pro_det
-                        and p.id_pro = {proceso.get_id()};''')
+                        and p.id_pro = {proceso.id};''')
         return cur.fetchall()
 
     def get_cantidad_activos_por_proceso(self, proceso):
         cur = db.get_cursor()
         cur.execute(f'''select count(id_pro_det) as cantidad_activos
                         from detalle_proceso 
-                        where id_pro_det = {proceso.get_id()}; ''')
+                        where id_pro_det = {proceso.id}; ''')
         return cur.fetchone()["cantidad_activos"]
 
     def get_procesos_por_usuario(self, usuario):
@@ -142,7 +138,7 @@ class DataProceso:
                             from detalle_proceso 
                             where id_act_det in ( select id_act
                                 from activo 
-                                where ced_usu_act = "{usuario.get_cedula()}")); ''')
+                                where ced_usu_act = "{usuario.cedula}")); ''')
         return cur.fetchall()
 
     def get_procesos(self):
@@ -158,10 +154,10 @@ class DataProceso:
     def eliminar_usuario_de_proceso(self, usuario, proceso):
         cur = db.get_cursor()
         cur.execute(f''' delete from detalle_proceso
-                        where id_pro_det = {proceso.get_id()} 
+                        where id_pro_det = {proceso.id} 
                         and id_act_det in ( select id_act 
                             from activo
-                            where ced_usu_act = '{usuario.get_cedula()}');''')
+                            where ced_usu_act = '{usuario.cedula}');''')
         cur.connection.commit()
 
     def validar_activo(self, activo, proceso, estado, observacion, admin):
@@ -170,16 +166,16 @@ class DataProceso:
                         set rev_act_det = true, 
                             est_act_det = '{estado}', 
                             obs_act_det = '{observacion}', 
-                            ced_adm_rev_det = '{admin.get_cedula()}'
-                        where id_pro_det = {proceso.get_id()}
-                        and id_act_det = '{activo.get_id()}';''')
+                            ced_adm_rev_det = '{admin.cedula}'
+                        where id_pro_det = {proceso.id}
+                        and id_act_det = '{activo.id}';''')
         cur.connection.commit()
 
     def actualizar_estado(self, proceso):
         cur = db.get_cursor()
         cur.execute(f'''update proceso 
-                        set est_pro = '{proceso.get_estado()}'
-                        where id_pro = {proceso.get_id()};''')
+                        set est_pro = '{proceso.estado}'
+                        where id_pro = {proceso.id};''')
         cur.connection.commit()
 
     def get_cant_activos_observacion(self, proceso):
@@ -187,7 +183,7 @@ class DataProceso:
         cur.execute(f'''select count(id_act_det) as cantidad_observaciones
                         from detalle_proceso
                         where est_act_det = "OBSERVACION"
-                        and id_pro_det = {proceso.get_id()} ; ''')
+                        and id_pro_det = {proceso.id} ; ''')
         return cur.fetchone()["cantidad_observaciones"]
 
     def get_cant_activos_observacion_usuario(self, proceso, usuario):
@@ -197,8 +193,8 @@ class DataProceso:
                         where est_act_det = "OBSERVACION"
                         and id_act_det in (select id_act
                             from activo
-                            where ced_usu_act = '{usuario.get_cedula()}')
-                        and id_pro_det = {proceso.get_id()} ; ''')
+                            where ced_usu_act = '{usuario.cedula}')
+                        and id_pro_det = {proceso.id} ; ''')
         return cur.fetchone()["cantidad_observaciones"]
 
     def get_usuarios_faltante(self, proceso):
@@ -212,7 +208,7 @@ class DataProceso:
                             where dp.id_act_det = a.id_act
                             and a.ced_usu_act = u.ced_usu
                             and p.id_pro = dp.id_pro_det
-                            and p.id_pro = {proceso.get_id()}); ''')
+                            and p.id_pro = {proceso.id}); ''')
         return cur.fetchall()
 
 
