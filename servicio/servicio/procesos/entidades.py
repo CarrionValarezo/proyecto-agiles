@@ -1,72 +1,62 @@
 from servicio.login.data import DataAdmin
+from servicio.login.entidades import Administrador
+
+
 class Usuario:
 
     def __init__(self, **kwargs):
-        self.cedula = kwargs.get("cedula_usuario")
-        self.nombre = kwargs.get("nombre_usuario")
-        self.apellido = kwargs.get("apellido_usuario")
-        self.activos = kwargs.get("activos_usuario")
+        self.cedula: str = kwargs.get("cedula_usuario")
+        self.nombre: str = kwargs.get("nombre_usuario")
+        self.apellido: str = kwargs.get("apellido_usuario")
 
     def to_dict(self) -> dict:
-        return {
-            "cedula_usuario": self.cedula,
-            "nombre_usuario": self.nombre,
-            "apellido_usuario": self.apellido
-        }
-
-
-class Item:
-
-    def __init__(self, **kwargs):
-        self.id = kwargs.get("id_item")
-        self.nombre = kwargs.get("nombre_item")
-        self.descripcion = kwargs.get("descripcion_item")
-
-    def to_dict(self) -> dict:
-        return {
-            "id_item": self.id,
-            "nombre_item": self.nombre,
-            "descripcion_item": self.descripcion
-        }
+        return {"cedula_usuario": self.cedula,
+                "nombre_usuario": self.nombre,
+                "apellido_usuario": self.apellido}
 
 
 class Activo:
 
     def __init__(self, **kwargs):
-        self.id = kwargs.get("id_activo")
-        self.usuario = kwargs.get("usuario")
-        self.item = kwargs.get("item")
-        self.revision = kwargs.get("revision_activo")
-        self.estado = kwargs.get("estado_revision_activo")
-        self.observacion = kwargs.get("observacion_revision")
-        self.cedula_revisor = kwargs.get("admin_revisor")
-        self.__set_revisor()
+        self.id: str = kwargs.get("id_activo")
+        self.nombre: str = kwargs.get("nombre_activo")
+        self.descripcion: str = kwargs.get("descripcion_activo")
+        self.usuario: Usuario = kwargs.get("usuario")
 
     def to_dict(self) -> dict:
-        return {
-            "id_activo": self.id,
-        }
+        return {"id_activo": self.id,
+                "nombre_activo": self.nombre,
+                "descripcion_activo": self.descripcion,
+                "usuario": self.usuario.to_dict()}
 
-    def __set_revisor(self):
-        if self.cedula_revisor is not None:
-            data_admin = DataAdmin().buscar(self.cedula_revisor)
-            self.nombre_revisor = data_admin.get("nombre_admin")
-            self.apellido_revisor = data_admin.get("apellido_admin")
-        else:
-            self.nombre_revisor = None
-            self.apellido_revisor = None
 
+class ActivoProcesado(Activo):
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.revision: bool = kwargs.get("revision_activo")
+        self.estado: str = kwargs.get("estado_revision_activo")
+        self.observacion: str = kwargs.get("observacion_revision")
+        self.revisor: Administrador = kwargs.get("revisor")
+
+    def to_dict(self) -> dict:
+        return {**super().to_dict(),
+                "revision_activo": self.revisor,
+                "estado_revision_activo": self.estado,
+                "observacion_revision": self.observacion,
+                "revisor": self.revisor.to_dict()}
 
 
 class Proceso:
 
     def __init__(self, **kwargs):
-        self.id = kwargs.get("id_proceso")
-        self.nombre = kwargs.get("nombre_proceso")
-        self.fecha = kwargs.get("fecha_proceso")
-        self.estado = kwargs.get("estado_proceso")
-        self.cant_observaciones = kwargs.get("cantidad_observaciones")
-        self.ced_admin_creador = kwargs.get("cedula_admin_creador")
+        self.id: int = kwargs.get("id_proceso")
+        self.nombre: str = kwargs.get("nombre_proceso")
+        self.fecha: str = kwargs.get("fecha_proceso")
+        self.estado: str = kwargs.get("estado_proceso")
+        self.cant_observaciones: int = kwargs.get("cantidad_observaciones")
+        self.creador: Administrador = kwargs.get("creador")
+        self.activos_procesados: list[ActivoProcesado] = kwargs.get("activos_procesado")
 
     def to_dict(self) -> dict:
         return {
@@ -75,7 +65,8 @@ class Proceso:
             "fecha_creacion_proceso": self.fecha,
             "estado_proceso": self.estado,
             "cantidad_observaciones": self.cant_observaciones,
-            "cedula_admin_creador": self.ced_admin_creador
+            "creador": self.creador.to_dict(),
+            "activos_procesados": [activo.to_dict() for activo in self.activos_procesados]
         }
 
     @staticmethod

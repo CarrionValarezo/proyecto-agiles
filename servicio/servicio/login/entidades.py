@@ -6,3 +6,8 @@ class Administrador:
         self.apellido: str = kwargs.get("apellido_admin")
         self.password: str = kwargs.get("password_admin")
         self.rol: str = kwargs.get("rol_admin")
+
+    def to_dict(self) -> dict:
+        return {"cedula_admin": self.cedula,
+                "nombre_admin": self.nombre,
+                "apellido_admin": self.apellido}

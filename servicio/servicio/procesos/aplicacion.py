@@ -1,6 +1,5 @@
 from servicio.procesos.data import DataActivo, DataUsuario, DataProceso
-from servicio.procesos.entidades import Usuario, Item, Activo, Proceso
-
+from servicio.procesos.entidades import Usuario, Activo, Proceso
 
 class Aplicacion:
 

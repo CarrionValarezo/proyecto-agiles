@@ -1,22 +1,26 @@
 from flask import Blueprint, jsonify, request
 from servicio.procesos.aplicacion import Aplicacion
-from servicio.procesos.entidades import Proceso
+from servicio.procesos.casos_de_uso import UsuarioCasosUso
 from servicio.app import auth
 
 procesos_blueprint = Blueprint("usac", __name__)
 aplicacion = Aplicacion()
+'''repo_usuarios = UsuarioBD(db.connection.cursor(MySQLdb.cursors.DictCursor))
+repo_procesos = ProcesoBD(db.connection.cursor(MySQLdb.cursors.DictCursor))
+repo_activos = ActivoBD(db.connection.cursor(MySQLdb.cursors.DictCursor))'''
 
 
 # Usuarios
 @procesos_blueprint.route('/usuarios/cantidad-activos')
 @auth.login_required
 def get_usuarios_cant_activos():
-    usuarios_cant_activos = aplicacion.get_usuarios_cant_activos()
+    usuario_casos_uso = UsuarioCasosUso()
+    usuarios_cant_activos = usuario_casos_uso.usuarios_cant_activos()
     respuesta = [{**usuario.to_dict(), "cantidad_activos_usuario": cant_activos}
                  for usuario, cant_activos in usuarios_cant_activos]
     return jsonify(respuesta)
 
-
+'''
 @procesos_blueprint.route('/usuarios/<cedula>/activos')
 @auth.login_required
 def get_activos_por_usuario(cedula):
@@ -151,4 +155,4 @@ def validar_activo(id_proceso, id_activo):
 
 @procesos_blueprint.route('/')
 def test():
-    return "Si funciona!"
+'''

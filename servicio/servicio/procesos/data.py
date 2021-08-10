@@ -92,19 +92,19 @@ class DataProceso:
 
     def get_activos_por_proceso(self, proceso):
         cur = db.get_cursor()
-        cur.execute(f'''SELECT a.ID_act AS id_activo,
+        cur.execute(f'''select a.id_act as id_activo,
                         dp.rev_act_det as revision_activo,                    
                         dp.est_act_det as estado_revision_activo, 
                         dp.obs_act_det as observacion_revision,
                         dp.ced_adm_rev_det as admin_revisor,
-                        i.ID_ite AS id_item, 
-                        i.NOM_ite AS nombre_item, 
-                        i.DES_ite AS descripcion_item
-                        FROM activo A, item i, PROCESO P, DETALLE_PROCESO DP
-                        WHERE A.id_ite_act = i.ID_ite
+                        i.id_ite as id_item, 
+                        i.nom_ite as nombre_item, 
+                        i.des_ite as descripcion_item
+                        from activo a, item i, proceso p, detalle_proceso dp
+                        where a.id_ite_act = i.id_ite
                         and a.id_act = dp.id_act_det
                         and p.id_pro = dp.id_pro_det
-                        AND P.ID_PRO = {proceso.id};''')
+                        and p.id_pro = {proceso.id};''')
         return cur.fetchall()
 
     def get_usuarios_por_proceso(self, proceso):
