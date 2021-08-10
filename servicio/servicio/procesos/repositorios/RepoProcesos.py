@@ -1,63 +1,12 @@
 from servicio.app import db
-from servicio.login.entidades import Administrador
-from servicio.procesos.entidades import Usuario, Activo, Proceso, ActivoProcesado
+from servicio.login.Administrador import Administrador
+from servicio.procesos.entidades.Activo import Activo
+from servicio.procesos.entidades.ActivoProcesado import ActivoProcesado
+from servicio.procesos.entidades.Proceso import Proceso
+from servicio.procesos.entidades.Usuario import Usuario
 
 
-class UsuarioBD:
-
-    def __init__(self):
-        self.cur = db.get_cursor()
-
-    def buscar(self, cedula: str) -> Usuario:
-        self.cur.execute(f'''select ced_usu as cedula_usuario, 
-                            nom_usu as nombre_usuario,
-                            ape_usu as apellido_usuario 
-                            from usuario
-                            where ced_usu = {cedula}''')
-        return Usuario(**self.cur.fetchone())
-
-    def listar(self) -> list[Usuario]:
-        self.cur.execute(f'''select ced_usu as cedula_usuario, 
-                            nom_usu as nombre_usuario, 
-                            ape_usu as apellido_usuario
-                            from usuario;''')
-        return [Usuario(**data) for data in self.cur.fetchall()]
-
-
-class ActivoBD:
-
-    def __init__(self):
-        self.cur = db.get_cursor()
-
-    def buscar(self, activo_id: str) -> Activo:
-        self.cur.execute(f'''select a.id_act as id_activo, 
-                        i.nom_ite as nombre_activo, 
-                        i.des_ite as descripcion_activo, 
-                        u.ced_usu as cedula_usuario, 
-                        u.nom_usu as nombre_usuario,
-                        u.ape_usu as apellido_usuario
-                        from activo a, item i, usuario u
-                        where a.id_act = {activo_id}
-                        and a.id_ite_act = i.id_ite
-                        and a.ced_usu_act = u.ced_usu;''')
-        params = self.cur.fetchone()
-        return Activo(**params, usuario=Usuario(**params))
-
-    def listar(self) -> list[Activo]:
-        self.cur.execute(f'''select a.id_act as id_activo, 
-                        i.nom_ite as nombre_activo, 
-                        i.des_ite as descripcion_activo, 
-                        u.ced_usu as cedula_usuario, 
-                        u.nom_usu as nombre_usuario,
-                        u.ape_usu as apellido_usuario
-                        from activo a, item i, usuario u
-                        where a.id_ite_act = i.id_ite
-                        and u.ced_usu = a.ced_usu_act''')
-        data = self.cur.fetchall()
-        return [Activo(**params, usuario=Usuario(**params)) for params in data]
-
-
-class ProcesoBD:
+class RepoProcesos:
 
     def __init__(self):
         self.cur = db.get_cursor()
@@ -87,7 +36,10 @@ class ProcesoBD:
                            from proceso p, administrador a
                            where a.ced_adm = p.ced_adm_cre_pro;''')
         data = self.cur.fetchall()
-        return [Proceso(**params, creador=Administrador(**params)) for params in data]
+        procesos = [Proceso(**params, creador=Administrador(**params)) for params in data]
+        for p in procesos:
+            p.activos_procesados = self.listar_activos(p)
+        return procesos
 
     def crear(self, proceso: Proceso) -> int:
         self.cur.execute(f'''insert into proceso
@@ -122,4 +74,3 @@ class ProcesoBD:
         data = self.cur.fetchall()
         return [ActivoProcesado(**params, usuario=Usuario(**params), revisor=Administrador(**params)) for params in
                 data]
-

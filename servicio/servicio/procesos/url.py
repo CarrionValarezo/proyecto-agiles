@@ -1,13 +1,10 @@
 from flask import Blueprint, jsonify, request
 from servicio.procesos.aplicacion import Aplicacion
-from servicio.procesos.casos_de_uso import UsuarioCasosUso
+from servicio.procesos.casos_uso.UsuarioCasosUso import UsuarioCasosUso
 from servicio.app import auth
 
 procesos_blueprint = Blueprint("usac", __name__)
 aplicacion = Aplicacion()
-'''repo_usuarios = UsuarioBD(db.connection.cursor(MySQLdb.cursors.DictCursor))
-repo_procesos = ProcesoBD(db.connection.cursor(MySQLdb.cursors.DictCursor))
-repo_activos = ActivoBD(db.connection.cursor(MySQLdb.cursors.DictCursor))'''
 
 
 # Usuarios
@@ -20,6 +17,17 @@ def get_usuarios_cant_activos():
                  for usuario, cant_activos in usuarios_cant_activos]
     return jsonify(respuesta)
 
+
+@procesos_blueprint.route('/usuarios/<cedula>/procesos')
+@auth.login_required
+def get_procesos_por_usuario(cedula):
+    csu = UsuarioCasosUso()
+    usuario = csu.buscar(cedula)
+    procesos = csu.procesos(usuario)
+    respuesta = [proceso.to_dict() for proceso in procesos]
+    return jsonify(respuesta)
+
+
 '''
 @procesos_blueprint.route('/usuarios/<cedula>/activos')
 @auth.login_required
@@ -29,14 +37,6 @@ def get_activos_por_usuario(cedula):
     respuesta = [{**activo.to_dict(), **activo.item.to_dict()} for activo in activos_usuario]
     return jsonify(respuesta)
 
-
-@procesos_blueprint.route('/usuarios/<cedula>/procesos')
-@auth.login_required
-def get_procesos_por_usuario(cedula):
-    usuario = aplicacion.get_usuario_por_cedula(cedula)
-    procesos = aplicacion.get_procesos_por_usuario(usuario)
-    respuesta = [proceso.to_dict() for proceso in procesos]
-    return jsonify(respuesta)
 
 
 # Procesos

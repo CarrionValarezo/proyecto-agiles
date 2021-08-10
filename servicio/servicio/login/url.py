@@ -1,14 +1,14 @@
 from flask import Blueprint, jsonify
 from servicio.app import auth
-from .entidades import Administrador
-from servicio.login.data import DataAdmin
+from .Administrador import Administrador
+from servicio.login.RepoAdministrador import RepoAdministrador
 
 login_blueprint = Blueprint("login_blueprint", __name__)
 
 
 @auth.verify_password
 def verify_password(username, password) -> Administrador:
-    repo_admins: DataAdmin = DataAdmin()
+    repo_admins: RepoAdministrador = RepoAdministrador()
     admin: Administrador = Administrador(cedula_admin=username, password_admin=password)
     if repo_admins.existe(admin):
         return admin
@@ -16,7 +16,7 @@ def verify_password(username, password) -> Administrador:
 
 @auth.get_user_roles
 def get_user_roles(admin: Administrador):
-    repo_admins: DataAdmin = DataAdmin()
+    repo_admins: RepoAdministrador = RepoAdministrador()
     admin.rol = repo_admins.get_rol(admin)
     return admin.rol
 

@@ -1,8 +1,8 @@
 from servicio.app import db
-from servicio.login.entidades import Administrador
+from servicio.login.Administrador import Administrador
 
 
-class DataAdmin:
+class RepoAdministrador:
 
     def __init__(self):
         self.cur = db.get_cursor()
