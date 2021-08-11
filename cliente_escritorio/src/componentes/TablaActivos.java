@@ -23,7 +23,7 @@ public class TablaActivos extends JTable {
 	public TablaActivos() {
 		this.modelo = new ModeloTabla();
 		this.gestor = Gestor._getGestor();
-		this.titulos = new String[]{"ID", "ID ITEM", "NOMBRE", "DESCRIPCION"};
+		this.titulos = new String[]{"ID", "NOMBRE", "DESCRIPCION"};
 	}
 
 	public void cargarTabla(String cedula) {

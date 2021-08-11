@@ -31,9 +31,9 @@ public class Activo {
 		Activo a = new Activo();
 		try {
 			a.id = json.getString("id_activo");
-			a.idItem = json.getString("id_item");
-			a.nomItem = json.getString("nombre_item");
-			a.desItem = json.getString("descripcion_item");
+			a.idItem = "0";
+			a.nomItem = json.getString("nombre_activo");
+			a.desItem = json.getString("descripcion_activo");
 		} catch (JSONException e) {
 		}
 		return a;
@@ -61,7 +61,7 @@ public class Activo {
 		if (activos != null) {
 			String[][] datosActivos = new String[activos.size()][];
 			for (Activo activo : activos) {
-				datosActivos[contador] = new String[]{activo.id, activo.idItem, activo.nomItem, activo.desItem};
+				datosActivos[contador] = new String[]{activo.id, activo.nomItem, activo.desItem};
 				contador++;
 			}
 			return datosActivos;

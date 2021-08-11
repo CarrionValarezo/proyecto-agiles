@@ -283,6 +283,12 @@ public class UsuariosActivity extends Activity implements SwipeRefreshLayout.OnR
             cliente.newCall(request).enqueue(new Callback() {
                 @Override
                 public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                    new Handler(Looper.getMainLooper()).post(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(context, "¡Se validó el activo correctamente!", Toast.LENGTH_LONG).show();
+                        }
+                    });
                 }
 
                 @Override
