@@ -1,6 +1,6 @@
 from flask import Blueprint, jsonify, request
 from servicio.login.Administrador import Administrador
-from servicio.procesos.casos_uso.AgregarUsuarioProcesado import AgregarUsuarioProcesado
+from servicio.procesos.casos_uso.AgregarUsuarioAlProceso import AgregarUsuarioProcesado
 from servicio.procesos.casos_uso.CrearProceso import CrearProceso
 from servicio.procesos.casos_uso.EliminarUsuarioProcesado import EliminarUsuarioProcesado
 from servicio.procesos.casos_uso.UsuarioCasosUso import UsuarioCasosUso
