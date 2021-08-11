@@ -26,7 +26,7 @@ class Proceso:
         self._activos_procesados = lista
         self.usuarios = self.__usuarios()
         self.cant_observaciones = self.__cant_observaciones()
-        self.cant_usuarios_procesados = len(self.__usuarios())
+        self.cant_usuarios_procesados = len(self.usuarios)
         self.cant_activos_procesados = len(lista)
 
     def __cant_observaciones(self) -> int:
@@ -40,7 +40,15 @@ class Proceso:
         usuarios: dict = {}
         for activo in self._activos_procesados:
             if activo.usuario.cedula not in usuarios:
+                if activo.estado == "OBSERVACION":
+                    activo.usuario.cant_obs += 1
+                activo.usuario.cant_act += 1
                 usuarios[activo.usuario.cedula] = activo.usuario
+            else:
+                u: Usuario = usuarios[activo.usuario.cedula]
+                u.cant_act += 1
+                if activo.estado == "OBSERVACION":
+                    u.cant_obs += 1
         return [usuario for usuario in usuarios.values()]
 
     def to_dict(self) -> dict:

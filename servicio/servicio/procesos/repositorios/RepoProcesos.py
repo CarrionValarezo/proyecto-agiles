@@ -27,7 +27,6 @@ class RepoProcesos:
         p.activos_procesados = self.listar_activos(p)
         return p
 
-
     def listar(self) -> list[Proceso]:
         self.cur.execute(f'''select p.id_pro as id_proceso, 
                            p.nom_pro as nombre_proceso, 

@@ -50,7 +50,7 @@ public class ActivoAdapter extends RecyclerView.Adapter<ActivoAdapter.ViewHolder
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        TextView tvNomAct, tvDesItem, tvIdItem, tvIdAct, tvObsAct, tvEstadoAct, tvRevisionAct;
+        TextView tvNomAct, tvDesItem, tvIdAct, tvObsAct, tvEstadoAct, tvRevisionAct;
         ImageView ivCirculoEstado;
         Context context;
         View itemView;
@@ -70,7 +70,6 @@ public class ActivoAdapter extends RecyclerView.Adapter<ActivoAdapter.ViewHolder
             tvEstadoAct = (TextView) itemView.findViewById(R.id.tvEstadoRevisionAct);
             tvRevisionAct = (TextView) itemView.findViewById(R.id.tvRevisionAct);
             tvDesItem = (TextView) itemView.findViewById(R.id.tvDesItem);
-            tvIdItem = (TextView) itemView.findViewById(R.id.tvIdItem);
             ivCirculoEstado = (ImageView)itemView.findViewById(R.id.ivCirEstadoAct);
             preferences = context.getSharedPreferences("com.example.cliente_android", Context.MODE_PRIVATE);
         }
@@ -87,7 +86,6 @@ public class ActivoAdapter extends RecyclerView.Adapter<ActivoAdapter.ViewHolder
               tvRevisionAct.setText("POR REVISAR");
            }
            tvDesItem.setText(activo.getDesItem());
-           tvIdItem.setText("ITEM: "+activo.getIdItem());
         }
         private void asignarColor(Activo activo){
             String estado = activo.getEstado();
@@ -148,6 +146,7 @@ public class ActivoAdapter extends RecyclerView.Adapter<ActivoAdapter.ViewHolder
                 }
                 activo.setObservacion(m_Text);
                 activo.setEstado(estado);
+                activo.setRevision(1);
                 RequestBody requestBody = RequestBody.create(enviar.toString(), JSON);
                 Request request  = new Request.Builder()
                         .url(url)
