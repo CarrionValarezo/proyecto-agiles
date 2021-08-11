@@ -3,6 +3,7 @@ from flask import Blueprint, jsonify, request
 from servicio.login.Administrador import Administrador
 from servicio.procesos.aplicacion import Aplicacion
 from servicio.procesos.casos_uso.CrearProceso import CrearProceso
+from servicio.procesos.casos_uso.EliminarUsuarioProcesado import EliminarUsuarioProcesado
 from servicio.procesos.casos_uso.UsuarioCasosUso import UsuarioCasosUso
 from servicio.app import auth
 from servicio.procesos.entidades.Activo import Activo
@@ -92,32 +93,22 @@ def crear_proceso():
 
     return jsonify({"id_proceso": nuevo_proceso.id})
 
+
+@procesos_blueprint.route('/procesos/<id_proceso>/usuarios/<cedula>', methods=['DELETE'])
+@auth.login_required(role="superadmin")
+def eliminar_usuario_de_proceso(id_proceso, cedula):
+    ucs = UsuarioCasosUso()
+    pcs = ProcesoCasosUso()
+    elm = EliminarUsuarioProcesado()
+
+    proceso: Proceso = pcs.buscar(id_proceso)
+    usuario: Usuario = ucs.buscar(cedula)
+
+    elm.eliminar(usuario, proceso)
+    return jsonify({"mensaje": "Usuario eliminado correctamente"})
+
+
 '''
-
-
-
-
-
-
-@procesos_blueprint.route('/procesos/<id_proceso>/usuarios')
-@auth.login_required
-def get_usuarios_por_proceso(id_proceso):
-    proceso = aplicacion.get_proceso_por_id(id_proceso)
-    usuarios = aplicacion.get_usuarios_por_proceso(proceso)
-    respuesta = [usuario.to_dict() for usuario in usuarios]
-    return jsonify(respuesta)
-
-
-@procesos_blueprint.route('/procesos/<id_proceso>/activos')
-@auth.login_required
-def get_activos_por_proceso(id_proceso):
-    proceso = aplicacion.get_proceso_por_id(id_proceso)
-    usuarios = aplicacion.get_usuarios_por_proceso(proceso)
-    activos = []
-    for usuario in usuarios:
-        activos = activos + aplicacion.get_activos_por_usuario(usuario)
-    respuesta = [{**activo.to_dict(), **activo.item.to_dict()} for activo in activos]
-    return jsonify(respuesta)
 
 
 @procesos_blueprint.route('/procesos/<id_proceso>/usuarios/<cedula>', methods=['POST'])
@@ -131,45 +122,7 @@ def agregar_usuario_a_proceso(id_proceso, cedula):
 
 
 
-@procesos_blueprint.route('/procesos/<id_proceso>')
-@auth.login_required
-def get_detalle_proceso(id_proceso):
-    proceso = aplicacion.get_proceso_por_id(id_proceso)
-    usuarios = aplicacion.get_usuarios_por_proceso(proceso)
-    respuesta = {"proceso": {**proceso.to_dict(),
-                             "cantidad_usuarios_proceso": len(usuarios),
-                             "cantidad_activos_proceso": aplicacion.get_cantidad_activos_proceso(proceso)},
-                 "usuarios": [],
-                 "activos": []
-                 }
-    for usuario in usuarios:
-        cant_act = len(aplicacion.get_cant_activos_usuario(usuario))
-        cant_obs = aplicacion.get_cant_activos_observacion_usuario(usuario, proceso)
-        respuesta["usuarios"].append({**usuario.to_dict(),
-                                      "cantidad_observaciones_usuario": cant_obs,
-                                      "cantidad_activos_usuario": cant_act})
-    for activo in aplicacion.get_activos_por_proceso(proceso):
-        respuesta["proceso"]["estado_proceso"] = proceso.estado
-        usuario = aplicacion.get_usuario_por_activo(activo)
-        respuesta["activos"].append({**activo.to_dict(),
-                                     **activo.item.to_dict(),
-                                     **usuario.to_dict(),
-                                     "revision_activo": activo.revision,
-                                     "estado_revision_activo": activo.estado,
-                                     "observacion_revision": activo.observacion,
-                                     "admin_revisor": activo.cedula_revisor,
-                                     "nombre_revisor": activo.nombre_revisor,
-                                     "apellido_revisor": activo.apellido_revisor})
-    return jsonify(respuesta)
 
-
-@procesos_blueprint.route('/procesos/<id_proceso>/usuarios/<cedula>', methods=['DELETE'])
-@auth.login_required(role="superadmin")
-def eliminar_usuario_de_proceso(id_proceso, cedula):
-    usuario = aplicacion.get_usuario_por_cedula(cedula)
-    proceso = aplicacion.get_proceso_por_id(id_proceso)
-    aplicacion.eliminar_usuario_de_proceso(usuario, proceso)
-    return jsonify({"mensaje": "Usuario eliminado correctamente"})
 
 
 @procesos_blueprint.route('/procesos/<id_proceso>/activos/<id_activo>', methods=['PUT'])

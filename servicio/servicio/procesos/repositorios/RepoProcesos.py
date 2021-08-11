@@ -50,6 +50,14 @@ class RepoProcesos:
         self.cur.execute(f"select last_insert_id();")
         return self.cur.fetchone()['last_insert_id()']
 
+    def eliminar_activo(self, proceso: Proceso, activo: Activo) -> bool:
+        self.cur.execute(f'''delete from detalle_proceso
+                            where id_pro_det = {proceso.id}
+                            and id_act_det = {activo.id}
+                            ''')
+        self.cur.connection.commit()
+        return True
+
     def agregar_activo(self, proceso: Proceso, activo: Activo) -> bool:
         self.cur.execute(f'''insert into detalle_proceso
                                 values({proceso.id},'{activo.id}',0,'','', null);''')
