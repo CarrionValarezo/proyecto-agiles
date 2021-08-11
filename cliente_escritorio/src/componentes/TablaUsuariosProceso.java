@@ -89,7 +89,7 @@ ModeloTabla modelo;
 			this.tablaActivos.model.clearSelection();
 			String cedula = (String) this.getValueAt(row, 0);
 			for(int i = 0; i < tablaActivos.getRowCount(); i++){
-				if(tablaActivos.getValueAt(i,4).toString().equals(cedula)){
+				if(tablaActivos.getValueAt(i,3).toString().equals(cedula)){
 					this.tablaActivos.model.addSelectionInterval(i, i);
 				}
 			}

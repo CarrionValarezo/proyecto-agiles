@@ -74,8 +74,11 @@ class RepoProcesos:
                             dp.rev_act_det as revision_activo,                    
                             dp.est_act_det as estado_revision_activo, 
                             dp.obs_act_det as observacion_revision,
-                            dp.ced_adm_rev_det as cedula_admin
-                            from activo a, item i, proceso p, detalle_proceso dp, usuario u
+                            ad.ced_adm as cedula_admin,
+                            ad.nom_adm as nombre_admin,
+                            ad.ape_adm as apellido_admin
+                            from activo a, item i, proceso p, usuario u,
+                            detalle_proceso dp left join administrador ad on dp.ced_adm_rev_det = ad.ced_adm
                             where a.id_ite_act = i.id_ite
                             and a.id_act = dp.id_act_det
                             and p.id_pro = dp.id_pro_det

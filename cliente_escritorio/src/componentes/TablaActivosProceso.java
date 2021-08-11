@@ -35,7 +35,7 @@ ModeloTabla modelo;
 		this.setRowSelectionAllowed(true);
 		this.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 		this.model = this.getSelectionModel();
-		this.titulos = new String[]{"ID ACTIVO", "ID ITEM", "NOMBRE", "DESCRIPCION", "CEDULA USUARIO",
+		this.titulos = new String[]{"ID ACTIVO", "NOMBRE", "DESCRIPCION", "CEDULA USUARIO",
 			 "REVISADO", "ESTADO REVISION", "OBSERVACION REVISION", "REVISOR", "NOMBRE REVISOR", "APELLIDO REVISOR"};
 		this.gestor = Gestor._getGestor();
 		crearBoton();
@@ -71,7 +71,7 @@ ModeloTabla modelo;
 					revision = "REVISADO";
 				}
 				Object[] datos = {activo.id(),
-					activo.idItem(), activo.nombreItem(),
+					activo.nombreItem(),
 					activo.descripcionItem(),
 					activo.getUsuario().getCedula(),
 					revision,
