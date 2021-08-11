@@ -198,9 +198,9 @@ public class UsuariosActivity extends Activity implements SwipeRefreshLayout.OnR
                 public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                     try {
                         JSONObject jsonObject = new JSONObject(response.body().string());
-                        proceso = Proceso.fromJson(jsonObject.getJSONObject("proceso"));
-                        usuarios = Usuario.fromJson(jsonObject.getJSONArray("usuarios"));
-                        activos = Activo.fromJson(jsonObject.getJSONArray("activos"));
+                        proceso = Proceso.fromJson(jsonObject);
+                        usuarios = Usuario.fromJson(jsonObject.getJSONArray("usuarios_procesados"));
+                        activos = Activo.fromJson(jsonObject.getJSONArray("activos_procesados"));
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }

@@ -60,8 +60,10 @@ public class Usuario {
             u.cedula = usuarioJson.getString("cedula_usuario");
             u.nombre = usuarioJson.getString("nombre_usuario");
             u.apellido = usuarioJson.getString("apellido_usuario");
-            u.cantObs = usuarioJson.getInt("cantidad_observaciones_usuario");
-            u.cantActivos = usuarioJson.getInt("cantidad_activos_usuario");
+            //u.cantObs = usuarioJson.getInt("cantidad_observaciones_usuario");
+            u.cantObs = 0;
+            //u.cantActivos = usuarioJson.getInt("cantidad_activos_usuario");
+            u.cantActivos = 0;
         } catch (JSONException e) {
             e.printStackTrace();
         }

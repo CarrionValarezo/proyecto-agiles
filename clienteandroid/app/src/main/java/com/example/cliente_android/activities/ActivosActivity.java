@@ -10,6 +10,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -89,11 +90,11 @@ public class ActivosActivity extends AppCompatActivity implements SwipeRefreshLa
                 public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                     try {
                         JSONObject jsonObject = new JSONObject(response.body().string());
-                        JSONArray jsonActivos = jsonObject.getJSONArray("activos");
-                        JSONArray jsonUsuarios = jsonObject.getJSONArray("usuarios");
-                        proceso = Proceso.fromJson(jsonObject.getJSONObject("proceso"));
-                        usuario = Usuario.fromJson(jsonUsuarios, cedulaUsuario);
                         //Log.e("JSON USU", "onResponse: "+jsonObject.toString());
+                        JSONArray jsonActivos = jsonObject.getJSONArray("activos_procesados");
+                        JSONArray jsonUsuarios = jsonObject.getJSONArray("usuarios_procesados");
+                        proceso = Proceso.fromJson(jsonObject);
+                        usuario = Usuario.fromJson(jsonUsuarios, cedulaUsuario);
                         activos = Activo.fromJson(jsonActivos, cedulaUsuario);
                     } catch (JSONException e) {
                         e.printStackTrace();

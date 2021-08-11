@@ -53,16 +53,17 @@ public class Activo {
         Activo a = new Activo();
         a.usuario = new Usuario();
         try {
+            JSONObject jsonUsuario = activoJson.getJSONObject("usuario");
             a.id = activoJson.getString("id_activo");
-            a.idItem = activoJson.getString("id_item");
-            a.nombreItem = activoJson.getString("nombre_item");
-            a.desItem = activoJson.getString("descripcion_item");
+            a.idItem = "0";
+            a.nombreItem = activoJson.getString("nombre_activo");
+            a.desItem = activoJson.getString("descripcion_activo");
             a.revision = activoJson.getInt("revision_activo");
             a.estado = activoJson.getString("estado_revision_activo");
             a.observacion = activoJson.getString("observacion_revision");
-            a.usuario.setCedula(activoJson.getString("cedula_usuario"));
-            a.usuario.setNombre(activoJson.getString("nombre_usuario"));
-            a.usuario.setApellido(activoJson.getString("apellido_usuario"));
+            a.usuario.setCedula(jsonUsuario.getString("cedula_usuario"));
+            a.usuario.setNombre(jsonUsuario.getString("nombre_usuario"));
+            a.usuario.setApellido(jsonUsuario.getString("apellido_usuario"));
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -92,8 +93,9 @@ public class Activo {
             JSONObject activoJson = null;
             try {
                 activoJson = jsonArray.getJSONObject(i);
+                JSONObject jsonUsuario = activoJson.getJSONObject("usuario");
                 Activo activo = Activo.fromJson(activoJson);
-                if (activo != null && activoJson.getString("cedula_usuario").equals(cedula)) {
+                if (activo != null && jsonUsuario.getString("cedula_usuario").equals(cedula)) {
                     activos.add(activo);
                 }
             } catch (JSONException e) {
