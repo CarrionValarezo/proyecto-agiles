@@ -115,3 +115,9 @@ class RepoProcesos:
                         where id_pro_det = {proceso.id}
                         and id_act_det = '{activo.id}';''')
         self.cur.connection.commit()
+
+    def actualizar(self, proceso: Proceso):
+        self.cur.execute(f'''update proceso
+                            set est_pro = '{proceso.estado}'
+                            where id_pro = {proceso.id};''')
+        self.cur.connection.commit()

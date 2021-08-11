@@ -134,15 +134,11 @@ def validar_activo(id_proceso, id_activo):
     pcs = ProcesoCasosUso()
     vla = ValidarActivo()
 
+    proceso: Proceso = pcs.buscar(id_proceso)
+
     observacion: str = request.get_json().get("observacion_activo")
     estado: str = request.get_json().get("estado_activo")
+    revisor: Administrador = auth.current_user()
 
-    proceso: Proceso = pcs.buscar(id_proceso)
-    activo: ActivoProcesado = pcs.buscar_activo(id_activo, proceso)
-
-    activo.revisor = auth.current_user()
-    activo.observacion = observacion
-    activo.estado = estado
-
-    vla.validar(activo, proceso)
+    vla.validar(id_activo, proceso, estado, observacion, revisor)
     return jsonify({"mensaje": "Activo validado"})
