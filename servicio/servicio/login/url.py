@@ -11,7 +11,7 @@ def verify_password(username, password) -> Administrador:
     repo_admins: RepoAdministrador = RepoAdministrador()
     admin: Administrador = Administrador(cedula_admin=username, password_admin=password)
     if repo_admins.existe(admin):
-        return admin
+        return repo_admins.buscar(username)
 
 
 @auth.get_user_roles

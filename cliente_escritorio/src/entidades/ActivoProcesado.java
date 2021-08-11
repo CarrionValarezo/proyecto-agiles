@@ -38,20 +38,22 @@ public class ActivoProcesado extends Activo {
 	public static ActivoProcesado fromJson(JSONObject json) {
 		ActivoProcesado a = new ActivoProcesado();
 		Usuario u = new Usuario(); 
+		JSONObject jsonUsuario = json.getJSONObject("usuario");
+		JSONObject jsonRevisor = json.getJSONObject("revisor");
 		try {
 			a.id = json.getString("id_activo");
-			a.idItem = json.getString("id_item");
-			a.nomItem = json.getString("nombre_item");
-			a.desItem = json.getString("descripcion_item");
-			u.setCedula(json.getString("cedula_usuario"));
-			u.setNombre(json.getString("nombre_usuario"));
-			u.setApellido(json.getString("apellido_usuario"));
+			a.idItem = "0";
+			a.nomItem = json.getString("nombre_activo");
+			a.desItem = json.getString("descripcion_activo");
+			u.setCedula(jsonUsuario.getString("cedula_usuario"));
+			u.setNombre(jsonUsuario.getString("nombre_usuario"));
+			u.setApellido(jsonUsuario.getString("apellido_usuario"));
 			a.estaRevisado = json.getInt("revision_activo");
 			a.estadoRevision = json.getString("estado_revision_activo");
 			a.obsRevision = json.getString("observacion_revision");
-			a.adminRevisor = json.getString("admin_revisor");
-			a.nombreRevisor = json.getString("nombre_revisor"); 
-			a.apellidoRevisor = json.getString("apellido_revisor");
+			a.adminRevisor = jsonRevisor.getString("cedula_admin");
+			a.nombreRevisor = jsonRevisor.getString("nombre_admin"); 
+			a.apellidoRevisor = jsonRevisor.getString("apellido_admin");
 		} catch (JSONException e) {
 		}
 		a.setUsuario(u);

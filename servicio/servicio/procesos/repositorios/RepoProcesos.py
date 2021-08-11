@@ -23,7 +23,9 @@ class RepoProcesos:
                            where p.id_pro = {id_proceso}
                            and a.ced_adm = p.ced_adm_cre_pro;''')
         params: dict = self.cur.fetchone()
-        return Proceso(**params, creador=Administrador(**params))
+        p: Proceso = Proceso(**params, creador=Administrador(**params))
+        p.activos_procesados = self.listar_activos(p)
+        return p
 
     def listar(self) -> list[Proceso]:
         self.cur.execute(f'''select p.id_pro as id_proceso, 

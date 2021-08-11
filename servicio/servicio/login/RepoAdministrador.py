@@ -17,10 +17,11 @@ class RepoAdministrador:
         self.cur.execute(f'''select rol_adm as rol_admin from administrador where ced_adm = {admin.cedula}''')
         return self.cur.fetchone()['rol_admin']
 
-    def buscar(self, cedula: str) -> dict:
+    def buscar(self, cedula: str) -> Administrador:
         self.cur.execute(f'''select ced_adm as cedula_admin, 
                         nom_adm as nombre_admin, 
                         ape_adm as apellido_admin
                         from administrador 
                         where ced_adm = {cedula};''')
-        return self.cur.fetchone()
+        data: dict = self.cur.fetchone()
+        return Administrador(**data)

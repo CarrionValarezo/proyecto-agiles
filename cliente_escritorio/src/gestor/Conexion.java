@@ -83,14 +83,13 @@ public class Conexion {
 
 		JSONObject jsonObject = new JSONObject(response.body());
 
-		JSONObject jsonProceso = jsonObject.getJSONObject("proceso");
-		JSONArray jsonUsuarios = jsonObject.getJSONArray("usuarios");
-		JSONArray jsonActivos = jsonObject.getJSONArray("activos");
+		JSONArray jsonUsuarios = jsonObject.getJSONArray("usuarios_procesados");
+		JSONArray jsonActivos = jsonObject.getJSONArray("activos_procesados");
 
 		ArrayList<Usuario> usuarios = Usuario.fromJson(jsonUsuarios); 
 		ArrayList<Activo> activos = ActivoProcesado.fromJson(jsonActivos); 
 
-		Proceso p = Proceso.fromJson(jsonProceso); 
+		Proceso p = Proceso.fromJson(jsonObject); 
 		p.setUsuarios(usuarios);
 		p.setActivos(activos);
 

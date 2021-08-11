@@ -39,10 +39,10 @@ public class Proceso {
             p.estado = json.getString("estado_proceso");
             p.cantObs = json.getInt("cantidad_observaciones");
 			p.cedulaCreador = json.getString("cedula_admin_creador");
-            if(json.has("cantidad_usuarios_proceso") &&
-                    json.has("cantidad_activos_proceso")) {
-                p.cantUsuarios = json.getInt("cantidad_usuarios_proceso");
-                p.cantActivos = json.getInt("cantidad_activos_proceso");
+            if(json.has("cantidad_usuarios_procesados") &&
+                    json.has("cantidad_activos_procesados")) {
+                p.cantUsuarios = json.getInt("cantidad_usuarios_procesados");
+                p.cantActivos = json.getInt("cantidad_activos_procesados");
             }
         } catch (JSONException e) {
         }

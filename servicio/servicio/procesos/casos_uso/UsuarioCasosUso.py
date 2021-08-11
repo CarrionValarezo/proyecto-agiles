@@ -29,10 +29,10 @@ class UsuarioCasosUso:
         procesos: list[Proceso] = self.repo_procesos.listar()
         procesos_usuario: list[Proceso] = []
         for p in procesos:
-            contador: int = 0
+            coincidencias: int = 0
             for activo in p.activos_procesados:
                 if activo.usuario.cedula == u.cedula:
-                    contador += 1
-            if contador != 0:
+                    coincidencias += 1
+            if coincidencias != 0:
                 procesos_usuario.append(p)
         return procesos_usuario
