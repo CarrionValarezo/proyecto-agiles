@@ -1,3 +1,4 @@
+from servicio.procesos.entidades.ActivoProcesado import ActivoProcesado
 from servicio.procesos.repositorios.RepoActivos import RepoActivos
 from servicio.procesos.repositorios.RepoProcesos import RepoProcesos
 from servicio.procesos.repositorios.RepoUsuarios import RepoUsuarios
@@ -37,3 +38,6 @@ class ProcesoCasosUso:
             if activo.usuario.cedula not in usuarios:
                 usuarios[activo.usuario.cedula] = activo.usuario
         return [usuario for usuario in usuarios.values()]
+
+    def buscar_activo(self, id_activo: str, p: Proceso) -> ActivoProcesado:
+        return self.repo_procesos.buscar_activo(id_activo, p)

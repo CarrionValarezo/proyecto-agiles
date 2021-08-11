@@ -27,6 +27,7 @@ class RepoProcesos:
         p.activos_procesados = self.listar_activos(p)
         return p
 
+
     def listar(self) -> list[Proceso]:
         self.cur.execute(f'''select p.id_pro as id_proceso, 
                            p.nom_pro as nombre_proceso, 
@@ -84,3 +85,34 @@ class RepoProcesos:
         data = self.cur.fetchall()
         return [ActivoProcesado(**params, usuario=Usuario(**params), revisor=Administrador(**params)) for params in
                 data]
+
+    def buscar_activo(self, id_activo: str, proceso: Proceso) -> ActivoProcesado:
+        self.cur.execute(f'''select a.id_act as id_activo,
+                                    i.nom_ite as nombre_activo, 
+                                    i.des_ite as descripcion_activo,
+                                    u.ced_usu as cedula_usuario, 
+                                    u.nom_usu as nombre_usuario, 
+                                    u.ape_usu as apellido_usuario, 
+                                    dp.rev_act_det as revision_activo,                    
+                                    dp.est_act_det as estado_revision_activo, 
+                                    dp.obs_act_det as observacion_revision,
+                                    dp.ced_adm_rev_det as cedula_admin
+                                    from activo a, item i, proceso p, detalle_proceso dp, usuario u
+                                    where a.id_ite_act = i.id_ite
+                                    and a.id_act = dp.id_act_det
+                                    and p.id_pro = dp.id_pro_det
+                                    and u.ced_usu = a.ced_usu_act
+                                    and a.id_act = {id_activo}
+                                    and p.id_pro = {proceso.id};''')
+        data = self.cur.fetchone()
+        return ActivoProcesado(**data, usuario=Usuario(**data), revisor=Administrador(**data))
+
+    def validar_activo(self, activo: ActivoProcesado, proceso: Proceso) -> None:
+        self.cur.execute(f'''update detalle_proceso 
+                        set rev_act_det = true, 
+                            est_act_det = '{activo.estado}', 
+                            obs_act_det = '{activo.observacion}', 
+                            ced_adm_rev_det = '{activo.revisor.cedula}'
+                        where id_pro_det = {proceso.id}
+                        and id_act_det = '{activo.id}';''')
+        self.cur.connection.commit()

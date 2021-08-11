@@ -1,19 +1,18 @@
 from flask import Blueprint, jsonify, request
-
 from servicio.login.Administrador import Administrador
-from servicio.procesos.aplicacion import Aplicacion
 from servicio.procesos.casos_uso.AgregarUsuarioProcesado import AgregarUsuarioProcesado
 from servicio.procesos.casos_uso.CrearProceso import CrearProceso
 from servicio.procesos.casos_uso.EliminarUsuarioProcesado import EliminarUsuarioProcesado
 from servicio.procesos.casos_uso.UsuarioCasosUso import UsuarioCasosUso
 from servicio.app import auth
 from servicio.procesos.entidades.Activo import Activo
+from servicio.procesos.entidades.ActivoProcesado import ActivoProcesado
 from servicio.procesos.entidades.Proceso import Proceso
 from servicio.procesos.entidades.Usuario import Usuario
 from servicio.procesos.casos_uso.ProcesoCasosUso import ProcesoCasosUso
+from servicio.procesos.casos_uso.ValidarActivo import ValidarActivo
 
 procesos_blueprint = Blueprint("usac", __name__)
-aplicacion = Aplicacion()
 
 
 # Usuarios
@@ -122,26 +121,22 @@ def agregar_usuario_a_proceso(id_proceso, cedula):
     agg.agregar(usuario, proceso)
     return jsonify({"mensaje": "Usuario agregado correctamente"})
 
-'''
-
-
-
-
-
-
-
 
 @procesos_blueprint.route('/procesos/<id_proceso>/activos/<id_activo>', methods=['PUT'])
 @auth.login_required
 def validar_activo(id_proceso, id_activo):
-    data = request.get_json()
-    proceso = aplicacion.get_proceso_por_id(id_proceso)
-    activo = aplicacion.get_activo_por_id(id_activo)
-    admin = auth.current_user()
-    aplicacion.validar_activo(activo, proceso, data.get("estado_activo"), data.get("observacion_activo"), admin)
+    pcs = ProcesoCasosUso()
+    vla = ValidarActivo()
+
+    observacion: str = request.get_json().get("observacion_activo")
+    estado: str = request.get_json().get("estado_activo")
+
+    proceso: Proceso = pcs.buscar(id_proceso)
+    activo: ActivoProcesado = pcs.buscar_activo(id_activo, proceso)
+
+    activo.revisor = auth.current_user()
+    activo.observacion = observacion
+    activo.estado = estado
+
+    vla.validar(activo, proceso)
     return jsonify({"mensaje": "Activo validado"})
-
-
-@procesos_blueprint.route('/')
-def test():
-'''
