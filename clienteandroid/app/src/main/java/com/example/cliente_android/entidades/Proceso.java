@@ -32,9 +32,10 @@ public class Proceso {
             p.fecha = procesoJson.getString("fecha_creacion_proceso");
             p.estado = procesoJson.getString("estado_proceso");
             p.cantObservaciones = procesoJson.getInt("cantidad_observaciones");
-            if(procesoJson.has("cantidad_usuarios_procesados") &&
-                    procesoJson.has("cantidad_activos_procesados")) {
+            if(procesoJson.has("cantidad_usuarios_procesados")) {
                 p.cantUsuarios = procesoJson.getInt("cantidad_usuarios_procesados");
+            }
+            if(procesoJson.has("cantidad_activos_procesados")) {
                 p.cantActivos = procesoJson.getInt("cantidad_activos_procesados");
             }
         } catch (JSONException e) {

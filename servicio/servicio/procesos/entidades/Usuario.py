@@ -7,7 +7,7 @@ class Usuario:
         self.cant_obs: int = 0
         self.cant_act: int = 0
 
-    def to_dict(self, opcion: str = "FULL") -> dict:
+    def to_dict(self, opcion: str = "SIMPLE") -> dict:
         dic: dict = {
             "SIMPLE": {"cedula_usuario": self.cedula,
                        "nombre_usuario": self.nombre,

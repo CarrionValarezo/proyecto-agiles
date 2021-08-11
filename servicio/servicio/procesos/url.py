@@ -5,6 +5,7 @@ from servicio.procesos.casos_uso.CrearProceso import CrearProceso
 from servicio.procesos.casos_uso.EliminarUsuarioProcesado import EliminarUsuarioProcesado
 from servicio.procesos.casos_uso.UsuarioCasosUso import UsuarioCasosUso
 from servicio.app import auth
+from servicio.procesos.casos_uso.UsuariosPorProceso import UsuariosPorProceso
 from servicio.procesos.entidades.Activo import Activo
 from servicio.procesos.entidades.ActivoProcesado import ActivoProcesado
 from servicio.procesos.entidades.Proceso import Proceso
@@ -72,8 +73,13 @@ def get_procesos():
 @auth.login_required
 def get_detalle_proceso(id_proceso):
     pcs = ProcesoCasosUso()
+    upp = UsuariosPorProceso()
     proceso: Proceso = pcs.buscar(id_proceso)
-    return jsonify(proceso.to_dict())
+    respuesta = proceso.to_dict()
+    usuarios: list[Usuario] = upp.usuarios(proceso)
+    respuesta["usuarios_procesados"] = [u.to_dict("FULL") for u in usuarios]
+    respuesta["cantidad_usuarios_procesados"] = len(usuarios)
+    return jsonify(respuesta)
 
 
 @procesos_blueprint.route('/procesos', methods=['POST'])
