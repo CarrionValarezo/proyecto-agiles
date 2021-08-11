@@ -2,6 +2,7 @@ from flask import Blueprint, jsonify, request
 
 from servicio.login.Administrador import Administrador
 from servicio.procesos.aplicacion import Aplicacion
+from servicio.procesos.casos_uso.AgregarUsuarioProcesado import AgregarUsuarioProcesado
 from servicio.procesos.casos_uso.CrearProceso import CrearProceso
 from servicio.procesos.casos_uso.EliminarUsuarioProcesado import EliminarUsuarioProcesado
 from servicio.procesos.casos_uso.UsuarioCasosUso import UsuarioCasosUso
@@ -108,16 +109,21 @@ def eliminar_usuario_de_proceso(id_proceso, cedula):
     return jsonify({"mensaje": "Usuario eliminado correctamente"})
 
 
-'''
-
-
 @procesos_blueprint.route('/procesos/<id_proceso>/usuarios/<cedula>', methods=['POST'])
 @auth.login_required(role="superadmin")
 def agregar_usuario_a_proceso(id_proceso, cedula):
-    usuario = aplicacion.get_usuario_por_cedula(cedula)
-    proceso = aplicacion.get_proceso_por_id(id_proceso)
-    aplicacion.agregar_usuario_proceso(usuario, proceso)
+    ucs = UsuarioCasosUso()
+    pcs = ProcesoCasosUso()
+    agg = AgregarUsuarioProcesado()
+
+    proceso: Proceso = pcs.buscar(id_proceso)
+    usuario: Usuario = ucs.buscar(cedula)
+
+    agg.agregar(usuario, proceso)
     return jsonify({"mensaje": "Usuario agregado correctamente"})
+
+'''
+
 
 
 
