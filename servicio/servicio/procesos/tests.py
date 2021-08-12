@@ -7,8 +7,8 @@ import unittest
 
 class TestProcesos(unittest.TestCase):
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+    def setUp(self) -> None:
+        super().setUp()
         self.app = create_app()
         self.app.config["MYSQL_DB"] = "agiles_pruebas"
         self.tester = self.app.test_client()
@@ -81,20 +81,6 @@ class TestProcesos(unittest.TestCase):
         self.assertEqual(respuesta.status_code, 200)
         self.assertTrue(b"id_proceso" in respuesta.data)
 
-    def test_usuarios_por_procesos(self):
-        ruta = f"/procesos/{self.proceso}/usuarios"
-        print("\n\n" + ruta)
-        self.__endpoint_test(ruta)
-        self.__content_type_test(ruta)
-        self.__data_test(ruta, self.usuario_data)
-
-    def test_activos_por_procesos(self):
-        ruta = f"/procesos/{self.proceso}/activos"
-        print("\n\n" + ruta)
-        self.__endpoint_test(ruta)
-        self.__content_type_test(ruta)
-        self.__data_test(ruta, self.activo_data + self.item_data)
-
     def test_detalle_proceso(self):
         ruta = f"/procesos/{self.proceso}"
         print("\n\n" + ruta)
@@ -103,7 +89,8 @@ class TestProcesos(unittest.TestCase):
         self.__data_test(ruta, self.activo_data + self.item_data + self.proceso_data + self.usuario_data)
 
     def test_eliminar_usuario_proceso(self):
-        respuesta = self.tester.delete(f'/procesos/{self.proceso}/usuarios/{self.usuario}', headers={"Authorization": f"Basic {self.auth}"})
+        respuesta = self.tester.delete(f'/procesos/{self.proceso}/usuarios/{self.usuario}',
+                                       headers={"Authorization": f"Basic {self.auth}"})
         self.assertEqual(respuesta.status_code, 200)
         self.assertTrue(b"mensaje" in respuesta.data)
 
@@ -118,8 +105,4 @@ class TestProcesos(unittest.TestCase):
                                     content_type="application/json")
         self.assertEqual(respuesta.status_code, 200)
         self.assertTrue(b"mensaje" in respuesta.data)
-
-    def test_index(self):
-        self.__endpoint_test("/")
-
 

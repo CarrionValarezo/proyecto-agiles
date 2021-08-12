@@ -4,8 +4,8 @@ from servicio.procesos.entidades.Usuario import Usuario
 
 class RepoUsuarios:
 
-    def __init__(self):
-        self.cur = db.get_cursor()
+    def __init__(self, dict_cursor):
+        self.cur = dict_cursor
 
     def buscar(self, cedula: str) -> Usuario:
         self.cur.execute(f'''select ced_usu as cedula_usuario, 

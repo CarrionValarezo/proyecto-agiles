@@ -1,36 +1,59 @@
 from flask import Blueprint, jsonify, request
+from servicio.app import auth, db
 from servicio.login.Administrador import Administrador
+
 from servicio.procesos.casos_uso.AgregarUsuarioAlProceso import AgregarUsuarioProcesado
 from servicio.procesos.casos_uso.CrearProceso import CrearProceso
 from servicio.procesos.casos_uso.EliminarUsuarioProcesado import EliminarUsuarioProcesado
 from servicio.procesos.casos_uso.UsuarioCasosUso import UsuarioCasosUso
-from servicio.app import auth
 from servicio.procesos.casos_uso.UsuariosPorProceso import UsuariosPorProceso
-from servicio.procesos.entidades.Activo import Activo
-from servicio.procesos.entidades.ActivoProcesado import ActivoProcesado
-from servicio.procesos.entidades.Proceso import Proceso
-from servicio.procesos.entidades.Usuario import Usuario
 from servicio.procesos.casos_uso.ProcesoCasosUso import ProcesoCasosUso
 from servicio.procesos.casos_uso.ValidarActivo import ValidarActivo
 
-procesos_blueprint = Blueprint("usac", __name__)
+from servicio.procesos.entidades.Activo import Activo
+from servicio.procesos.entidades.Proceso import Proceso
+from servicio.procesos.entidades.Usuario import Usuario
+
+from servicio.procesos.repositorios.RepoActivos import RepoActivos
+from servicio.procesos.repositorios.RepoProcesos import RepoProcesos
+from servicio.procesos.repositorios.RepoUsuarios import RepoUsuarios
+
+procesos_blueprint = Blueprint("procesos_blueprint", __name__)
 
 
 # Usuarios
 @procesos_blueprint.route('/usuarios/cantidad-activos')
 @auth.login_required
 def get_usuarios_cant_activos():
-    usuario_casos_uso = UsuarioCasosUso()
+    dict_cursor = db.get_cursor()
+    repo_procesos = RepoProcesos(dict_cursor)
+    repo_activos = RepoActivos(dict_cursor)
+    repo_usuarios = RepoUsuarios(dict_cursor)
+
+    usuario_casos_uso = UsuarioCasosUso(repo_procesos=repo_procesos,
+                                        repo_activos=repo_activos,
+                                        repo_usuarios=repo_usuarios)
+
     usuarios_cant_activos = usuario_casos_uso.usuarios_cant_activos()
+
     respuesta = [{**usuario.to_dict(), "cantidad_activos_usuario": cant_activos}
                  for usuario, cant_activos in usuarios_cant_activos]
+
     return jsonify(respuesta)
 
 
 @procesos_blueprint.route('/usuarios/<cedula>/procesos')
 @auth.login_required
 def get_procesos_por_usuario(cedula):
-    csu = UsuarioCasosUso()
+    dict_cursor = db.get_cursor()
+    repo_procesos = RepoProcesos(dict_cursor)
+    repo_activos = RepoActivos(dict_cursor)
+    repo_usuarios = RepoUsuarios(dict_cursor)
+
+    csu = UsuarioCasosUso(repo_procesos=repo_procesos,
+                          repo_activos=repo_activos,
+                          repo_usuarios=repo_usuarios)
+
     usuario: Usuario = csu.buscar(cedula)
     procesos: list[Proceso] = csu.procesos(usuario)
     respuesta = [proceso.to_dict() for proceso in procesos]
@@ -40,7 +63,15 @@ def get_procesos_por_usuario(cedula):
 @procesos_blueprint.route('/usuarios/<cedula>/activos')
 @auth.login_required
 def get_activos_por_usuario(cedula):
-    csu = UsuarioCasosUso()
+    dict_cursor = db.get_cursor()
+    repo_procesos = RepoProcesos(dict_cursor)
+    repo_activos = RepoActivos(dict_cursor)
+    repo_usuarios = RepoUsuarios(dict_cursor)
+
+    csu = UsuarioCasosUso(repo_procesos=repo_procesos,
+                          repo_activos=repo_activos,
+                          repo_usuarios=repo_usuarios)
+
     usuario: Usuario = csu.buscar(cedula)
     activos: list[Activo] = csu.activos(usuario)
     respuesta: list[dict] = [activo.to_dict() for activo in activos]
@@ -50,11 +81,23 @@ def get_activos_por_usuario(cedula):
 @procesos_blueprint.route('/procesos/<id_proceso>/usuarios-faltantes')
 @auth.login_required
 def get_usuarios_faltante(id_proceso):
-    pcs = ProcesoCasosUso()
-    ucs = UsuarioCasosUso()
+    dict_cursor = db.get_cursor()
+    repo_procesos = RepoProcesos(dict_cursor)
+    repo_activos = RepoActivos(dict_cursor)
+    repo_usuarios = RepoUsuarios(dict_cursor)
+
+    ucs = UsuarioCasosUso(repo_procesos=repo_procesos,
+                          repo_activos=repo_activos,
+                          repo_usuarios=repo_usuarios)
+
+    pcs = ProcesoCasosUso(repo_procesos=repo_procesos,
+                          repo_usuarios=repo_usuarios)
+
     proceso: Proceso = pcs.buscar(id_proceso)
+
     usuarios_faltantes: list[Usuario] = pcs.usuarios_faltantes(proceso)
     usuarios_cant_activos: list[tuple] = [ucs.usuario_cant_activos(u) for u in usuarios_faltantes]
+
     respuesta = [{**usuario.to_dict(), "cantidad_activos_usuario": cant_activos}
                  for usuario, cant_activos in usuarios_cant_activos]
     return jsonify(respuesta)
@@ -64,7 +107,12 @@ def get_usuarios_faltante(id_proceso):
 @procesos_blueprint.route('/procesos')
 @auth.login_required
 def get_procesos():
-    pcs = ProcesoCasosUso()
+    dict_cursor = db.get_cursor()
+    repo_procesos = RepoProcesos(dict_cursor)
+    repo_usuarios = RepoUsuarios(dict_cursor)
+
+    pcs = ProcesoCasosUso(repo_procesos, repo_usuarios)
+
     respuesta = [p.to_dict() for p in pcs.listar()]
     return jsonify(respuesta)
 
@@ -72,11 +120,17 @@ def get_procesos():
 @procesos_blueprint.route('/procesos/<id_proceso>')
 @auth.login_required
 def get_detalle_proceso(id_proceso):
-    pcs = ProcesoCasosUso()
+    dict_cursor = db.get_cursor()
+    repo_procesos = RepoProcesos(dict_cursor)
+    repo_usuarios = RepoUsuarios(dict_cursor)
+
+    pcs = ProcesoCasosUso(repo_procesos, repo_usuarios)
     upp = UsuariosPorProceso()
+
     proceso: Proceso = pcs.buscar(id_proceso)
-    respuesta = proceso.to_dict()
     usuarios: list[Usuario] = upp.usuarios(proceso)
+
+    respuesta = proceso.to_dict()
     respuesta["usuarios_procesados"] = [u.to_dict("FULL") for u in usuarios]
     respuesta["cantidad_usuarios_procesados"] = len(usuarios)
     return jsonify(respuesta)
@@ -85,8 +139,15 @@ def get_detalle_proceso(id_proceso):
 @procesos_blueprint.route('/procesos', methods=['POST'])
 @auth.login_required(role="superadmin")
 def crear_proceso():
-    ucs = UsuarioCasosUso()
-    crear = CrearProceso()
+    dict_cursor = db.get_cursor()
+
+    repo_procesos = RepoProcesos(dict_cursor)
+    repo_activos = RepoActivos(dict_cursor)
+    repo_usuarios = RepoUsuarios(dict_cursor)
+
+    ucs = UsuarioCasosUso(repo_procesos, repo_usuarios, repo_activos)
+    crear = CrearProceso(repo_procesos=repo_procesos,
+                         ucs=ucs)
 
     creador: Administrador = auth.current_user()
     data_proceso = request.get_json().get("proceso")
@@ -103,9 +164,15 @@ def crear_proceso():
 @procesos_blueprint.route('/procesos/<id_proceso>/usuarios/<cedula>', methods=['DELETE'])
 @auth.login_required(role="superadmin")
 def eliminar_usuario_de_proceso(id_proceso, cedula):
-    ucs = UsuarioCasosUso()
-    pcs = ProcesoCasosUso()
-    elm = EliminarUsuarioProcesado()
+    dict_cursor = db.get_cursor()
+    repo_procesos = RepoProcesos(dict_cursor)
+    repo_activos = RepoActivos(dict_cursor)
+    repo_usuarios = RepoUsuarios(dict_cursor)
+
+    ucs = UsuarioCasosUso(repo_procesos, repo_usuarios, repo_activos)
+    pcs = ProcesoCasosUso(repo_procesos, repo_usuarios)
+    elm = EliminarUsuarioProcesado(repo_procesos=repo_procesos,
+                                   ucs=ucs)
 
     proceso: Proceso = pcs.buscar(id_proceso)
     usuario: Usuario = ucs.buscar(cedula)
@@ -117,9 +184,14 @@ def eliminar_usuario_de_proceso(id_proceso, cedula):
 @procesos_blueprint.route('/procesos/<id_proceso>/usuarios/<cedula>', methods=['POST'])
 @auth.login_required(role="superadmin")
 def agregar_usuario_a_proceso(id_proceso, cedula):
-    ucs = UsuarioCasosUso()
-    pcs = ProcesoCasosUso()
-    agg = AgregarUsuarioProcesado()
+    dict_cursor = db.get_cursor()
+    repo_procesos = RepoProcesos(dict_cursor)
+    repo_activos = RepoActivos(dict_cursor)
+    repo_usuarios = RepoUsuarios(dict_cursor)
+
+    ucs = UsuarioCasosUso(repo_procesos, repo_usuarios, repo_activos)
+    pcs = ProcesoCasosUso(repo_procesos, repo_usuarios)
+    agg = AgregarUsuarioProcesado(repo_procesos=repo_procesos, ucs=ucs)
 
     proceso: Proceso = pcs.buscar(id_proceso)
     usuario: Usuario = ucs.buscar(cedula)
@@ -131,8 +203,14 @@ def agregar_usuario_a_proceso(id_proceso, cedula):
 @procesos_blueprint.route('/procesos/<id_proceso>/activos/<id_activo>', methods=['PUT'])
 @auth.login_required
 def validar_activo(id_proceso, id_activo):
-    pcs = ProcesoCasosUso()
-    vla = ValidarActivo()
+    dict_cursor = db.get_cursor()
+
+    repo_procesos = RepoProcesos(dict_cursor)
+    repo_usuarios = RepoUsuarios(dict_cursor)
+
+    pcs = ProcesoCasosUso(repo_procesos=repo_procesos,
+                          repo_usuarios=repo_usuarios)
+    vla = ValidarActivo(repo_procesos=repo_procesos)
 
     proceso: Proceso = pcs.buscar(id_proceso)
 

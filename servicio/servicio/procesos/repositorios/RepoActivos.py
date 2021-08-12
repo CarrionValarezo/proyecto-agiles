@@ -5,8 +5,8 @@ from servicio.procesos.entidades.Usuario import Usuario
 
 class RepoActivos:
 
-    def __init__(self):
-        self.cur = db.get_cursor()
+    def __init__(self, dict_cursor):
+        self.cur = dict_cursor
 
     def buscar(self, activo_id: str) -> Activo:
         self.cur.execute(f'''select a.id_act as id_activo, 

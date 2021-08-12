@@ -6,8 +6,8 @@ from servicio.procesos.entidades.Proceso import Proceso
 
 class ValidarActivo:
 
-    def __init__(self):
-        self.repo_procesos: RepoProcesos = RepoProcesos()
+    def __init__(self, repo_procesos: RepoProcesos):
+        self.repo_procesos: RepoProcesos = repo_procesos
         self.proceso: Proceso = None
         self.activo: ActivoProcesado = None
 

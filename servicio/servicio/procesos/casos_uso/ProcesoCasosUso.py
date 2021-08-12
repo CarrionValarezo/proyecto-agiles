@@ -7,9 +7,9 @@ from servicio.procesos.entidades.Usuario import Usuario
 
 class ProcesoCasosUso:
 
-    def __init__(self):
-        self.repo_procesos: RepoProcesos = RepoProcesos()
-        self.repo_usuarios: RepoUsuarios = RepoUsuarios()
+    def __init__(self, repo_procesos: RepoProcesos, repo_usuarios: RepoUsuarios):
+        self.repo_procesos: RepoProcesos = repo_procesos
+        self.repo_usuarios: RepoUsuarios = repo_usuarios
 
     def listar(self) -> list[Proceso]:
         return self.repo_procesos.listar()

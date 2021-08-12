@@ -6,10 +6,10 @@ from servicio.procesos.entidades import Usuario, Activo, Proceso
 
 class UsuarioCasosUso:
 
-    def __init__(self):
-        self.repo_procesos: RepoProcesos = RepoProcesos()
-        self.repo_activos: RepoActivos = RepoActivos()
-        self.repo_usuarios: RepoUsuarios = RepoUsuarios()
+    def __init__(self, repo_procesos: RepoProcesos, repo_usuarios: RepoUsuarios, repo_activos: RepoActivos):
+        self.repo_procesos: RepoProcesos = repo_procesos
+        self.repo_activos: RepoActivos = repo_activos
+        self.repo_usuarios: RepoUsuarios = repo_usuarios
 
     def buscar(self, cedula: str) -> Usuario:
         return self.repo_usuarios.buscar(cedula)

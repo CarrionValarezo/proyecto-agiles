@@ -7,11 +7,11 @@ from servicio.procesos.entidades.Usuario import Usuario
 
 class EliminarUsuarioProcesado:
 
-    def __init__(self):
-        self.repo_procesos: RepoProcesos = RepoProcesos()
+    def __init__(self, repo_procesos: RepoProcesos, ucs: UsuarioCasosUso):
+        self.ucs = ucs
+        self.repo_procesos: RepoProcesos = repo_procesos
 
     def eliminar(self, u: Usuario, p: Proceso):
-        ucs = UsuarioCasosUso()
-        activos: list[Activo] = ucs.activos(u)
+        activos: list[Activo] = self.ucs.activos(u)
         for activo in activos:
             self.repo_procesos.eliminar_activo(p, activo)

@@ -7,15 +7,15 @@ from servicio.procesos.entidades.Usuario import Usuario
 
 class CrearProceso:
 
-    def __init__(self):
-        self.repo_procesos: RepoProcesos = RepoProcesos()
+    def __init__(self, repo_procesos: RepoProcesos, ucs: UsuarioCasosUso):
+        self.ucs = ucs
+        self.repo_procesos: RepoProcesos = repo_procesos
 
     def crear_proceso(self, usuarios: list[Usuario], p: Proceso) -> Proceso:
-        ucs = UsuarioCasosUso()
         id_proceso: int = self.repo_procesos.crear(p)
         p.id = id_proceso
         for u in usuarios:
-            activos: list[Activo] = ucs.activos(u)
+            activos: list[Activo] = self.ucs.activos(u)
             for a in activos:
                 self.repo_procesos.agregar_activo(p, a)
         return p

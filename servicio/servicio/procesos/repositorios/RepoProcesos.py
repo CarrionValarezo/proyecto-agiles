@@ -8,8 +8,8 @@ from servicio.procesos.entidades.Usuario import Usuario
 
 class RepoProcesos:
 
-    def __init__(self):
-        self.cur = db.get_cursor()
+    def __init__(self, dict_cursor):
+        self.cur = dict_cursor
 
     def buscar(self, id_proceso: int) -> Proceso:
         self.cur.execute(f'''select p.id_pro as id_proceso, 
