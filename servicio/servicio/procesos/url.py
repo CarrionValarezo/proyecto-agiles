@@ -2,7 +2,7 @@ from flask import Blueprint, jsonify, request
 from servicio.app import auth, db
 from servicio.login.Administrador import Administrador
 
-from servicio.procesos.casos_uso.AgregarUsuarioAlProceso import AgregarUsuarioProcesado
+from servicio.procesos.casos_uso.AgregarUsuarioAlProceso import AgregarUsuarioAlProceso
 from servicio.procesos.casos_uso.CrearProceso import CrearProceso
 from servicio.procesos.casos_uso.EliminarUsuarioProcesado import EliminarUsuarioProcesado
 from servicio.procesos.casos_uso.UsuarioCasosUso import UsuarioCasosUso
@@ -191,7 +191,7 @@ def agregar_usuario_a_proceso(id_proceso, cedula):
 
     ucs = UsuarioCasosUso(repo_procesos, repo_usuarios, repo_activos)
     pcs = ProcesoCasosUso(repo_procesos, repo_usuarios)
-    agg = AgregarUsuarioProcesado(repo_procesos=repo_procesos, ucs=ucs)
+    agg = AgregarUsuarioAlProceso(repo_procesos=repo_procesos, ucs=ucs)
 
     proceso: Proceso = pcs.buscar(id_proceso)
     usuario: Usuario = ucs.buscar(cedula)

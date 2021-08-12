@@ -5,7 +5,7 @@ from servicio.procesos.entidades.Proceso import Proceso
 from servicio.procesos.entidades.Usuario import Usuario
 
 
-class AgregarUsuarioProcesado:
+class AgregarUsuarioAlProceso:
 
     def __init__(self, repo_procesos: RepoProcesos, ucs: UsuarioCasosUso):
         self.ucs = ucs

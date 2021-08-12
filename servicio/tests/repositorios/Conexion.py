@@ -12,7 +12,6 @@ class Conexion:
             password='',
             db='agiles_pruebas'
         )
-        print("COnexion exitosa")
 
     def get_cursor(self):
         return self.connection.cursor(pymysql.cursors.DictCursor)

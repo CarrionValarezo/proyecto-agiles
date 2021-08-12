@@ -96,7 +96,7 @@ class TestProcesos(unittest.TestCase):
 
     def test_validar_activo(self):
         dic = {
-            "estado_activo": "Observacion",
+            "estado_activo": "OBSERVACION",
             "observacion_activo": "El activo no se encontro"
         }
         respuesta = self.tester.put(f'/procesos/{self.proceso}/activos/{self.activo}',

@@ -18,4 +18,5 @@ class CrearProceso:
             activos: list[Activo] = self.ucs.activos(u)
             for a in activos:
                 self.repo_procesos.agregar_activo(p, a)
+        p = self.repo_procesos.buscar(id_proceso)
         return p
