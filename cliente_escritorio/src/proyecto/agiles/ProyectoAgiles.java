@@ -19,12 +19,7 @@ public class ProyectoAgiles {
 	 * @param args the command line arguments
 	 */
 	public static void main(String[] args) {
-		try {
-			// TODO code application logic here
-			String[][] usuarios = Conexion.getUsuarios();
-		} catch (Exception ex) {
-			Logger.getLogger(ProyectoAgiles.class.getName()).log(Level.SEVERE, null, ex);
-		}
+		
 	}
 
 }

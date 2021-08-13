@@ -7,4 +7,4 @@ class LocalConfig(Config):
     MYSQL_USER = "rmcv"
     MYSQL_PASSWORD = ""
     MYSQL_PORT = 3308
-    MYSQL_DB = "agiles"
+    MYSQL_DB = "agiles_login"
