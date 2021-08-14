@@ -31,10 +31,12 @@ class ValidarActivo:
 
     def __actualizar_proceso(self):
         self.proceso.cargar_datos()
-        if (self.proceso.cant_activos_revisados == self.proceso.cant_activos_procesados
-                and self.proceso.estado == "INICIADO"):
+        cant_activos: int = self.proceso.cant_activos_procesados
+        cant_revisados: int = self.proceso.cant_activos_revisados
+        if cant_revisados == cant_activos and self.proceso.estado == "INICIADO":
             self.proceso.estado = "FINALIZADO"
-            self.repo_procesos.actualizar(self.proceso)
-        elif self.proceso.cant_activos_revisados > 0 and self.proceso.estado == "CREADO":
+        elif cant_revisados > 0 and self.proceso.estado == "CREADO":
             self.proceso.estado = "INICIADO"
-            self.repo_procesos.actualizar(self.proceso)
+        elif cant_revisados < cant_activos and self.proceso.estado == "FINALIZADO":
+            self.proceso.estado = "INICIADO"
+        self.repo_procesos.actualizar(self.proceso)
