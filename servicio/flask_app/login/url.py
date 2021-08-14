@@ -1,7 +1,7 @@
 from flask import Blueprint, jsonify
-from servicio.app import auth
-from .Administrador import Administrador
-from servicio.login.RepoAdministrador import RepoAdministrador
+from flask_app.app import auth
+from src.login.Administrador import Administrador
+from src.login.RepoAdministrador import RepoAdministrador
 
 login_blueprint = Blueprint("login_blueprint", __name__)
 

@@ -1,6 +1,4 @@
-from servicio.app import db
-from servicio.procesos.entidades.Activo import Activo
-from servicio.procesos.entidades.Usuario import Usuario
+from src.procesos.entidades import Activo, Usuario
 
 
 class RepoActivos:

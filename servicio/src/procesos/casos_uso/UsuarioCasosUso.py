@@ -1,7 +1,5 @@
-from servicio.procesos.repositorios.RepoProcesos import RepoProcesos
-from servicio.procesos.repositorios.RepoActivos import RepoActivos
-from servicio.procesos.repositorios.RepoUsuarios import RepoUsuarios
-from servicio.procesos.entidades import Usuario, Activo, Proceso
+from src.procesos.repositorios import RepoProcesos, RepoUsuarios, RepoActivos
+from src.procesos.entidades import Usuario, Activo, Proceso
 
 
 class UsuarioCasosUso:

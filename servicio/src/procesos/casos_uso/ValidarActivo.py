@@ -1,7 +1,6 @@
-from servicio.login.Administrador import Administrador
-from servicio.procesos.entidades.ActivoProcesado import ActivoProcesado
-from servicio.procesos.repositorios.RepoProcesos import RepoProcesos
-from servicio.procesos.entidades.Proceso import Proceso
+from src.login import Administrador
+from src.procesos.repositorios import RepoProcesos
+from src.procesos.entidades import Proceso, ActivoProcesado
 
 
 class ValidarActivo:

@@ -1,5 +1,5 @@
-from servicio.login.Administrador import Administrador
-from servicio.procesos.entidades.Activo import Activo
+from src.login import Administrador
+from src.procesos.entidades.Activo import Activo
 
 
 class ActivoProcesado(Activo):

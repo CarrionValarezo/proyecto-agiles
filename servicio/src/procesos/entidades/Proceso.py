@@ -1,5 +1,5 @@
-from servicio.login.Administrador import Administrador
-from servicio.procesos.entidades.ActivoProcesado import ActivoProcesado
+from src.login import Administrador
+from src.procesos.entidades import ActivoProcesado
 
 REVISADO = 1
 

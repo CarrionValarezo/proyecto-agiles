@@ -1,5 +1,5 @@
-from servicio.app import db
-from servicio.login.Administrador import Administrador
+from flask_app.app import db
+from src.login.Administrador import Administrador
 
 
 class RepoAdministrador:
