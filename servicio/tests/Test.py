@@ -1,13 +1,9 @@
 import unittest
 from datetime import date
-from servicio.login.Administrador import Administrador
-from servicio.procesos.casos_uso.CrearProceso import CrearProceso
-from servicio.procesos.casos_uso.UsuarioCasosUso import UsuarioCasosUso
-from servicio.procesos.casos_uso.ValidarActivo import ValidarActivo
-from servicio.procesos.entidades.Proceso import Proceso
-from servicio.procesos.repositorios.RepoActivos import RepoActivos
-from servicio.procesos.repositorios.RepoProcesos import RepoProcesos
-from servicio.procesos.repositorios.RepoUsuarios import RepoUsuarios
+from src.login import Administrador
+from src.procesos.casos_uso import CrearProceso, UsuarioCasosUso, ValidarActivo
+from src.procesos.entidades import Proceso
+from src.procesos.repositorios import RepoProcesos, RepoActivos, RepoUsuarios
 from tests.repositorios.Conexion import Conexion
 
 

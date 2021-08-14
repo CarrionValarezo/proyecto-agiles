@@ -1,22 +1,10 @@
 from flask import Blueprint, jsonify, request
-from servicio.app import auth, db
-from servicio.login.Administrador import Administrador
-
-from servicio.procesos.casos_uso.AgregarUsuarioAlProceso import AgregarUsuarioAlProceso
-from servicio.procesos.casos_uso.CrearProceso import CrearProceso
-from servicio.procesos.casos_uso.EliminarUsuarioProcesado import EliminarUsuarioProcesado
-from servicio.procesos.casos_uso.UsuarioCasosUso import UsuarioCasosUso
-from servicio.procesos.casos_uso.UsuariosPorProceso import UsuariosPorProceso
-from servicio.procesos.casos_uso.ProcesoCasosUso import ProcesoCasosUso
-from servicio.procesos.casos_uso.ValidarActivo import ValidarActivo
-
-from servicio.procesos.entidades.Activo import Activo
-from servicio.procesos.entidades.Proceso import Proceso
-from servicio.procesos.entidades.Usuario import Usuario
-
-from servicio.procesos.repositorios.RepoActivos import RepoActivos
-from servicio.procesos.repositorios.RepoProcesos import RepoProcesos
-from servicio.procesos.repositorios.RepoUsuarios import RepoUsuarios
+from flask_app.app import auth, db
+from src.login import Administrador
+from src.procesos.casos_uso import AgregarUsuarioAlProceso, CrearProceso, EliminarUsuarioProcesado, UsuarioCasosUso, \
+    UsuariosPorProceso, ProcesoCasosUso, ValidarActivo
+from src.procesos.entidades import Activo, Proceso, Usuario
+from src.procesos.repositorios import RepoProcesos, RepoActivos, RepoUsuarios
 
 procesos_blueprint = Blueprint("procesos_blueprint", __name__)
 

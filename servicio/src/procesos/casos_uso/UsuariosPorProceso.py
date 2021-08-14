@@ -1,5 +1,4 @@
-from servicio.procesos.entidades.Proceso import Proceso
-from servicio.procesos.entidades.Usuario import Usuario
+from src.procesos.entidades import Proceso, Usuario
 
 
 class UsuariosPorProceso:

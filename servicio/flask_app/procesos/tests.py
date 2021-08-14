@@ -1,7 +1,6 @@
 import json
 from base64 import b64encode
-
-from servicio.app import create_app
+from flask_app.app import create_app
 import unittest
 
 

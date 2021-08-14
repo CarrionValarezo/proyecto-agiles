@@ -1,9 +1,5 @@
-from servicio.app import db
-from servicio.login.Administrador import Administrador
-from servicio.procesos.entidades.Activo import Activo
-from servicio.procesos.entidades.ActivoProcesado import ActivoProcesado
-from servicio.procesos.entidades.Proceso import Proceso
-from servicio.procesos.entidades.Usuario import Usuario
+from src.login import Administrador
+from src.procesos.entidades import ActivoProcesado, Proceso, Usuario, Activo
 
 
 class RepoProcesos:
