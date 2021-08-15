@@ -120,3 +120,23 @@ class RepoProcesos:
                             set est_pro = '{proceso.estado}'
                             where id_pro = {proceso.id};''')
         self.cur.connection.commit()
+
+    def listar_por_usuario(self, usuario: Usuario):
+        self.cur.execute(f'''select p.id_pro as id_proceso, 
+                           p.nom_pro as nombre_proceso, 
+                           p.fec_cre_pro as fecha_proceso,
+                           p.est_pro as estado_proceso, 
+                           ad.ced_adm as cedula_admin, 
+                           ad.nom_adm as nombre_admin, 
+                           ad.ape_adm as apellido_admin
+                           from proceso p, administrador ad, detalle_proceso dp, activo a
+                           where ad.ced_adm = p.ced_adm_cre_pro
+                           and dp.id_pro_det = p.id_pro
+                           and dp.id_act_det = a.id_act
+                           and a.ced_usu_act = {usuario.cedula}
+                           group by p.id_pro;''')
+        data = self.cur.fetchall()
+        procesos = [Proceso(**params, creador=Administrador(**params)) for params in data]
+        for p in procesos:
+            p.activos_procesados = self.listar_activos(p)
+        return procesos

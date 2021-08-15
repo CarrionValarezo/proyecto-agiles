@@ -1,8 +1,8 @@
 from flask import Blueprint, jsonify, request
 from flask_app.app import auth, db
 from src.login import Administrador
-from src.procesos.casos_uso import AgregarUsuarioAlProceso, CrearProceso, EliminarUsuarioProcesado, UsuarioCasosUso, \
-    UsuariosPorProceso, ProcesoCasosUso, ValidarActivo
+from src.procesos.servicio import AgregarUsuarioAlProceso, CrearProceso, EliminarUsuarioProcesado, ServicioUsuario, \
+    UsuariosPorProceso, ServicioProceso, ValidarActivo
 from src.procesos.entidades import Activo, Proceso, Usuario
 from src.procesos.repositorios import RepoProcesos, RepoActivos, RepoUsuarios
 
@@ -18,7 +18,7 @@ def get_usuarios_cant_activos():
     repo_activos = RepoActivos(dict_cursor)
     repo_usuarios = RepoUsuarios(dict_cursor)
 
-    usuario_casos_uso = UsuarioCasosUso(repo_procesos=repo_procesos,
+    usuario_casos_uso = ServicioUsuario(repo_procesos=repo_procesos,
                                         repo_activos=repo_activos,
                                         repo_usuarios=repo_usuarios)
 
@@ -38,7 +38,7 @@ def get_procesos_por_usuario(cedula):
     repo_activos = RepoActivos(dict_cursor)
     repo_usuarios = RepoUsuarios(dict_cursor)
 
-    csu = UsuarioCasosUso(repo_procesos=repo_procesos,
+    csu = ServicioUsuario(repo_procesos=repo_procesos,
                           repo_activos=repo_activos,
                           repo_usuarios=repo_usuarios)
 
@@ -56,7 +56,7 @@ def get_activos_por_usuario(cedula):
     repo_activos = RepoActivos(dict_cursor)
     repo_usuarios = RepoUsuarios(dict_cursor)
 
-    csu = UsuarioCasosUso(repo_procesos=repo_procesos,
+    csu = ServicioUsuario(repo_procesos=repo_procesos,
                           repo_activos=repo_activos,
                           repo_usuarios=repo_usuarios)
 
@@ -74,11 +74,11 @@ def get_usuarios_faltante(id_proceso):
     repo_activos = RepoActivos(dict_cursor)
     repo_usuarios = RepoUsuarios(dict_cursor)
 
-    ucs = UsuarioCasosUso(repo_procesos=repo_procesos,
+    ucs = ServicioUsuario(repo_procesos=repo_procesos,
                           repo_activos=repo_activos,
                           repo_usuarios=repo_usuarios)
 
-    pcs = ProcesoCasosUso(repo_procesos=repo_procesos,
+    pcs = ServicioProceso(repo_procesos=repo_procesos,
                           repo_usuarios=repo_usuarios)
 
     proceso: Proceso = pcs.buscar(id_proceso)
@@ -99,7 +99,7 @@ def get_procesos():
     repo_procesos = RepoProcesos(dict_cursor)
     repo_usuarios = RepoUsuarios(dict_cursor)
 
-    pcs = ProcesoCasosUso(repo_procesos, repo_usuarios)
+    pcs = ServicioProceso(repo_procesos, repo_usuarios)
 
     respuesta = [p.to_dict() for p in pcs.listar()]
     return jsonify(respuesta)
@@ -112,7 +112,7 @@ def get_detalle_proceso(id_proceso):
     repo_procesos = RepoProcesos(dict_cursor)
     repo_usuarios = RepoUsuarios(dict_cursor)
 
-    pcs = ProcesoCasosUso(repo_procesos, repo_usuarios)
+    pcs = ServicioProceso(repo_procesos, repo_usuarios)
     upp = UsuariosPorProceso()
 
     proceso: Proceso = pcs.buscar(id_proceso)
@@ -133,7 +133,7 @@ def crear_proceso():
     repo_activos = RepoActivos(dict_cursor)
     repo_usuarios = RepoUsuarios(dict_cursor)
 
-    ucs = UsuarioCasosUso(repo_procesos, repo_usuarios, repo_activos)
+    ucs = ServicioUsuario(repo_procesos, repo_usuarios, repo_activos)
     crear = CrearProceso(repo_procesos=repo_procesos,
                          ucs=ucs)
 
@@ -157,8 +157,8 @@ def eliminar_usuario_de_proceso(id_proceso, cedula):
     repo_activos = RepoActivos(dict_cursor)
     repo_usuarios = RepoUsuarios(dict_cursor)
 
-    ucs = UsuarioCasosUso(repo_procesos, repo_usuarios, repo_activos)
-    pcs = ProcesoCasosUso(repo_procesos, repo_usuarios)
+    ucs = ServicioUsuario(repo_procesos, repo_usuarios, repo_activos)
+    pcs = ServicioProceso(repo_procesos, repo_usuarios)
     elm = EliminarUsuarioProcesado(repo_procesos=repo_procesos,
                                    ucs=ucs)
 
@@ -177,8 +177,8 @@ def agregar_usuario_a_proceso(id_proceso, cedula):
     repo_activos = RepoActivos(dict_cursor)
     repo_usuarios = RepoUsuarios(dict_cursor)
 
-    ucs = UsuarioCasosUso(repo_procesos, repo_usuarios, repo_activos)
-    pcs = ProcesoCasosUso(repo_procesos, repo_usuarios)
+    ucs = ServicioUsuario(repo_procesos, repo_usuarios, repo_activos)
+    pcs = ServicioProceso(repo_procesos, repo_usuarios)
     agg = AgregarUsuarioAlProceso(repo_procesos=repo_procesos, ucs=ucs)
 
     proceso: Proceso = pcs.buscar(id_proceso)
@@ -196,7 +196,7 @@ def validar_activo(id_proceso, id_activo):
     repo_procesos = RepoProcesos(dict_cursor)
     repo_usuarios = RepoUsuarios(dict_cursor)
 
-    pcs = ProcesoCasosUso(repo_procesos=repo_procesos,
+    pcs = ServicioProceso(repo_procesos=repo_procesos,
                           repo_usuarios=repo_usuarios)
     vla = ValidarActivo(repo_procesos=repo_procesos)
 

@@ -1,7 +1,7 @@
 import unittest
 from datetime import date
 from src.login import Administrador
-from src.procesos.casos_uso import CrearProceso, UsuarioCasosUso, ValidarActivo
+from src.procesos.servicio import CrearProceso, ServicioUsuario, ValidarActivo
 from src.procesos.entidades import Proceso
 from src.procesos.repositorios import RepoProcesos, RepoActivos, RepoUsuarios
 from tests.repositorios.Conexion import Conexion
@@ -18,7 +18,7 @@ class Test(unittest.TestCase):
         self.hoy = date.today()
 
     def test_crear_proceso_validar_correcto(self):
-        ucs = UsuarioCasosUso(repo_procesos=self.repo_procesos,
+        ucs = ServicioUsuario(repo_procesos=self.repo_procesos,
                               repo_activos=self.repo_activos,
                               repo_usuarios=self.repo_usuarios)
         cp = CrearProceso(repo_procesos=self.repo_procesos, ucs=ucs)
@@ -49,7 +49,7 @@ class Test(unittest.TestCase):
         self.assertEqual("FINALIZADO", nuevo_proceso.estado)
 
     def test_crear_proceso_validar_observacion(self):
-        ucs = UsuarioCasosUso(repo_procesos=self.repo_procesos,
+        ucs = ServicioUsuario(repo_procesos=self.repo_procesos,
                               repo_activos=self.repo_activos,
                               repo_usuarios=self.repo_usuarios)
         cp = CrearProceso(repo_procesos=self.repo_procesos, ucs=ucs)

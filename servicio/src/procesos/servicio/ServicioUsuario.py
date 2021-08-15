@@ -2,7 +2,7 @@ from src.procesos.repositorios import RepoProcesos, RepoUsuarios, RepoActivos
 from src.procesos.entidades import Usuario, Activo, Proceso
 
 
-class UsuarioCasosUso:
+class ServicioUsuario:
 
     def __init__(self, repo_procesos: RepoProcesos, repo_usuarios: RepoUsuarios, repo_activos: RepoActivos):
         self.repo_procesos: RepoProcesos = repo_procesos
@@ -24,13 +24,4 @@ class UsuarioCasosUso:
         return [self.usuario_cant_activos(u) for u in usuarios]
 
     def procesos(self, u: Usuario) -> list[Proceso]:
-        procesos: list[Proceso] = self.repo_procesos.listar()
-        procesos_usuario: list[Proceso] = []
-        for p in procesos:
-            coincidencias: int = 0
-            for activo in p.activos_procesados:
-                if activo.usuario.cedula == u.cedula:
-                    coincidencias += 1
-            if coincidencias != 0:
-                procesos_usuario.append(p)
-        return procesos_usuario
+        return self.repo_procesos.listar_por_usuario(u)

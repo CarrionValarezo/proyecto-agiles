@@ -2,7 +2,7 @@ from src.procesos.repositorios import RepoProcesos, RepoUsuarios
 from src.procesos.entidades import ActivoProcesado, Proceso, Usuario
 
 
-class ProcesoCasosUso:
+class ServicioProceso:
 
     def __init__(self, repo_procesos: RepoProcesos, repo_usuarios: RepoUsuarios):
         self.repo_procesos: RepoProcesos = repo_procesos
