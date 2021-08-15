@@ -4,7 +4,7 @@ from flask_app.app import create_app
 import unittest
 
 
-class TestProcesos(unittest.TestCase):
+class TestEndpoints(unittest.TestCase):
 
     def setUp(self) -> None:
         super().setUp()
@@ -17,7 +17,8 @@ class TestProcesos(unittest.TestCase):
         self.proceso = "1"
         self.activo = "1"
         self.usuario_data = [b"cedula_usuario", b"nombre_usuario", b"apellido_usuario"]
-        self.proceso_data = [b"id_proceso", b"nombre_proceso", b"fecha_creacion_proceso", b"estado_proceso"]
+        self.proceso_data = [b"id_proceso", b"nombre_proceso", b"fecha_creacion_proceso", b"estado_proceso",
+                             b"cantidad_activos_procesados", b"cantidad_activos_revisados", b"cantidad_observaciones"]
         self.activo_data = [b"id_activo"]
         self.item_data = [b"id_item", b"nombre_item", b"descripcion_item"]
 

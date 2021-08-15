@@ -44,7 +44,7 @@ class Test(unittest.TestCase):
         for a in nuevo_proceso.activos_procesados:
             val.validar(a.id, nuevo_proceso, estado, obs, revisor)
 
-        self.assertEqual(cant_activos, nuevo_proceso.cant_activos_revisados)
+        self.assertEqual(cant_activos, nuevo_proceso.cant_activos_validados)
         self.assertEqual(0, nuevo_proceso.cant_observaciones)
         self.assertEqual("FINALIZADO", nuevo_proceso.estado)
 
@@ -74,6 +74,6 @@ class Test(unittest.TestCase):
         for a in nuevo_proceso.activos_procesados:
             val.validar(a.id, nuevo_proceso, estado, obs, revisor)
 
-        self.assertEqual(cant_activos, nuevo_proceso.cant_activos_revisados)
+        self.assertEqual(cant_activos, nuevo_proceso.cant_activos_validados)
         self.assertEqual(cant_activos, nuevo_proceso.cant_observaciones)
         self.assertEqual("FINALIZADO", nuevo_proceso.estado)

@@ -108,7 +108,7 @@ class RepoProcesos:
     def validar_activo(self, activo: ActivoProcesado, proceso: Proceso) -> None:
         self.cur.execute(f'''update detalle_proceso 
                         set rev_act_det = true, 
-                            est_act_det = '{activo.estado}', 
+                            est_act_det = '{activo.estado_validacion}', 
                             obs_act_det = '{activo.observacion}', 
                             ced_adm_rev_det = '{activo.revisor.cedula}'
                         where id_pro_det = {proceso.id}
