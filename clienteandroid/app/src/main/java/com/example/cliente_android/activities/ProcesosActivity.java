@@ -64,7 +64,7 @@ public class ProcesosActivity extends AppCompatActivity implements SwipeRefreshL
             btnSalir();
         } else {
             btnIniciar();
-            Toast.makeText(context, "Debes iniciar sesion", Toast.LENGTH_LONG);
+            Toast.makeText(context, "¡Debe iniciar sesión!", Toast.LENGTH_LONG).show();
         }
     }
 

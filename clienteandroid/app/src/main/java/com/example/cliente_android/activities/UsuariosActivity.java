@@ -96,7 +96,7 @@ public class UsuariosActivity extends Activity implements SwipeRefreshLayout.OnR
     private void scanCode() {
         IntentIntegrator integrator = new IntentIntegrator(this);
         integrator.setDesiredBarcodeFormats(IntentIntegrator.ONE_D_CODE_TYPES);
-        integrator.setPrompt("Escanee un codigo de barras");
+        integrator.setPrompt("Escaneé un código de barras");
         integrator.setOrientationLocked(false);
         integrator.setCameraId(0);  // Use a specific camera of the device
         integrator.setBeepEnabled(false);
@@ -125,7 +125,7 @@ public class UsuariosActivity extends Activity implements SwipeRefreshLayout.OnR
                         nombreItem = (TextView)inflater.findViewById(R.id.tvNomItemVal);
                         desItem = (TextView)inflater.findViewById(R.id.tvDesItemVal);
                         input = (EditText)inflater.findViewById(R.id.etObservacionValScanner);
-
+                        input.setText(activo.getObservacion());
 
                         cedula.setText(usuario.getCedula());
                         nombre.setText(usuario.getNombre());
