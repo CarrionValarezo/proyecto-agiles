@@ -9,6 +9,8 @@ import componentes.PnlDetalleProceso;
 import entidades.Proceso;
 import gestor.Conexion;
 import java.awt.Component;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import javax.swing.JFrame;
 import javax.swing.table.DefaultTableModel;
 
@@ -44,6 +46,7 @@ public class IntDetalleProceso extends javax.swing.JFrame {
 		this.setTitle("Detalles de los Procesos");
 		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		this.contador = 0;
+		refresh();
 	}
 
 	public void agregarDetalle(int idProceso) {
@@ -79,6 +82,21 @@ public class IntDetalleProceso extends javax.swing.JFrame {
 		} else {
 			jTbpDetalles.setSelectedIndex(instancia.jTbpDetalles.getTabCount());
 		}
+	}
+
+	public void refresh(){ 
+		jTbpDetalles.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				if (e.getClickCount() == 2){
+					int i = jTbpDetalles.getSelectedIndex();
+					System.out.println("CLICK: "+i);
+					PnlDetalleProceso panel = (PnlDetalleProceso) jTbpDetalles.getComponent(i);
+					panel.actualizarTablas();
+				}
+			}
+
+		});
 	}
 
 	/**
