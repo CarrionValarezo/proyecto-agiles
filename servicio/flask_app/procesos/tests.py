@@ -19,8 +19,7 @@ class TestEndpoints(unittest.TestCase):
         self.usuario_data = [b"cedula_usuario", b"nombre_usuario", b"apellido_usuario"]
         self.proceso_data = [b"id_proceso", b"nombre_proceso", b"fecha_creacion_proceso", b"estado_proceso",
                              b"cantidad_activos_procesados", b"cantidad_activos_revisados", b"cantidad_observaciones"]
-        self.activo_data = [b"id_activo"]
-        self.item_data = [b"id_item", b"nombre_item", b"descripcion_item"]
+        self.activo_data = [b"id_activo", b"nombre_activo", b"descripcion_activo"]
 
     def __endpoint_test(self, ruta):
         status_code = self.tester.get(ruta, headers={"Authorization": f"Basic {self.auth}"}).status_code
@@ -33,9 +32,9 @@ class TestEndpoints(unittest.TestCase):
     def __data_test(self, ruta, data):
         data_json = self.tester.get(ruta, headers={"Authorization": f"Basic {self.auth}"}).data
         self.assertTrue(True)
-        '''for key in data:
+        for key in data:
             print(key)
-            self.assertTrue(key in data_json)'''
+            self.assertTrue(key in data_json)
 
     def test_usuarios_cantidad_activos(self):
         ruta = "/usuarios/cantidad-activos"
@@ -49,7 +48,7 @@ class TestEndpoints(unittest.TestCase):
         print("\n\n" + ruta)
         self.__endpoint_test(ruta)
         self.__content_type_test(ruta)
-        self.__data_test(ruta, self.activo_data + self.item_data)
+        self.__data_test(ruta, self.activo_data + self.activo_data)
 
     def test_procesos_por_usuario(self):
         ruta = f"/usuarios/{self.usuario}/procesos"
@@ -86,7 +85,7 @@ class TestEndpoints(unittest.TestCase):
         print("\n\n" + ruta)
         self.__endpoint_test(ruta)
         self.__content_type_test(ruta)
-        self.__data_test(ruta, self.activo_data + self.item_data + self.proceso_data + self.usuario_data)
+        self.__data_test(ruta, self.activo_data + self.activo_data + self.proceso_data + self.usuario_data)
 
     def test_eliminar_usuario_proceso(self):
         respuesta = self.tester.delete(f'/procesos/{self.proceso}/usuarios/{self.usuario}',
@@ -105,4 +104,3 @@ class TestEndpoints(unittest.TestCase):
                                     content_type="application/json")
         self.assertEqual(respuesta.status_code, 200)
         self.assertTrue(b"mensaje" in respuesta.data)
-
