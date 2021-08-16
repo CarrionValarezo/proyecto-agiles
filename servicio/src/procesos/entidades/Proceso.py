@@ -37,7 +37,9 @@ class Proceso:
         self.cargar_datos()
         cant_activos: int = self.cant_activos_procesados
         cant_revisados: int = self.cant_activos_validados
-        if cant_revisados == cant_activos and self.estado == self.INICIADO:
+        if cant_revisados == 0:
+            self.estado = self.CREADO
+        elif cant_revisados == cant_activos and self.estado == self.INICIADO:
             self.estado = self.FINALIZADO
         elif cant_revisados > 0 and self.estado == self.CREADO:
             self.estado = self.INICIADO

@@ -19,6 +19,7 @@ class ValidarActivo:
         activo.estado_validacion = estado
         self.repo_procesos.validar_activo(activo, proceso)
         proceso.actualizar_estado()
+        self.repo_procesos.actualizar(proceso)
         return True
 
     def __buscar_activo(self, id_activo: str, proceso: Proceso) -> ActivoProcesado:

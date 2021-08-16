@@ -13,3 +13,6 @@ class EliminarUsuarioProcesado:
         activos: list[Activo] = self.ucs.activos(u)
         for activo in activos:
             self.repo_procesos.eliminar_activo(p, activo)
+        p = self.repo_procesos.buscar(p.id)
+        p.actualizar_estado()
+        self.repo_procesos.actualizar(p)
