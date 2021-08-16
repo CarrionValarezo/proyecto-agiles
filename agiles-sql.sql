@@ -1,8 +1,5 @@
 create database agiles_login; 
-use agiles_login; 
-
-create database agiles_pruebas;
-use agiles_pruebas; 
+use agiles_login;  
 
 create table administrador(
 ced_adm varchar(10) not null primary key, 
