@@ -19,21 +19,37 @@ class Test(unittest.TestCase):
         self.hoy = date.today()
 
     def test_crear_proceso(self):
+        #Instanciacion de los servicios
         ucs = ServicioUsuario(repo_procesos=self.repo_procesos,
                               repo_activos=self.repo_activos,
                               repo_usuarios=self.repo_usuarios)
         cp = CrearProceso(repo_procesos=self.repo_procesos, ucs=ucs)
-
+        
+        
+        #Creacion de la lista con todos los usarios en la base de datos. 
         usuarios = self.repo_usuarios.listar()
+        
+        #Instanciacion del nuevo proceso 
         proceso = Proceso(nombre_proceso="Proceso Prueba",
                           fecha_proceso=self.hoy,
                           creador=Administrador(cedula_admin="123"))
+        
+        #Creacion y almacenamiento en la base de datos mediante el servicio CrearProceso
         nuevo_proceso = cp.crear_proceso(usuarios=usuarios, p=proceso)
+        
+        #Obtencion de la cantidad de activos en el proceso. 
         cant_activos = len(nuevo_proceso.activos_procesados)
 
+        #Comrpueba que el estado del nuevo proceso sea CREADO. 
         self.assertEqual("CREADO", nuevo_proceso.estado)
+        
+        #Comprueba la fecha de creacion
         self.assertEqual(self.hoy, nuevo_proceso.fecha)
+        
+        #Comprueba que existan activos en el proceso creado. 
         self.assertTrue(cant_activos > 0)
+        
+        #Comprueba que al estar recien creado no tenga observaciones. 
         self.assertEqual(0, nuevo_proceso.cant_observaciones)
         return nuevo_proceso
 
